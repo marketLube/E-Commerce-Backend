@@ -4,6 +4,7 @@ const apiRouter = require('./routes')
 const connectDb = require('./config/dbConnection')
 const globalErrorHandler = require('./utilities/errorHandlings/globalErrorHandler')
 const AppError = require('./utilities/errorHandlings/appError')
+const job = require('./utilities/cronJobs')
 require('dotenv').config()
 
 
@@ -12,7 +13,7 @@ const app = express()
 //Database connection
 connectDb()
 
-
+job.start()
 //middlewares
 app.use(cookieParser())
 app.use(express.json())

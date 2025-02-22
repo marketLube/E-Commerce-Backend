@@ -1,12 +1,15 @@
 // Schedule the job (runs every day at midnight)
-const { CronJob } = require("cron");
+const cron = require("cron");
 const removeExpiredOffers = require("./services/cronJobServices");
 
-const job = new CronJob("*/1 * * * *", () => {
+// const job = new cron.CronJob("*/1 * * * *", () => {
+//     console.log("⏳ CronJob Testing...");
+// });
+const job = new cron.CronJob("0 0 * * *", () => {
     console.log("⏳ Checking for expired offers...");
     removeExpiredOffers();
 });
 
 
 
-job.start();
+module.exports = job

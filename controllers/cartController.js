@@ -6,18 +6,15 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
 // Helper function to recalculate total price
 const recalcTotalPrice = (cart) => {
+
     cart.totalPrice = cart.items.reduce((total, item) => {
-        return total + (item.price * item.quantity);
+        return total + (item.offerPrice * item.quantity);
     }, 0);
+
     return cart;
 };
 
-/**
- * Add a product to the user's cart.
- * Expects in req.body:
- * - productId: The product's ObjectId.
- * - quantity: Number to add (default to 1 if not provided).
- */
+
 const addToCart = catchAsync(async (req, res, next) => {
     const { productId, quantity = 1 } = req.body;
     const userId = req.user;
@@ -45,7 +42,8 @@ const addToCart = catchAsync(async (req, res, next) => {
         cart.items.push({
             product: productId,
             quantity,
-            price: product.price
+            originalPrice: product.originalPrice,
+            offerPrice: product.offerPrice
         });
     }
 
@@ -59,10 +57,7 @@ const addToCart = catchAsync(async (req, res, next) => {
     });
 });
 
-/**
- * Remove a specific product from the cart.
- * Expects req.params.productId to indicate which product to remove.
- */
+
 const removeFromCart = catchAsync(async (req, res, next) => {
     const { productId } = req.params;
     const userId = req.user;
@@ -92,9 +87,7 @@ const removeFromCart = catchAsync(async (req, res, next) => {
 });
 
 
-/**
- * Clear all items from the user's cart.
- */
+
 const clearCart = catchAsync(async (req, res, next) => {
     const userId = req.user;
 
@@ -135,6 +128,46 @@ const getCart = catchAsync(async (req, res, next) => {
 });
 
 
+
+const updateCartItem = catchAsync(async (req, res, next) => {
+    const { productId, action } = req.body;
+    const userId = req.user;
+
+    let cart = await cartModel.findOne({ user: userId });
+    if (!cart) {
+        return next(new AppError("Cart not found", 404));
+    }
+
+    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+
+    if (itemIndex === -1) {
+        return next(new AppError("Product not found in cart", 404));
+    }
+
+    if (action === "increment") {
+        cart.items[itemIndex].quantity += 1;
+    } else if (action === "decrement") {
+        if (cart.items[itemIndex].quantity === 1) {
+            cart.items = cart.items.filter(item => item.product.toString() !== productId);
+        } else {
+            cart.items[itemIndex].quantity -= 1;
+        }
+    } else {
+        return next(new AppError("Invalid action. Use 'increment' or 'decrement'", 400));
+    }
+
+
+    recalcTotalPrice(cart);
+    await cart.save();
+
+    res.status(200).json({
+        message: "Cart item updated successfully",
+        cart
+    });
+});
+
+
+
 module.exports = {
-    addToCart, clearCart, removeFromCart, getCart
+    addToCart, clearCart, removeFromCart, getCart, updateCartItem
 }

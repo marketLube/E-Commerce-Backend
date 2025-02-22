@@ -1,3 +1,5 @@
+const { getTotalSales, getMonthlySalesReport } = require("../helpers/aggregation/aggregations");
+const orderModel = require("../model/orderModel");
 const { User, Admin } = require("../model/userModel");
 const createToken = require("../utilities/createToken");
 const AppError = require("../utilities/errorHandlings/appError");
@@ -58,9 +60,30 @@ const adminLogout = catchAsync(async (req, res, next) => {
 
 
 
+//sales related controllers 
+
+const getSalesDetails = catchAsync(async (req, res, next) => {
+    const { startDate, endDate } = req.query
+    const salesDetails = await getTotalSales(startDate, endDate, orderModel)
+    res.status(200).json(salesDetails)
+})
+
+
+const monthlyReport = catchAsync(async (req, res, next) => {
+    const { startDate, endDate } = req.query
+    const report = await getMonthlySalesReport(startDate, endDate)
+
+    res.status(200).json(report)
+})
+
+
+
+
 
 module.exports = {
     adminRegister,
     AdminLogin,
-    adminLogout
+    adminLogout,
+    getSalesDetails,
+    monthlyReport
 }

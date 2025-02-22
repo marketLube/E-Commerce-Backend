@@ -1,4 +1,4 @@
-const { groupProductsByLabel } = require("../helpers/aggregation/aggregations");
+const { groupProductsByLabel, groupProductsByRating } = require("../helpers/aggregation/aggregations");
 const { updateOne, deleteOne } = require("../helpers/handlerFactory/handlerFactory");
 const categoryModel = require("../model/categoryModel");
 const productModel = require("../model/productModel");
@@ -9,27 +9,26 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
 
 
-const uploadProductImages = catchAsync(async (files) => {
+const uploadProductImages = (files) => {
+    return new Promise((resolve, reject) => {
+        if (!files || files.length === 0) {
+            return resolve([]);
+        }
 
-    if (!files || files.length === 0) {
-        return [];
-    }
+        Promise.all(files.map((file) => uploadToCloudinary(file.buffer)))
+            .then((uploadedImages) => resolve(uploadedImages))
+            .catch((error) => reject(error));
+    });
+};
 
-    const uploadedImages = await Promise.all(
-        files.map((file) => uploadToCloudinary(file.buffer))
-    );
-
-    return uploadedImages;
-
-});
 
 const addProduct = catchAsync(async (req, res, next) => {
 
     const createdBy = req.user
 
-    const { productName, productCode, productDescription, category, originalPrice, quantity, label } = req.body;
+    const { productName, productCode, productDescription, category, originalPrice, label, stock } = req.body;
 
-    if (!productName || !productCode || !productDescription || !category || !originalPrice || !quantity || !label) {
+    if (!productName || !productCode || !productDescription || !category || !originalPrice || !label || !stock) {
         return next(new AppError("All fields are required", 400));
     }
 
@@ -63,12 +62,7 @@ const addProduct = catchAsync(async (req, res, next) => {
             offerPrice = (originalPrice - discount).toFixed(2);
         }
     }
-
-    // Handle file uploads
     const productImages = await uploadProductImages(req.files);
-
-
-    // Create a new product
     const newProduct = new productModel({
         productName,
         productCode,
@@ -76,13 +70,13 @@ const addProduct = catchAsync(async (req, res, next) => {
         category,
         originalPrice,
         offerPrice,
-        quantity,
         productImages,
         createdBy,
-        label
+        label,
+        stock
     });
 
-    // Save the product to the database
+
     await newProduct.save();
     res.status(201).json({ message: "Product added successfully", product: newProduct });
 });
@@ -147,7 +141,28 @@ const updateProduct = catchAsync(async (req, res, next) => {
     }
 
 
+
+
+
     const updatedData = req.body;
+
+
+    if (updatedData.originalPrice && updatedData.originalPrice !== product.originalPrice) {
+        const category = await categoryModel.findById(product.category);
+
+        if (category && category.offer && category.offer.isActive) {
+            const currentDate = new Date();
+
+            if (currentDate >= category.offer.startDate && currentDate <= category.offer.endDate) {
+                const discount = (updatedData.originalPrice * category.offer.discountPercentage) / 100;
+                updatedData.offerPrice = (updatedData.originalPrice - discount).toFixed(2);
+            } else {
+                updatedData.offerPrice = updatedData.originalPrice;
+            }
+        } else {
+            updatedData.offerPrice = updatedData.originalPrice;
+        }
+    }
 
 
     const updatedProduct = await productModel.findByIdAndUpdate(id, updatedData, {
@@ -189,10 +204,44 @@ const getProductsByLabel = catchAsync(async (req, res, next) => {
 
 });
 
-const getGroupedProducts = catchAsync(async (req, res, next) => {
+const getGroupedProductsByLabel = catchAsync(async (req, res, next) => {
     const result = await groupProductsByLabel()
     res.status(200).json(result)
 })
+const getGroupedProductsByRating = catchAsync(async (req, res, next) => {
+    const result = await groupProductsByRating()
+    res.status(200).json(result)
+})
+
+const searchProducts = catchAsync(async (req, res, next) => {
+    let { keyword, category, minPrice, maxPrice, sortBy, page, limit } = req.query;
+
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const query = {};
+    if (keyword) query.productName = { $regex: keyword, $options: "i" };
+    if (category) query.category = category;
+    if (minPrice || maxPrice) {
+        query.originalPrice = {};
+        if (minPrice) query.originalPrice.$gte = parseFloat(minPrice);
+        if (maxPrice) query.originalPrice.$lte = parseFloat(maxPrice);
+    }
+
+    let sortOption = {};
+    if (sortBy === "priceAsc") sortOption.originalPrice = 1;
+    if (sortBy === "priceDesc") sortOption.originalPrice = -1;
+
+    const products = await productModel.find(query).skip(skip).limit(limit).sort(sortOption);
+    const totalProducts = await productModel.countDocuments(query);
+
+    res.status(200).json({
+        success: true,
+        data: { products, totalProducts, totalPages: Math.ceil(totalProducts / limit), currentPage: page }
+    });
+});
+
 
 
 
@@ -205,5 +254,7 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getProductsByLabel,
-    getGroupedProducts
+    getGroupedProductsByLabel,
+    getGroupedProductsByRating,
+    searchProducts
 }

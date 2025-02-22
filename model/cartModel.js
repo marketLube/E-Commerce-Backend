@@ -13,7 +13,11 @@ const cartItemSchema = new Schema({
         default: 1,
         min: [1, 'Quantity cannot be less than 1']
     },
-    price: {
+    originalPrice: {
+        type: Number,
+        required: true
+    },
+    offerPrice: {
         type: Number,
         required: true
     }
@@ -25,7 +29,7 @@ const cartSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-        unique: true  
+        unique: true
     },
     items: [cartItemSchema],
     totalPrice: {

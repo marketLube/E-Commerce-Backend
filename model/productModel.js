@@ -24,10 +24,6 @@ const productSchema = new mongoose.Schema({
     },
     originalPrice: { type: Number, required: true }, // Always store original price
     offerPrice: { type: Number },
-    quantity: {
-        type: Number,
-        required: true
-    },
     productImages: {
         type: [String],
         required: true,
@@ -45,7 +41,10 @@ const productSchema = new mongoose.Schema({
     },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
-    label: { type: mongoose.Schema.Types.ObjectId, ref: "Label" }
+    label: { type: mongoose.Schema.Types.ObjectId, ref: "Label" },
+    averageRating: { type: Number, default: 0 },
+    totalRatings: { type: Number, default: 0 } ,
+    stock: { type: Number, min: 0 },
 }, { timestamps: true })
 
 
