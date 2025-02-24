@@ -248,6 +248,85 @@ const getMonthlySalesReport = (startDate, endDate) => {
     });
 };
 
+const getDashBoardDetails = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Aggregation for total orders, total deliveries, and total revenue
+            const orderStats = await orderModel.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalOrders: { $sum: 1 },
+                        totalDeliveries: {
+                            $sum: { $cond: [{ $eq: ["$status", "delivered"] }, 1, 0] }
+                        },
+                        totalRevenue: {
+                            $sum: {
+                                $cond: [{ $eq: ["$status", "delivered"] }, "$totalAmount", 0]
+                            }
+                        }
+                    }
+                }
+            ]);
+
+            // Default values if no orders are found
+            const stats = orderStats.length > 0 ? orderStats[0] : {
+                totalOrders: 0,
+                totalDeliveries: 0,
+                totalRevenue: 0
+            };
+
+            // Aggregation for top 4 products based on order placements
+            const topProducts = await orderModel.aggregate([
+                { $unwind: "$products" }, // Flatten product arrays in orders
+                {
+                    $group: {
+                        _id: "$products.productId",
+                        totalOrdered: { $sum: "$products.quantity" }
+                    }
+                },
+                { $sort: { totalOrdered: -1 } }, // Sort in descending order
+                { $limit: 4 }, // Get top 4 products
+                {
+                    $lookup: {
+                        from: "products",
+                        localField: "_id",
+                        foreignField: "_id",
+                        as: "productDetails"
+                    }
+                },
+                { $unwind: "$productDetails" },
+                {
+                    $project: {
+                        _id: 0,
+                        name: "$productDetails.productName",
+                        code: "$productDetails.productCode",
+                        image: "$productDetails.productImages",
+                        price: "$productDetails.originalPrice",
+                        totalOrdered: 1
+                    }
+                }
+            ]);
+
+            // Return results in separate arrays
+            resolve({
+                summary: [
+                    { data: "Total Orders", count: stats.totalOrders },
+                    { data: "Total Deliveries", count: stats.totalDeliveries },
+                    { data: "Total Revenue", count: `₹${stats.totalRevenue.toLocaleString()}` }
+                ],
+                topProducts: topProducts
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+
+
+
+
 
 
 // const getMonthlyReport = catchAsync(async (req, res, next) => {
@@ -302,6 +381,6 @@ module.exports = {
     groupProductsByLabel,
     groupProductsByRating,
     getTotalSales,
-    getMonthlySalesReport
-
+    getMonthlySalesReport,
+    getDashBoardDetails
 };

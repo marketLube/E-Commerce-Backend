@@ -12,7 +12,7 @@ productRouter.get("/get-grouped-products-rating", getGroupedProductsByRating);
 productRouter.get("/search", searchProducts);
 
 
-productRouter.post("/addproduct", autheticateToken(["admin", "seller"]), upload.array('image'), addProduct);
+productRouter.post("/addproduct", autheticateToken(["admin", "seller"]), upload.any(), addProduct);
 
 productRouter.patch("/update-product/:id", autheticateToken(["admin", "seller"]), updateProduct);
 

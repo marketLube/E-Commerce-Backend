@@ -1,7 +1,9 @@
 const { groupProductsByLabel, groupProductsByRating } = require("../helpers/aggregation/aggregations");
 const { updateOne, deleteOne } = require("../helpers/handlerFactory/handlerFactory");
 const categoryModel = require("../model/categoryModel");
+const Product = require("../model/productModel");
 const productModel = require("../model/productModel");
+const Variant = require("../model/variantsModel");
 const uploadToCloudinary = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
@@ -22,64 +24,146 @@ const uploadProductImages = (files) => {
 };
 
 
-const addProduct = catchAsync(async (req, res, next) => {
+// const addProduct = catchAsync(async (req, res, next) => {
+//     console.log(req.body.variants, "body");
 
-    const createdBy = req.user
+//     const {
+//         name,
+//         brandName,
+//         category,
+//         description,
+//         variants,
+//         sku,
+//         price,
+//         offerPrice,
+//         stock,
+//     } = req.body;
 
-    const { productName, productCode, productDescription, category, originalPrice, label, stock } = req.body;
 
-    if (!productName || !productCode || !productDescription || !category || !originalPrice || !label || !stock) {
-        return next(new AppError("All fields are required", 400));
-    }
+//     const existingProduct = await productModel.findOne({
+//         $or: [{ name }, { sku }]
+//     });
 
-    const existingProduct = await productModel.findOne({
-        $or: [{ productName }, { productCode }]
-    });
+//     if (existingProduct) {
+//         if (existingProduct.name === name) {
+//             return next(new AppError("Product Name Already Exists", 400));
+//         }
+//         if (existingProduct.sku === sku) {
+//             return next(new AppError("SKU Code Already Exists", 400));
+//         }
+//     }
+//     // Check if variants are provided
+//     if (variants && variants.length > 0) {
+//         console.log("in 1");
 
-    if (existingProduct) {
-        if (existingProduct.productName === productName) {
-            return next(new AppError("Product Name Already Exists", 400));
+//         // Validate each variant
+//         for (const variant of variants) {
+//             console.log(variant, "Variant");
+
+//             if (!variant.sku || !variant.price || variant.stock === "") {
+//                 console.log("in 3");
+
+//                 return next(new AppError('Each variant must have SKU, price, and stock.', 400))
+//             }
+//         }
+//     } else {
+//         // For non-variant products, ensure SKU, price, and stock are provided
+//         if (!sku || !price || stock === undefined) {
+//             return next(new AppError('Non-variant products must have SKU, price, and stock.', 400))
+//         }
+//     }
+
+//     const productImages = await uploadProductImages(req.files);
+
+//     // Create and save the product
+//     const newProduct = new productModel({
+//         name,
+//         brandName,
+//         category,
+//         description,
+//         variants: variants && variants.length > 0 ? variants : undefined,
+//         sku: !variants || variants.length === 0 ? sku : undefined,
+//         price: !variants || variants.length === 0 ? price : undefined,
+//         offerPrice: !variants || variants.length === 0 ? offerPrice : undefined,
+//         stock: !variants || variants.length === 0 ? stock : undefined,
+//         images: productImages,
+//     });
+
+//     console.log(newProduct, "new product");
+
+
+//     await newProduct.save();
+//     res.status(201).json({ message: 'Product added successfully', product: newProduct });
+
+// })
+
+const addProduct = catchAsync(async (req, res) => {
+
+    const { name, brandName, category, description, variants, sku, price, offerPrice, stock } = req.body;
+
+
+    const parsedVariants = variants ? variants : []
+
+
+    const productImages = [];
+    const variantImagesMap = {};
+
+    // Process uploaded files
+    for (const file of req.files) {
+        const { fieldname } = file;
+
+        if (fieldname.startsWith('productImages')) {
+            const imageUrl = await uploadProductImages([file]);
+            productImages.push(imageUrl[0]);
+        } else if (fieldname.startsWith('variants')) {
+            const match = fieldname.match(/variants\[(\d+)\]\[images\]/);
+            if (match) {
+                const variantIndex = match[1];
+                if (!variantImagesMap[variantIndex]) {
+                    variantImagesMap[variantIndex] = [];
+                }
+                const imageUrl = await uploadProductImages([file]);
+                variantImagesMap[variantIndex].push(imageUrl[0]);
+            }
         }
-        if (existingProduct.productCode === productCode) {
-            return next(new AppError("Product Code Already Exists", 400));
-        }
-    }
-    // Fetch the category with its offer details
-    const categoryExist = await categoryModel.findById(category);
-
-
-    if (!categoryExist) {
-        return next(new AppError("Category not found", 404))
     }
 
-    let offerPrice = originalPrice;
 
-    if (categoryExist.offer && categoryExist.offer.isActive) {
-        const currentDate = new Date();
-
-        if (currentDate >= categoryExist.offer.startDate && currentDate <= categoryExist.offer.endDate) {
-            const discount = (originalPrice * categoryExist.offer.discountPercentage) / 100;
-            offerPrice = (originalPrice - discount).toFixed(2);
-        }
-    }
-    const productImages = await uploadProductImages(req.files);
-    const newProduct = new productModel({
-        productName,
-        productCode,
-        productDescription,
+    const productData = {
+        name,
+        brandName,
         category,
-        originalPrice,
-        offerPrice,
-        productImages,
-        createdBy,
-        label,
-        stock
-    });
+        description,
+        images: productImages,
+    };
 
+    if (parsedVariants.length > 0) {
+        const variantIds = await Promise.all(
+            parsedVariants.map(async (variant, index) => {
+                const newVariant = new Variant({
+                    ...variant,
+                    images: variantImagesMap[index] || [],
+                });
+                await newVariant.save();
+                return newVariant._id;
+            })
+        );
+        productData.variants = variantIds;
+    } else {
+        // Product without variants
+        productData.sku = sku;
+        productData.price = price;
+        productData.offerPrice = offerPrice;
+        productData.stock = stock;
+    }
 
+    const newProduct = new Product(productData);
     await newProduct.save();
-    res.status(201).json({ message: "Product added successfully", product: newProduct });
+
+    res.status(201).json({ message: 'Product added successfully', product: newProduct })
 });
+
+
 
 const listProducts = catchAsync(async (req, res, next) => {
     let { page, limit } = req.query;

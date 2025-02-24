@@ -1,4 +1,4 @@
-const { getTotalSales, getMonthlySalesReport } = require("../helpers/aggregation/aggregations");
+const { getTotalSales, getMonthlySalesReport, getDashBoardDetails } = require("../helpers/aggregation/aggregations");
 const orderModel = require("../model/orderModel");
 const { User, Admin } = require("../model/userModel");
 const createToken = require("../utilities/createToken");
@@ -49,6 +49,11 @@ const AdminLogin = catchAsync(async (req, res, next) => {
 })
 
 
+const AdminDashboard = catchAsync(async (req, res, next) => {
+    const dashboardDetails = await getDashBoardDetails()
+    res.status(200).json(dashboardDetails)
+})
+
 const adminLogout = catchAsync(async (req, res, next) => {
     res.clearCookie("admin-auth-token");
 
@@ -85,5 +90,6 @@ module.exports = {
     AdminLogin,
     adminLogout,
     getSalesDetails,
-    monthlyReport
+    monthlyReport,
+    AdminDashboard
 }

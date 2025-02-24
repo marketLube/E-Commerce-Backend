@@ -1,55 +1,20 @@
-const mongoose = require('mongoose')
+const { default: mongoose } = require("mongoose");
+const { Schema } = mongoose;
 
-
-const productSchema = new mongoose.Schema({
-    productName: {
-        type: String,
-        required: true,
-        min: 3,
-        trim: true,
-    },
-    productCode: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    productDescription: {
-        type: String
-    },
-
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        required: true
-    },
-    originalPrice: { type: Number, required: true }, // Always store original price
+const productSchema = new Schema({
+    name: { type: String, required: true, unique: true },
+    brandName: { type: String, required: true },
+    category: { type: String, required: true },
+    description: { type: String },
+    variants: [{ type: Schema.Types.ObjectId, ref: 'Variant' }], // References to Variant documents
+    // Fields for non-variant products
+    sku: { type: String, unique: true, sparse: true },
+    price: { type: Number },
     offerPrice: { type: Number },
-    productImages: {
-        type: [String],
-        required: true,
-        validate: {
-            validator: function (value) {
-                return value.length > 0;
-            },
-            message: 'At least one product image is required.'
-        }
-    },
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    isDeleted: { type: Boolean, default: false },
-    deletedAt: { type: Date },
-    label: { type: mongoose.Schema.Types.ObjectId, ref: "Label" },
-    averageRating: { type: Number, default: 0 },
-    totalRatings: { type: Number, default: 0 } ,
-    stock: { type: Number, min: 0 },
-}, { timestamps: true })
+    stock: { type: Number },
+    size: { type: String },
+    images: [String],
+}, { timestamps: true });
 
-
-
-
-
-
-module.exports = new mongoose.model("Product", productSchema)
+const Product = mongoose.model('Product', productSchema);
+module.exports = Product
