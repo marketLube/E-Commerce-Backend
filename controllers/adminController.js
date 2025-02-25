@@ -1,4 +1,6 @@
 const { getTotalSales, getMonthlySalesReport, getDashBoardDetails } = require("../helpers/aggregation/aggregations");
+const Brand = require("../model/brandModel");
+const categoryModel = require("../model/categoryModel");
 const orderModel = require("../model/orderModel");
 const { User, Admin } = require("../model/userModel");
 const createToken = require("../utilities/createToken");
@@ -62,6 +64,18 @@ const adminLogout = catchAsync(async (req, res, next) => {
     });
 });
 
+const fetchCategoriesAndBrands = catchAsync(async (req, res) => {
+
+    // Fetch categories (assuming your model has _id and name fields)
+    const categories = await categoryModel.find({}, '_id name');
+
+    // Fetch brands (assuming your model has _id and name fields)
+    const brands = await Brand.find({}, '_id name');
+
+    res.status(200).json({ categories, brands })
+
+})
+
 
 
 
@@ -91,5 +105,6 @@ module.exports = {
     adminLogout,
     getSalesDetails,
     monthlyReport,
-    AdminDashboard
+    AdminDashboard,
+    fetchCategoriesAndBrands
 }

@@ -1,10 +1,10 @@
 const { default: mongoose } = require("mongoose");
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const productSchema = new Schema({
     name: { type: String, required: true, unique: true },
-    brandName: { type: String, required: true },
-    category: { type: String, required: true },
+    brand: { type: Schema.Types.ObjectId, ref: 'Brand' },
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
     description: { type: String },
     variants: [{ type: Schema.Types.ObjectId, ref: 'Variant' }], // References to Variant documents
     // Fields for non-variant products
@@ -14,7 +14,11 @@ const productSchema = new Schema({
     stock: { type: Number },
     size: { type: String },
     images: [String],
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    label: { type: Schema.Types.ObjectId, ref: 'Label' },
+    averageRating: { type: Number, default: 0 },
+    totalRatings: { type: Number, default: 0 },
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
-module.exports = Product
+module.exports = Product;

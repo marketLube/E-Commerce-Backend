@@ -5,40 +5,49 @@ const cartItemSchema = new Schema({
     product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
-        required: true
+    },
+    variant: {
+        type: Schema.Types.ObjectId,
+        ref: 'Variant',
     },
     quantity: {
         type: Number,
         required: true,
         default: 1,
-        min: [1, 'Quantity cannot be less than 1']
+        min: [1, 'Quantity cannot be less than 1'],
     },
-    originalPrice: {
+    price: {
         type: Number,
-        required: true
+        required: true,
     },
     offerPrice: {
         type: Number,
-        required: true
-    }
+    },
 }, { _id: false });
 
-// Cart schema
+// Ensure that either 'product' or 'variant' is present
+cartItemSchema.pre('validate', function (next) {
+    if (!this.product && !this.variant) {
+        next(new Error('A cart item must reference either a product or a variant.'));
+    } else {
+        next();
+    }
+});
+
 const cartSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-        unique: true
+        unique: true,
     },
     items: [cartItemSchema],
     totalPrice: {
         type: Number,
         required: true,
-        default: 0
-    }
+        default: 0,
+    },
 }, { timestamps: true });
-
 
 cartSchema.methods.calculateTotalQuantity = function () {
     return this.items.reduce((total, item) => total + item.quantity, 0);

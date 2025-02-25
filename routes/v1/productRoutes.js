@@ -14,8 +14,8 @@ productRouter.get("/search", searchProducts);
 
 productRouter.post("/addproduct", autheticateToken(["admin", "seller"]), upload.any(), addProduct);
 
-productRouter.patch("/update-product/:id", autheticateToken(["admin", "seller"]), updateProduct);
+productRouter.patch("/update-product", autheticateToken(["admin", "seller"]), updateProduct);
 
-productRouter.delete("/delete-product/:id", autheticateToken(["admin", "seller"]), deleteProduct);
+productRouter.delete("/delete-product", autheticateToken(["admin", "seller"]), deleteProduct);
 
 module.exports = productRouter;

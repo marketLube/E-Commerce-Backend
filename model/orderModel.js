@@ -1,50 +1,34 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const OrderSchema = new mongoose.Schema(
+const orderSchema = new Schema(
     {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true,
-            index: true,
-        },
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         products: [
             {
-                productId: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Product',
-                    required: true,
-                },
-                 quantity: {
-                    type: Number,
-                    required: true
-                }
+                productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+                variantId: { type: Schema.Types.ObjectId, ref: 'Variant' }, // Optional, if variants are used
+                quantity: { type: Number, required: true },
+                price: { type: Number, required: true },
             },
         ],
-        // address: {
-        //     street: { type: String, required: true },
-        //     city: { type: String, required: true },
-        //     state: { type: String, required: true },
-        //     zipCode: { type: String, required: true },
-        //     country: { type: String, required: true },
-        // },
+        totalAmount: { type: Number, required: true },
         status: {
             type: String,
-            enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+            enum: ['pending', 'processed', 'shipped', 'delivered', 'cancelled'],
             default: 'pending',
-            index: true, 
         },
-        totalAmount: {
-            type: Number,
-            required: true,
-        },
-        // paymentDetails: {
-        //     method: { type: String, enum: ['credit_card', 'paypal', 'cod', 'upi'], required: true },
-        //     transactionId: { type: String },
-        //     status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
-        // },
+        isDeleted: { type: Boolean, default: false },
+        deletedAt: { type: Date },
     },
     { timestamps: true }
 );
 
-module.exports = mongoose.model('Order', OrderSchema);
+// Middleware to exclude soft-deleted orders from queries by default
+orderSchema.pre(/^find/, function (next) {
+    this.where({ isDeleted: false });
+    next();
+});
+
+const Order = mongoose.model('Order', orderSchema);
+module.exports = Order;

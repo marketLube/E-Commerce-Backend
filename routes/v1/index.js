@@ -1,4 +1,5 @@
 const adminRouter = require('./adminRoutes')
+const brandRouter = require('./brandRoutes')
 const cartRouter = require('./cartRoutes')
 const categoryRouter = require('./categoryRoutes')
 const labelRouter = require('./labelRoutes')
@@ -22,6 +23,7 @@ v1Router.use("/cart", cartRouter)
 v1Router.use("/label", labelRouter)
 v1Router.use("/rating", ratingRouter)
 v1Router.use("/order", orderRouter)
+v1Router.use("/brand", brandRouter)
 
 
 module.exports = v1Router

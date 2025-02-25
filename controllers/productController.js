@@ -11,100 +11,10 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
 
 
-const uploadProductImages = (files) => {
-    return new Promise((resolve, reject) => {
-        if (!files || files.length === 0) {
-            return resolve([]);
-        }
-
-        Promise.all(files.map((file) => uploadToCloudinary(file.buffer)))
-            .then((uploadedImages) => resolve(uploadedImages))
-            .catch((error) => reject(error));
-    });
-};
-
-
-// const addProduct = catchAsync(async (req, res, next) => {
-//     console.log(req.body.variants, "body");
-
-//     const {
-//         name,
-//         brandName,
-//         category,
-//         description,
-//         variants,
-//         sku,
-//         price,
-//         offerPrice,
-//         stock,
-//     } = req.body;
-
-
-//     const existingProduct = await productModel.findOne({
-//         $or: [{ name }, { sku }]
-//     });
-
-//     if (existingProduct) {
-//         if (existingProduct.name === name) {
-//             return next(new AppError("Product Name Already Exists", 400));
-//         }
-//         if (existingProduct.sku === sku) {
-//             return next(new AppError("SKU Code Already Exists", 400));
-//         }
-//     }
-//     // Check if variants are provided
-//     if (variants && variants.length > 0) {
-//         console.log("in 1");
-
-//         // Validate each variant
-//         for (const variant of variants) {
-//             console.log(variant, "Variant");
-
-//             if (!variant.sku || !variant.price || variant.stock === "") {
-//                 console.log("in 3");
-
-//                 return next(new AppError('Each variant must have SKU, price, and stock.', 400))
-//             }
-//         }
-//     } else {
-//         // For non-variant products, ensure SKU, price, and stock are provided
-//         if (!sku || !price || stock === undefined) {
-//             return next(new AppError('Non-variant products must have SKU, price, and stock.', 400))
-//         }
-//     }
-
-//     const productImages = await uploadProductImages(req.files);
-
-//     // Create and save the product
-//     const newProduct = new productModel({
-//         name,
-//         brandName,
-//         category,
-//         description,
-//         variants: variants && variants.length > 0 ? variants : undefined,
-//         sku: !variants || variants.length === 0 ? sku : undefined,
-//         price: !variants || variants.length === 0 ? price : undefined,
-//         offerPrice: !variants || variants.length === 0 ? offerPrice : undefined,
-//         stock: !variants || variants.length === 0 ? stock : undefined,
-//         images: productImages,
-//     });
-
-//     console.log(newProduct, "new product");
-
-
-//     await newProduct.save();
-//     res.status(201).json({ message: 'Product added successfully', product: newProduct });
-
-// })
-
 const addProduct = catchAsync(async (req, res) => {
-
-    const { name, brandName, category, description, variants, sku, price, offerPrice, stock } = req.body;
-
-
-    const parsedVariants = variants ? variants : []
-
-
+    const { name, brand, category, description, variants, sku, price, offerPrice, stock, label } = req.body;
+    const createdBy = req.user
+    // Initialize arrays to hold image URLs
     const productImages = [];
     const variantImagesMap = {};
 
@@ -113,8 +23,8 @@ const addProduct = catchAsync(async (req, res) => {
         const { fieldname } = file;
 
         if (fieldname.startsWith('productImages')) {
-            const imageUrl = await uploadProductImages([file]);
-            productImages.push(imageUrl[0]);
+            const imageUrl = await uploadToCloudinary(file.buffer); // Upload product image
+            productImages.push(imageUrl);
         } else if (fieldname.startsWith('variants')) {
             const match = fieldname.match(/variants\[(\d+)\]\[images\]/);
             if (match) {
@@ -122,26 +32,30 @@ const addProduct = catchAsync(async (req, res) => {
                 if (!variantImagesMap[variantIndex]) {
                     variantImagesMap[variantIndex] = [];
                 }
-                const imageUrl = await uploadProductImages([file]);
-                variantImagesMap[variantIndex].push(imageUrl[0]);
+                const imageUrl = await uploadToCloudinary(file.buffer); // Upload variant image
+                variantImagesMap[variantIndex].push(imageUrl);
             }
         }
     }
 
-
+    // Prepare product data
     const productData = {
         name,
-        brandName,
+        brand,
         category,
         description,
         images: productImages,
+        createdBy,
+        label
     };
 
-    if (parsedVariants.length > 0) {
+    if (variants && variants.length > 0) {
+        // Handle products with variants
         const variantIds = await Promise.all(
-            parsedVariants.map(async (variant, index) => {
+            variants.map(async (variant, index) => {
                 const newVariant = new Variant({
                     ...variant,
+                    product: null, // Temporarily set to null
                     images: variantImagesMap[index] || [],
                 });
                 await newVariant.save();
@@ -150,18 +64,31 @@ const addProduct = catchAsync(async (req, res) => {
         );
         productData.variants = variantIds;
     } else {
-        // Product without variants
+        // Handle products without variants
         productData.sku = sku;
         productData.price = price;
         productData.offerPrice = offerPrice;
         productData.stock = stock;
     }
 
+    // Create and save the product
     const newProduct = new Product(productData);
     await newProduct.save();
 
-    res.status(201).json({ message: 'Product added successfully', product: newProduct })
+
+    // Update variants with the product reference
+    if (newProduct.variants && newProduct.variants.length > 0) {
+
+        const updated = await Variant.updateMany(
+            { _id: { $in: newProduct.variants } },
+            { $set: { product: newProduct._id } }
+        );
+
+    }
+
+    res.status(201).json({ message: 'Product added successfully', product: newProduct });
 });
+
 
 
 
@@ -170,12 +97,15 @@ const listProducts = catchAsync(async (req, res, next) => {
     page = parseInt(page) || 1;
     limit = parseInt(limit) || 10;
 
-
     const skip = (page - 1) * limit;
 
-
-    const productsPromise = productModel.find().skip(skip).limit(limit).populate("category", "name description").populate("createdBy", "username email role");
-    const countPromise = productModel.countDocuments();
+    const productsPromise = Product.find()
+        .skip(skip)
+        .limit(limit).populate("brand")
+        .populate('category', 'name description')
+        .populate('createdBy', 'username email role')
+        .populate('variants');
+    const countPromise = Product.countDocuments();
 
     const [products, totalProducts] = await Promise.all([productsPromise, countPromise]);
 
@@ -189,94 +119,121 @@ const listProducts = catchAsync(async (req, res, next) => {
             totalProducts,
             totalPages,
             currentPage: page,
-        }
+        },
     });
 });
+
 
 
 const getProductDetails = catchAsync(async (req, res, next) => {
-    const { productId } = req.params
+    const { productId } = req.params;
 
-    const productDetails = await productModel.findById(productId).populate("category").populate("createdBy", "username email role")
+    const productDetails = await Product.findById(productId)
+        .populate('category')
+        .populate('createdBy', 'username email role')
+        .populate('variants');
     if (!productDetails) {
-        return next(new AppError("Product Not found", 404))
+        return next(new AppError('Product not found', 404));
     }
 
-    res.status(200).json(productDetails)
-})
-
-
-const updateProduct = catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const userId = req.user;
-    const userRole = req.role;
-
-
-    const product = await productModel.findById(id);
-
-
-    if (!product) {
-        return next(new AppError("Product not found", 404));
-    }
-
-
-    if (userRole === "seller" && product.createdBy.toString() !== userId) {
-        return next(new AppError("You are not authorized to update this product", 403));
-    }
-
-
-
-
-
-    const updatedData = req.body;
-
-
-    if (updatedData.originalPrice && updatedData.originalPrice !== product.originalPrice) {
-        const category = await categoryModel.findById(product.category);
-
-        if (category && category.offer && category.offer.isActive) {
-            const currentDate = new Date();
-
-            if (currentDate >= category.offer.startDate && currentDate <= category.offer.endDate) {
-                const discount = (updatedData.originalPrice * category.offer.discountPercentage) / 100;
-                updatedData.offerPrice = (updatedData.originalPrice - discount).toFixed(2);
-            } else {
-                updatedData.offerPrice = updatedData.originalPrice;
-            }
-        } else {
-            updatedData.offerPrice = updatedData.originalPrice;
-        }
-    }
-
-
-    const updatedProduct = await productModel.findByIdAndUpdate(id, updatedData, {
-        new: true,
-        runValidators: true,
-    });
-
-    res.status(200).json({
-        message: "Product updated successfully",
-        product: updatedProduct,
-    });
+    res.status(200).json(productDetails);
 });
 
 
 
-// const deleteProduct = catchAsync(async (req, res, next) => {
-//     const { id } = req.params;
+const updateProduct = catchAsync(async (req, res, next) => {
 
-//     const product = await productModel.findByIdAndDelete(id);
+    const { productId, variantId } = req.query;
 
-//     if (!product) {
-//         return next(new AppError("Product not found", 404));
-//     }
+    const updateData = req.body;
 
-//     res.status(200).json({
-//         message: "Product deleted successfully",
-//     });
-// })
+    // Check if files are uploaded
+    if (req.files && req.files.length > 0) {
+        // Upload images to Cloudinary
+        const imageUploadPromises = req.files.map(file => uploadToCloudinary(file.buffer));
+        const imageUrls = await Promise.all(imageUploadPromises);
+        updateData.images = imageUrls; // Add image URLs to the update data
+    }
 
-const deleteProduct = deleteOne(productModel)
+    if (variantId) {
+        // Update specific variant
+        const variant = await Variant.findOneAndUpdate(
+            { _id: variantId, product: productId },
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        if (!variant) {
+            return next(new AppError('Variant not found or does not belong to the specified product', 404));
+        }
+
+        res.status(200).json({
+            message: 'Variant updated successfully',
+            variant,
+        });
+    } else {
+        // Check if the product has variants
+        const product = await Product.findById(productId).populate('variants');
+
+        if (!product) {
+            return next(new AppError('Product not found', 404));
+        }
+
+        if (product.variants && product.variants.length > 0) {
+            // Product has variants; prevent direct update
+            return next(new AppError('This product has variants. Please update the specific variant.', 400));
+        } else {
+            // No variants; proceed to update product directly
+            const updatedProduct = await Product.findByIdAndUpdate(
+                productId,
+                updateData,
+                { new: true, runValidators: true }
+            );
+
+            res.status(200).json({
+                message: 'Product updated successfully',
+                product: updatedProduct,
+            });
+        }
+    }
+});
+
+
+
+
+
+
+const deleteProduct = catchAsync(async (req, res, next) => {
+    const { productId, variantId } = req.query;
+
+    if (variantId) {
+        const variant = await Variant.findOneAndDelete({ _id: variantId, product: productId });
+
+        if (!variant) {
+            return next(new AppError('Variant not found or does not belong to the specified product', 404));
+        }
+        await productModel.findByIdAndUpdate(
+            productId,
+            { $pull: { variants: variantId } }
+        );
+        res.status(200).json({
+            message: 'Variant deleted successfully',
+        });
+    } else {
+        const product = await Product.findByIdAndDelete(productId);
+
+        if (!product) {
+            return next(new AppError('Product not found', 404));
+        }
+
+        await Variant.deleteMany({ product: productId });
+
+        res.status(200).json({
+            message: 'Product and its variants deleted successfully',
+        });
+    }
+});
+
 
 
 const getProductsByLabel = catchAsync(async (req, res, next) => {

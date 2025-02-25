@@ -2,6 +2,8 @@
 const categoryModel = require("../../model/categoryModel");
 const orderModel = require("../../model/orderModel");
 const productModel = require("../../model/productModel");
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 const groupProductsByLabel = () => {
     return new Promise(async (resolve, reject) => {
@@ -248,80 +250,137 @@ const getMonthlySalesReport = (startDate, endDate) => {
     });
 };
 
+
+
 const getDashBoardDetails = () => {
     return new Promise(async (resolve, reject) => {
         try {
             // Aggregation for total orders, total deliveries, and total revenue
             const orderStats = await orderModel.aggregate([
                 {
+                    $match: {
+                        isDeleted: false, // Exclude soft-deleted orders
+                    },
+                },
+                {
                     $group: {
                         _id: null,
                         totalOrders: { $sum: 1 },
                         totalDeliveries: {
-                            $sum: { $cond: [{ $eq: ["$status", "delivered"] }, 1, 0] }
+                            $sum: {
+                                $cond: [{ $eq: ['$status', 'delivered'] }, 1, 0],
+                            },
                         },
                         totalRevenue: {
                             $sum: {
-                                $cond: [{ $eq: ["$status", "delivered"] }, "$totalAmount", 0]
-                            }
-                        }
-                    }
-                }
+                                $cond: [{ $eq: ['$status', 'delivered'] }, '$totalAmount', 0],
+                            },
+                        },
+                    },
+                },
             ]);
 
             // Default values if no orders are found
-            const stats = orderStats.length > 0 ? orderStats[0] : {
-                totalOrders: 0,
-                totalDeliveries: 0,
-                totalRevenue: 0
-            };
+            const stats =
+                orderStats.length > 0
+                    ? orderStats[0]
+                    : {
+                        totalOrders: 0,
+                        totalDeliveries: 0,
+                        totalRevenue: 0,
+                    };
 
             // Aggregation for top 4 products based on order placements
             const topProducts = await orderModel.aggregate([
-                { $unwind: "$products" }, // Flatten product arrays in orders
+                { $unwind: '$products' }, // Flatten product arrays in orders
                 {
                     $group: {
-                        _id: "$products.productId",
-                        totalOrdered: { $sum: "$products.quantity" }
-                    }
+                        _id: '$products.productId',
+                        totalOrdered: { $sum: '$products.quantity' },
+                    },
                 },
                 { $sort: { totalOrdered: -1 } }, // Sort in descending order
                 { $limit: 4 }, // Get top 4 products
                 {
                     $lookup: {
-                        from: "products",
-                        localField: "_id",
-                        foreignField: "_id",
-                        as: "productDetails"
-                    }
+                        from: 'products',
+                        localField: '_id',
+                        foreignField: '_id',
+                        as: 'productDetails',
+                    },
                 },
-                { $unwind: "$productDetails" },
+                { $unwind: '$productDetails' },
                 {
-                    $project: {
-                        _id: 0,
-                        name: "$productDetails.productName",
-                        code: "$productDetails.productCode",
-                        image: "$productDetails.productImages",
-                        price: "$productDetails.originalPrice",
-                        totalOrdered: 1
-                    }
-                }
+                    $lookup: {
+                        from: 'variants',
+                        let: { productId: { $toObjectId: '$_id' } }, // Convert productId to ObjectId
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ['$product', '$$productId'] }
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                        as: 'variantDetails',
+                    },
+                },
+                {
+                    $addFields: {
+                        displayName: '$productDetails.name',
+                        displayImage: {
+                            $cond: {
+                                if: { $gt: [{ $size: '$variantDetails' }, 0] },
+                                then: { $arrayElemAt: ['$variantDetails.images', 0] },
+                                else: { $arrayElemAt: ['$productDetails.images', 0] },
+                            },
+                        },
+                        displayPrice: {
+                            $cond: {
+                                if: { $gt: [{ $size: '$variantDetails' }, 0] },
+                                then: { $arrayElemAt: ['$variantDetails.price', 0] },
+                                else: '$productDetails.price',
+                            },
+                        },
+                    },
+                },
+                {
+                  $project: {
+                    _id: 0,
+                    productId: '$_id',
+                    name: '$displayName',
+                    image: '$displayImage',
+                    price: '$displayPrice',
+                    totalOrdered: 1,
+                  },
+                },
             ]);
 
             // Return results in separate arrays
             resolve({
                 summary: [
-                    { data: "Total Orders", count: stats.totalOrders },
-                    { data: "Total Deliveries", count: stats.totalDeliveries },
-                    { data: "Total Revenue", count: `₹${stats.totalRevenue.toLocaleString()}` }
+                    { data: 'Total Orders', count: stats.totalOrders },
+                    { data: 'Total Deliveries', count: stats.totalDeliveries },
+                    {
+                        data: 'Total Revenue',
+                        count: `₹${stats.totalRevenue.toLocaleString()}`,
+                    },
                 ],
-                topProducts: topProducts
+                topProducts: topProducts,
             });
         } catch (error) {
             reject(error);
         }
     });
 };
+
+
+
+
+
 
 
 

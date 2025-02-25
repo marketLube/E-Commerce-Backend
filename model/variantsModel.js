@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const variantSchema = new Schema({
+    product: { type: Schema.Types.ObjectId, ref: 'Product' }, // Reference to parent Product
     sku: { type: String, required: true, unique: true },
     attributes: {
         color: { type: String },
@@ -15,4 +16,4 @@ const variantSchema = new Schema({
 }, { timestamps: true });
 
 const Variant = mongoose.model('Variant', variantSchema);
-module.exports = Variant
+module.exports = Variant;

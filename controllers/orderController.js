@@ -6,67 +6,92 @@ const orderModel = require("../model/orderModel");
 const productModel = require("../model/productModel");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
+// const placeOrder = catchAsync(async (req, res, next) => {
+//     const userId = req.user
+//     const { products, address, paymentMethod, transactionId } = req.body
+//     if (!products) {
+//         return next(new AppError("All fields are required", 400))
+//     }
+//     const productIds = products.map(p => new mongoose.Types.ObjectId(p.productId));
+//     const productDetails = await productModel.aggregate([
+//         { $match: { _id: { $in: productIds } } },
+//         {
+//             $project: {
+//                 name: 1,
+//                 offerPrice: 1,
+//                 stock: 1,
+//             }
+//         }
+//     ]);
+
+//     if (productDetails.length !== products.length) return next(new AppError("Invalid product selection", 400));
+
+
+//     let totalAmount = 0;
+//     const orderProducts = [];
+
+//     const bulkOperations = productDetails.map(product => {
+//         const item = products.find(p => p.productId === product._id.toString());
+
+//         if (!item) next(new AppError(`Product not found: ${product._id}`));
+//         if (product.quantity < item.quantity) next(new AppError(`Insufficient stock for ${product.name}`));
+
+//         totalAmount += product.offerPrice * item.quantity;
+//         orderProducts.push({ productId: product._id, quantity: item.quantity, price: product.offerPrice });
+
+//         // Reduce stock using bulk update
+//         return {
+//             updateOne: {
+//                 filter: { _id: product._id },
+//                 update: { $inc: { stock: -item.quantity } }
+//             }
+//         };
+//     });
+
+//     // Perform bulk stock update
+//     await productModel.bulkWrite(bulkOperations);
+
+
+
+//     const newOrder = new orderModel({
+//         userId,
+//         products: orderProducts,
+//         // address,
+//         totalAmount,
+//         // paymentDetails: {
+//         //     method: paymentMethod,
+//         //     status: paymentMethod === "cod" ? "pending" : "completed",
+//         // }
+//     })
+
+//     const orderPlaced = await newOrder.save()
+
+//     res.status(201).json({ message: "Order Placed", orderPlaced })
+
+// });
+
 const placeOrder = catchAsync(async (req, res, next) => {
-    const userId = req.user
-    const { products, address, paymentMethod, transactionId } = req.body
-    if (!products) {
-        return next(new AppError("All fields are required", 400))
-    }
-    const productIds = products.map(p => new mongoose.Types.ObjectId(p.productId));
-    const productDetails = await productModel.aggregate([
-        { $match: { _id: { $in: productIds } } },
-        {
-            $project: {
-                name: 1,
-                offerPrice: 1,
-                stock: 1,
-            }
-        }
-    ]);
 
-    if (productDetails.length !== products.length) return next(new AppError("Invalid product selection", 400));
+    const { userId, products } = req.body;
 
-
+    // Calculate total amount
     let totalAmount = 0;
-    const orderProducts = [];
-
-    const bulkOperations = productDetails.map(product => {
-        const item = products.find(p => p.productId === product._id.toString());
-
-        if (!item) next(new AppError(`Product not found: ${product._id}`));
-        if (product.quantity < item.quantity) next(new AppError(`Insufficient stock for ${product.name}`));
-
-        totalAmount += product.offerPrice * item.quantity;
-        orderProducts.push({ productId: product._id, quantity: item.quantity, price: product.offerPrice });
-
-        // Reduce stock using bulk update
-        return {
-            updateOne: {
-                filter: { _id: product._id },
-                update: { $inc: { stock: -item.quantity } }
-            }
-        };
+    products.forEach((item) => {
+        totalAmount += item.price * item.quantity;
     });
 
-    // Perform bulk stock update
-    await productModel.bulkWrite(bulkOperations);
-
-
-
     const newOrder = new orderModel({
-        userId,
-        products: orderProducts,
-        // address,
+        user: userId,
+        products,
         totalAmount,
-        // paymentDetails: {
-        //     method: paymentMethod,
-        //     status: paymentMethod === "cod" ? "pending" : "completed",
-        // }
-    })
+    });
 
-    const orderPlaced = await newOrder.save()
+    await newOrder.save();
 
-    res.status(201).json({ message: "Order Placed", orderPlaced })
+    res.status(201).json({
+        message: 'Order created successfully',
+        order: newOrder,
+    });
 
 });
 
