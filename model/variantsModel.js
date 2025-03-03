@@ -1,19 +1,37 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const variantSchema = new Schema({
-    product: { type: Schema.Types.ObjectId, ref: 'Product' }, // Reference to parent Product
-    sku: { type: String, required: true, unique: true },
-    attributes: {
-        color: { type: String },
-        size: { type: String },
-        // Add other attributes as needed
-    },
-    price: { type: Number, required: true },
-    offerPrice: { type: Number },
-    stock: { type: Number, required: true },
-    images: [String], // Array of image URLs or paths
-}, { timestamps: true });
+const variantSchema = new mongoose.Schema({
+  sku: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  offerPrice: {
+    type: Number,
+  },
+  stock: {
+    type: Number,
+    required: true,
+  },
+  stockStatus: {
+    type: String,
+    enum: ["instock", "outofstock"],
+    default: "instock",
+  },
+  attributes: {
+    title: String,
+    description: String,
+  },
+  images: [String],
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+  },
+});
 
-const Variant = mongoose.model('Variant', variantSchema);
+const Variant = mongoose.model("Variant", variantSchema);
 module.exports = Variant;

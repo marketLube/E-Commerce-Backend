@@ -1,5 +1,3 @@
-
-
 const mongoose = require("mongoose");
 const AppError = require("../utilities/errorHandlings/appError");
 const orderModel = require("../model/orderModel");
@@ -26,7 +24,6 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
 //     if (productDetails.length !== products.length) return next(new AppError("Invalid product selection", 400));
 
-
 //     let totalAmount = 0;
 //     const orderProducts = [];
 
@@ -51,8 +48,6 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 //     // Perform bulk stock update
 //     await productModel.bulkWrite(bulkOperations);
 
-
-
 //     const newOrder = new orderModel({
 //         userId,
 //         products: orderProducts,
@@ -71,199 +66,282 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 // });
 
 const placeOrder = catchAsync(async (req, res, next) => {
+  const { userId, products } = req.body;
 
-    const { userId, products } = req.body;
+  // Calculate total amount
+  let totalAmount = 0;
+  products.forEach((item) => {
+    totalAmount += item.price * item.quantity;
+  });
 
-    // Calculate total amount
-    let totalAmount = 0;
-    products.forEach((item) => {
-        totalAmount += item.price * item.quantity;
-    });
+  const newOrder = new orderModel({
+    user: userId,
+    products,
+    totalAmount,
+  });
 
-    const newOrder = new orderModel({
-        user: userId,
-        products,
-        totalAmount,
-    });
+  await newOrder.save();
 
-    await newOrder.save();
-
-    res.status(201).json({
-        message: 'Order created successfully',
-        order: newOrder,
-    });
-
+  res.status(201).json({
+    message: "Order created successfully",
+    order: newOrder,
+  });
 });
 
-
 const updateOrderStatus = catchAsync(async (req, res, next) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
 
-    const { orderId } = req.params;
-    const { status } = req.body;
+  // Validate the status
+  const validStatuses = [
+    "pending",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled",
+  ];
+  if (!validStatuses.includes(status)) {
+    return next(new AppError("Invalid status provided.", 400));
+  }
 
-    // Validate the status
-    const validStatuses = ["pending", "processing", "shipped", "delivered", "cancelled"];
-    if (!validStatuses.includes(status)) {
-        return next(new AppError("Invalid status provided.", 400))
-    }
+  const updatedOrder = await orderModel.findByIdAndUpdate(
+    orderId,
+    { status },
+    { new: true }
+  );
 
-    const updatedOrder = await orderModel.findByIdAndUpdate(
-        orderId,
-        { status },
-        { new: true }
-    );
+  if (!updatedOrder) {
+    return res.status(404).json({ message: "Order not found." });
+  }
 
-    if (!updatedOrder) {
-        return res.status(404).json({ message: "Order not found." });
-    }
-
-    return res.status(200).json({
-        message: "Order status updated successfully.",
-        order: updatedOrder,
-    });
-
+  return res.status(200).json({
+    message: "Order status updated successfully.",
+    order: updatedOrder,
+  });
 });
 
 const filterOrders = catchAsync(async (req, res, next) => {
-    const { status, startDate, endDate, category, userId } = req.query;
+  const { status, startDate, endDate, category, userId } = req.query;
 
-    let filterCriteria = {};
+  let filterCriteria = {};
 
+  if (status) {
+    filterCriteria.status = status;
+  }
 
-    if (status) {
-        filterCriteria.status = status;
-    }
+  if (userId) {
+    filterCriteria.userId = userId;
+  }
 
+  if (startDate || endDate) {
+    filterCriteria.createdAt = {};
+    if (startDate) filterCriteria.createdAt.$gte = new Date(startDate);
+    if (endDate) filterCriteria.createdAt.$lte = new Date(endDate);
+  }
 
-    if (userId) {
-        filterCriteria.userId = userId;
-    }
+  let orders;
+  if (category) {
+    const categoryId = new mongoose.Types.ObjectId(category);
+    orders = await orderModel.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      {
+        $match: {
+          "productDetails.category": categoryId,
+          ...filterCriteria,
+        },
+      },
+    ]);
+  } else {
+    orders = await orderModel
+      .find(filterCriteria)
+      .populate({
+        path: "products.productId",
+        populate: {
+          path: "category",
+          model: "Category",
+          select: "name description",
+        },
+      })
+      .populate("user", "username email phonenumber address");
+  }
 
+  if (orders.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No orders found matching the criteria." });
+  }
 
-    if (startDate || endDate) {
-        filterCriteria.createdAt = {};
-        if (startDate) filterCriteria.createdAt.$gte = new Date(startDate);
-        if (endDate) filterCriteria.createdAt.$lte = new Date(endDate);
-    }
-
-    // Filter by category (join with productModel)
-    let orders;
-    if (category) {
-        const categoryId = new mongoose.Types.ObjectId(category)
-        orders = await orderModel.aggregate([
-            {
-                $lookup: {
-                    from: "products",
-                    localField: "products.productId",
-                    foreignField: "_id",
-                    as: "productDetails",
-                },
-            },
-
-            {
-                $match: {
-                    "productDetails.category": categoryId,
-                    ...filterCriteria
-                },
-            },
-        ]);
-    } else {
-        orders = await orderModel.find(filterCriteria).populate("products.productId");
-    }
-
-    if (orders.length === 0) {
-        return res.status(404).json({ message: "No orders found matching the criteria." });
-    }
-
-    res.status(200).json({
-        message: "Filtered orders retrieved successfully.",
-        orders,
-    });
+  res.status(200).json({
+    message: "Filtered orders retrieved successfully.",
+    orders,
+  });
 });
 
 const getOrderById = catchAsync(async (req, res, next) => {
-    const { orderId } = req.params;
+  const { orderId } = req.params;
 
-    const order = await orderModel.findById(orderId).populate({
-        path: "products.productId",
-        populate: {
-            path: "category",
-            model: "Category",
-            select: "name description"
-        }
-    }).populate("userId", "username email");
+  const order = await orderModel
+    .findById(orderId)
+    .populate({
+      path: "products.productId",
+      populate: {
+        path: "category",
+        model: "Category",
+        select: "name description",
+      },
+    })
+    .populate("userId", "username email");
 
-    if (!order) {
-        return next(new AppError("Order not found", 404));
-    }
+  if (!order) {
+    return next(new AppError("Order not found", 404));
+  }
 
-    res.status(200).json({
-        message: "Order details retrieved successfully",
-        order,
-    });
+  res.status(200).json({
+    message: "Order details retrieved successfully",
+    order,
+  });
 });
-
-
 
 const getUserOrders = catchAsync(async (req, res, next) => {
-    const userId = req.user;
-    const orders = await orderModel.find({ userId }).populate({
-        path: "products.productId",
-        populate: {
-            path: "category",
-            model: "Category",
-            select: "name description"
-        }
-    });
+  const userId = req.user;
+  const orders = await orderModel.find({ userId }).populate({
+    path: "products.productId",
+    populate: {
+      path: "category",
+      model: "Category",
+      select: "name description",
+    },
+  });
 
-    if (!orders.length) {
-        return next(new AppError("No orders found for this user", 404));
-    }
+  if (!orders.length) {
+    return next(new AppError("No orders found for this user", 404));
+  }
 
-    res.status(200).json({
-        message: "User orders retrieved successfully",
-        orders,
-    });
+  res.status(200).json({
+    message: "User orders retrieved successfully",
+    orders,
+  });
 });
-
-
 
 const cancelOrder = catchAsync(async (req, res, next) => {
-    const { orderId } = req.params;
-    const userId = req.user;
+  const { orderId } = req.params;
+  const userId = req.user;
 
-    const order = await orderModel.findById(orderId);
+  const order = await orderModel.findById(orderId);
 
-    if (!order) {
-        return next(new AppError("Order not found", 404));
-    }
+  if (!order) {
+    return next(new AppError("Order not found", 404));
+  }
 
-    if (order.userId.toString() !== userId) {
-        return next(new AppError("You are not authorized to cancel this order", 403));
-    }
+  if (order.user.toString() !== userId) {
+    return next(
+      new AppError("You are not authorized to cancel this order", 403)
+    );
+  }
 
-    if (order.status !== "pending") {
-        return next(new AppError("Only pending orders can be cancelled", 400));
-    }
+  if (order.status !== "pending") {
+    return next(new AppError("Only pending orders can be cancelled", 400));
+  }
 
-    // Restore stock for cancelled order
-    const bulkOperations = order.products.map(product => ({
-        updateOne: {
-            filter: { _id: product.productId },
-            update: { $inc: { stock: product.quantity } }
-        }
-    }));
+  // Restore stock for cancelled order
+  const bulkOperations = order.products.map((product) => ({
+    updateOne: {
+      filter: { _id: product.productId },
+      update: { $inc: { stock: product.quantity } },
+    },
+  }));
 
-    await productModel.bulkWrite(bulkOperations);
+  await productModel.bulkWrite(bulkOperations);
 
-    order.status = "cancelled";
-    await order.save();
+  order.status = "cancelled";
+  await order.save();
 
-    res.status(200).json({
-        message: "Order cancelled successfully",
-        order,
-    });
+  res.status(200).json({
+    message: "Order cancelled successfully",
+    order,
+  });
 });
 
+// const getAllOrders = catchAsync(async (req, res, next) => {
+//   // Get page and limit from query params, set defaults if not provided
+//   const page = parseInt(req.query.page) || 1;
+//   const limit = parseInt(req.query.limit) || 10;
+//   const skip = (page - 1) * limit;
 
-module.exports = { placeOrder, updateOrderStatus, filterOrders, getOrderById, getUserOrders, cancelOrder };
+//   try {
+//     // Get total count for pagination
+//     const totalOrders = await orderModel.countDocuments();
+//     const totalPages = Math.ceil(totalOrders / limit);
+
+//     // Fetch orders with pagination and populate necessary fields
+//     const orders = await orderModel
+//       .find()
+//       .populate({
+//         path: "user",
+//         select: "username email phone", // Add the fields you want from user
+//       })
+//       .populate({
+//         path: "products.productId",
+//         select: "name images price offerPrice variant", // Add the fields you want from product
+//         populate: {
+//           path: "category",
+//           select: "name",
+//         },
+//       })
+//       .populate({
+//         path: "products.variantId",
+//       })
+//       .sort({ createdAt: -1 }) // Sort by newest first
+//       .skip(skip)
+//       .limit(limit);
+
+//     // Calculate pagination info
+//     const paginationInfo = {
+//       currentPage: page,
+//       totalPages,
+//       totalOrders,
+//       hasNextPage: page < totalPages,
+//       hasPrevPage: page > 1,
+//       nextPage: page < totalPages ? page + 1 : null,
+//       prevPage: page > 1 ? page - 1 : null,
+//       limit,
+//     };
+
+//     // Group orders by status for analytics
+//     const orderAnalytics = {
+//       total: totalOrders,
+//       completed: await orderModel.countDocuments({ status: "delivered" }),
+//       confirmed: await orderModel.countDocuments({ status: "processing" }),
+//       cancelled: await orderModel.countDocuments({ status: "cancelled" }),
+//       refunded: await orderModel.countDocuments({ status: "refunded" }),
+//     };
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Orders fetched successfully",
+//       data: {
+//         orders,
+//         pagination: paginationInfo,
+//         analytics: orderAnalytics,
+//       },
+//     });
+//   } catch (error) {
+//     return next(new AppError("Error fetching orders", 500));
+//   }
+// });
+
+module.exports = {
+  placeOrder,
+  updateOrderStatus,
+  filterOrders,
+  getOrderById,
+  getUserOrders,
+  cancelOrder,
+};
