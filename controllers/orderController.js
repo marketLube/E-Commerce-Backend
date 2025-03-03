@@ -92,6 +92,7 @@ const placeOrder = catchAsync(async (req, res, next) => {
 const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { orderId } = req.params;
   const { status, type } = req.body; // type can be 'order' or 'payment'
+  console.log(status, type);
 
   // Define valid statuses for both order and payment
   const validStatuses = {
@@ -102,9 +103,9 @@ const updateOrderStatus = catchAsync(async (req, res, next) => {
       "delivered",
       "cancelled",
       "refunded",
-      "onrefound",
+      "onrefund",
     ],
-    payment: ["pending", "paid", "failed", "refunded", "on-refund"],
+    payment: ["pending", "paid", "failed", "refunded", "onrefund"],
   };
 
   // Validate the status type

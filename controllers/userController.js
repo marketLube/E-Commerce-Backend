@@ -64,8 +64,36 @@ const userLogOut = catchAsync(async (req, res, next) => {
   });
 });
 
+const listUsers = catchAsync(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const [users, totalUsers] = await Promise.all([
+    NormalUser.find()
+      .skip(skip)
+      .limit(limit)
+      .select("username email phonenumber address createdAt isBlocked"),
+    NormalUser.countDocuments(),
+  ]);
+
+  const totalPages = Math.ceil(totalUsers / limit);
+
+  res.status(200).json({
+    users,
+    pagination: {
+      currentPage: page,
+      totalPages,
+      totalUsers,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+    },
+  });
+});
+
 module.exports = {
   register,
   login,
   userLogOut,
+  listUsers,
 };

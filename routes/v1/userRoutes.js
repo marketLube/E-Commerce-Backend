@@ -1,12 +1,15 @@
-const { register, login, userLogOut } = require('../../controllers/userController')
+const {
+  register,
+  login,
+  userLogOut,
+  listUsers,
+} = require("../../controllers/userController");
+const autheticateToken = require("../../middlewares/authMiddleware");
+const userRouter = require("express").Router();
 
-const userRouter = require('express').Router()
+userRouter.post("/register", register);
+userRouter.post("/login", login);
+userRouter.post("/logout", userLogOut);
+userRouter.get("/list", autheticateToken(["admin"]), listUsers);
 
-userRouter.post('/register', register)
-userRouter.post('/login', login)
-userRouter.post('/logout', userLogOut)
-
-
-
-
-module.exports = userRouter
+module.exports = userRouter;

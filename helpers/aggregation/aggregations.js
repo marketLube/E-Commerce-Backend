@@ -439,7 +439,7 @@ const getOrderStats = () => {
           },
           {
             pending: 0,
-            processing: 0,
+            processed: 0,
             shipped: 0,
             delivered: 0,
             onrefund: 0,
