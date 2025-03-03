@@ -19,12 +19,20 @@ const orderSchema = new Schema(
     totalAmount: { type: Number, required: true },
     status: {
       type: String,
-      enum: ["pending", "processed", "shipped", "delivered", "cancelled"],
+      enum: [
+        "pending",
+        "processed",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "refunded",
+        "on-refound",
+      ],
       default: "pending",
     },
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed", "refunded"],
+      enum: ["pending", "paid", "failed", "refunded", "onrefund"],
       default: "pending",
     },
     isDeleted: { type: Boolean, default: false },

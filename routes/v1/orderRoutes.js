@@ -5,6 +5,7 @@ const {
   getOrderById,
   getUserOrders,
   cancelOrder,
+  orderStats,
 } = require("../../controllers/orderController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 
@@ -20,6 +21,12 @@ orderRouter.get(
   "/get-orders",
   autheticateToken(["admin", "seller"]),
   filterOrders
+);
+
+orderRouter.get(
+  "/get-order-stats",
+  autheticateToken(["admin", "seller"]),
+  orderStats
 );
 orderRouter.get(
   "/get-order/:orderId",

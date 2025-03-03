@@ -117,10 +117,65 @@ const addProduct = catchAsync(async (req, res) => {
   });
 });
 
+const formatProductResponse = (product) => {
+  let hasVariants = false;
+  if (Array.isArray(product.variants) && product.variants.length > 0) {
+    hasVariants = true;
+  }
+  return {
+    _id: product._id,
+    name: product.name,
+    brand: product.brand
+      ? {
+          _id: product.brand._id,
+          name: product.brand.name,
+          createdAt: product.brand.createdAt,
+          updatedAt: product.brand.updatedAt,
+        }
+      : null,
+    category: product.category
+      ? {
+          _id: product.category._id,
+          name: product.category.name,
+          description: product.category.description,
+        }
+      : null,
+    description: product.description,
+    hasVariants: hasVariants,
+    sku: hasVariants ? product.variants[0].sku : product.sku,
+    price: hasVariants ? product.variants[0].price : product.price,
+    offerPrice: hasVariants
+      ? product.variants[0].offerPrice
+      : product.offerPrice,
+    stock: hasVariants ? product.variants[0].stock : product.stock,
+    mainImage:
+      hasVariants &&
+      Array.isArray(product.variants[0].images) &&
+      product.variants[0].images.length > 0
+        ? product.variants[0].images[0]
+        : Array.isArray(product.images) && product.images.length > 0
+        ? product.images[0]
+        : null,
+    createdBy: product.createdBy
+      ? {
+          _id: product.createdBy._id,
+          username: product.createdBy.username,
+          email: product.createdBy.email,
+          role: product.createdBy.role,
+        }
+      : null,
+    label: product.label,
+    averageRating: product.averageRating,
+    totalRatings: product.totalRatings,
+    createdAt: product.createdAt,
+    updatedAt: product.updatedAt,
+  };
+};
+
 const listProducts = catchAsync(async (req, res, next) => {
   let { page, limit } = req.query;
   page = parseInt(page) || 1;
-  limit = parseInt(limit) || 3;
+  limit = parseInt(limit) || 10;
 
   const skip = (page - 1) * limit;
 
@@ -128,9 +183,10 @@ const listProducts = catchAsync(async (req, res, next) => {
     .skip(skip)
     .limit(limit)
     .populate("brand")
+    .populate("variants")
     .populate("category", "name description")
-    .populate("createdBy", "username email role")
-    .populate("variants");
+    .populate("createdBy", "username email role");
+
   const countPromise = Product.countDocuments();
 
   const [products, totalProducts] = await Promise.all([
@@ -138,15 +194,14 @@ const listProducts = catchAsync(async (req, res, next) => {
     countPromise,
   ]);
 
-  // Calculate total pages
-  const totalPages = Math.ceil(totalProducts / limit);
+  const formattedProducts = products.map(formatProductResponse);
 
   res.status(200).json({
     success: true,
     data: {
-      products,
+      products: formattedProducts,
       totalProducts,
-      totalPages,
+      totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,
     },
   });
@@ -291,37 +346,35 @@ const getGroupedProductsByRating = catchAsync(async (req, res, next) => {
 });
 
 const searchProducts = catchAsync(async (req, res, next) => {
-  let { keyword, category, minPrice, maxPrice, sortBy, page, limit } =
-    req.query;
+  let { keyword, page, limit } = req.query;
 
   page = parseInt(page) || 1;
-  limit = parseInt(limit) || 10;
+  limit = parseInt(limit) || 3;
+
   const skip = (page - 1) * limit;
 
-  const query = {};
-  if (keyword) query.productName = { $regex: keyword, $options: "i" };
-  if (category) query.category = category;
-  if (minPrice || maxPrice) {
-    query.originalPrice = {};
-    if (minPrice) query.originalPrice.$gte = parseFloat(minPrice);
-    if (maxPrice) query.originalPrice.$lte = parseFloat(maxPrice);
-  }
+  const query = keyword ? { name: { $regex: keyword, $options: "i" } } : {};
 
-  let sortOption = {};
-  if (sortBy === "priceAsc") sortOption.originalPrice = 1;
-  if (sortBy === "priceDesc") sortOption.originalPrice = -1;
-
-  const products = await productModel
-    .find(query)
+  const productsPromise = Product.find(query)
     .skip(skip)
     .limit(limit)
-    .sort(sortOption);
-  const totalProducts = await productModel.countDocuments(query);
+    .populate("brand")
+    .populate("category", "name description")
+    .populate("createdBy", "username email role");
+
+  const countPromise = Product.countDocuments(query);
+
+  const [products, totalProducts] = await Promise.all([
+    productsPromise,
+    countPromise,
+  ]);
+
+  const formattedProducts = products.map(formatProductResponse);
 
   res.status(200).json({
     success: true,
     data: {
-      products,
+      products: formattedProducts,
       totalProducts,
       totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,

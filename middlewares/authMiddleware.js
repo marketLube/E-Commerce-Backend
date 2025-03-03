@@ -36,7 +36,6 @@ const autheticateToken = (allowedRoles) => {
         return next(new AppError("Authentication token not found", 401));
       }
 
-      console.log(token);
       // Verify the token
       const verifiedToken = jwt.verify(token, process.env.JWT_SECRETE);
       if (!verifiedToken) {

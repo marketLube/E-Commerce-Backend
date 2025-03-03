@@ -3,6 +3,7 @@ const AppError = require("../utilities/errorHandlings/appError");
 const orderModel = require("../model/orderModel");
 const productModel = require("../model/productModel");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
+const { getOrderStats } = require("../helpers/aggregation/aggregations");
 
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
@@ -90,47 +91,74 @@ const placeOrder = catchAsync(async (req, res, next) => {
 
 const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { orderId } = req.params;
-  const { status } = req.body;
+  const { status, type } = req.body; // type can be 'order' or 'payment'
 
-  // Validate the status
-  const validStatuses = [
-    "pending",
-    "processing",
-    "shipped",
-    "delivered",
-    "cancelled",
-  ];
-  if (!validStatuses.includes(status)) {
-    return next(new AppError("Invalid status provided.", 400));
+  // Define valid statuses for both order and payment
+  const validStatuses = {
+    order: [
+      "pending",
+      "processed",
+      "shipped",
+      "delivered",
+      "cancelled",
+      "refunded",
+      "onrefound",
+    ],
+    payment: ["pending", "paid", "failed", "refunded", "on-refund"],
+  };
+
+  // Validate the status type
+  if (!type || !["order", "payment"].includes(type)) {
+    return next(
+      new AppError("Invalid status type. Must be 'order' or 'payment'.", 400)
+    );
   }
 
-  const updatedOrder = await orderModel.findByIdAndUpdate(
-    orderId,
-    { status },
-    { new: true }
-  );
+  // Validate the status value
+  if (!validStatuses[type].includes(status)) {
+    return next(
+      new AppError(
+        `Invalid ${type} status provided. Valid statuses are: ${validStatuses[
+          type
+        ].join(", ")}`,
+        400
+      )
+    );
+  }
+
+  // Create update object based on type
+  const updateField = type === "order" ? { status } : { paymentStatus: status };
+
+  const updatedOrder = await orderModel
+    .findByIdAndUpdate(orderId, updateField, { new: true })
+    .populate({
+      path: "products.productId",
+      select: "name images price category",
+      populate: {
+        path: "category",
+        select: "name",
+      },
+    })
+    .populate("user", "username phonenumber address");
 
   if (!updatedOrder) {
-    return res.status(404).json({ message: "Order not found." });
+    return next(new AppError("Order not found.", 404));
   }
 
   return res.status(200).json({
-    message: "Order status updated successfully.",
+    success: true,
+    message: `Order ${type} status updated successfully.`,
     order: updatedOrder,
   });
 });
 
 const filterOrders = catchAsync(async (req, res, next) => {
-  const { status, startDate, endDate, category, userId } = req.query;
+  const { status, startDate, endDate, category } = req.query;
 
   let filterCriteria = {};
 
   if (status) {
     filterCriteria.status = status;
-  }
-
-  if (userId) {
-    filterCriteria.userId = userId;
   }
 
   if (startDate || endDate) {
@@ -139,37 +167,25 @@ const filterOrders = catchAsync(async (req, res, next) => {
     if (endDate) filterCriteria.createdAt.$lte = new Date(endDate);
   }
 
-  let orders;
+  let orders = await orderModel
+    .find(filterCriteria)
+    .populate({
+      path: "products.productId",
+      select: "name images price category",
+      populate: {
+        path: "category",
+        select: "name",
+      },
+    })
+    .populate("user", "username phonenumber address")
+    .sort({ createdAt: -1 });
+
   if (category) {
-    const categoryId = new mongoose.Types.ObjectId(category);
-    orders = await orderModel.aggregate([
-      {
-        $lookup: {
-          from: "products",
-          localField: "products.productId",
-          foreignField: "_id",
-          as: "productDetails",
-        },
-      },
-      {
-        $match: {
-          "productDetails.category": categoryId,
-          ...filterCriteria,
-        },
-      },
-    ]);
-  } else {
-    orders = await orderModel
-      .find(filterCriteria)
-      .populate({
-        path: "products.productId",
-        populate: {
-          path: "category",
-          model: "Category",
-          select: "name description",
-        },
-      })
-      .populate("user", "username email phonenumber address");
+    orders = orders.filter((order) =>
+      order.products.some(
+        (product) => product.productId?.category?._id.toString() === category
+      )
+    );
   }
 
   if (orders.length === 0) {
@@ -179,7 +195,7 @@ const filterOrders = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).json({
-    message: "Filtered orders retrieved successfully.",
+    message: "Orders retrieved successfully",
     orders,
   });
 });
@@ -337,6 +353,14 @@ const cancelOrder = catchAsync(async (req, res, next) => {
 //   }
 // });
 
+const orderStats = catchAsync(async (req, res, next) => {
+  const stats = await getOrderStats();
+  res.status(200).json({
+    message: "Order statistics retrieved successfully",
+    stats,
+  });
+});
+
 module.exports = {
   placeOrder,
   updateOrderStatus,
@@ -344,4 +368,5 @@ module.exports = {
   getOrderById,
   getUserOrders,
   cancelOrder,
+  orderStats,
 };
