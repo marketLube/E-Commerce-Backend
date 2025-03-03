@@ -23,6 +23,7 @@ app.use(
       "http://localhost:5173",
       process.env.FRONTEND_URL,
       "https://milistore-marketlubes-projects.vercel.app",
+      "https://millstore.marketlube.in",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
