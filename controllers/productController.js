@@ -180,6 +180,7 @@ const listProducts = catchAsync(async (req, res, next) => {
   const skip = (page - 1) * limit;
 
   const productsPromise = Product.find()
+    .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit)
     .populate("brand")

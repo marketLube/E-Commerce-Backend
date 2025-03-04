@@ -91,9 +91,37 @@ const listUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+const searchUser = catchAsync(async (req, res, next) => {
+  const { search } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+  const users = await NormalUser.find({
+    $or: [
+      { username: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+      { phonenumber: { $regex: search, $options: "i" } },
+    ],
+  });
+  const totalUsers = users.length;
+  const totalPages = Math.ceil(totalUsers / limit);
+
+  res.status(200).json({
+    users,
+    pagination: {
+      currentPage: page,
+      totalPages,
+      totalUsers,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+    },
+  });
+});
+
 module.exports = {
   register,
   login,
   userLogOut,
   listUsers,
+  searchUser,
 };
