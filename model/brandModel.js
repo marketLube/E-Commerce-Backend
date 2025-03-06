@@ -1,13 +1,13 @@
 // models/brandModel.js
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const brandSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Brand name is required"],
       unique: true,
       trim: true,
     },
@@ -18,9 +18,13 @@ const brandSchema = new Schema(
     logoUrl: {
       type: String,
     },
+    image: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );
 
-const Brand = mongoose.model('Brand', brandSchema);
+const Brand = mongoose.model("Brand", brandSchema);
 module.exports = Brand;

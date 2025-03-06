@@ -1,16 +1,29 @@
 const Brand = require("../model/brandModel");
+const uploadToCloudinary = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
+// const { saveImage } = require("../utilities/imageUpload"); // Use the same helper from categories
+const fs = require("fs");
+const path = require("path");
 
 // Create a new brand
 const createBrand = catchAsync(async (req, res, next) => {
-  const { name, description, logoUrl } = req.body;
+  const { name, description } = req.body;
 
   if (!name) {
-    return next(new AppError("All fields are reqiured", 400));
+    return next(new AppError("Brand name is required", 400));
   }
 
-  const newBrand = await Brand.create({ name, description, logoUrl });
+  const brandData = { name, description };
+
+  // Handle image upload
+  if (req.files && req.files.length > 0) {
+    const imageFile = req.files[0];
+    const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+    brandData.image = uploadedImage;
+  }
+
+  const newBrand = await Brand.create(brandData);
 
   res.status(201).json({
     status: "success",
@@ -51,42 +64,59 @@ const getBrandById = catchAsync(async (req, res, next) => {
   });
 });
 
-// Update a brand by ID
+// Update brand with image handling
 const updateBrand = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const { name, description, logoUrl } = req.body;
+  const { name, description } = req.body;
 
-  const updatedBrand = await Brand.findByIdAndUpdate(
-    id,
-    { name, description, logoUrl },
-    { new: true, runValidators: true }
-  );
-
-  if (!updatedBrand) {
-    return next(new AppError("Brand not found", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      brand: updatedBrand,
-    },
-  });
-});
-
-// Delete a brand by ID
-const deleteBrand = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const brand = await Brand.findByIdAndDelete(id);
-
+  const brand = await Brand.findById(id);
   if (!brand) {
     return next(new AppError("Brand not found", 404));
   }
 
-  res.status(204).json({
+  if (req.files && req.files.length > 0) {
+    // Delete old image if exists
+
+    const imageFile = req.files[0];
+    const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+    brand.image = uploadedImage;
+  }
+
+  brand.name = name || brand.name;
+  brand.description = description || brand.description;
+
+  await brand.save();
+
+  res.status(200).json({
     status: "success",
-    data: null,
+    data: {
+      brand: brand,
+    },
+  });
+});
+
+// Delete brand with image cleanup
+const deleteBrand = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const brand = await Brand.findById(id);
+  if (!brand) {
+    return next(new AppError("Brand not found", 404));
+  }
+
+  // Delete associated image if exists
+  if (brand.image) {
+    const imagePath = path.join("public", brand.image);
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
+  }
+
+  await brand.deleteOne();
+
+  res.status(200).json({
+    status: "success",
+    message: "Brand deleted successfully",
   });
 });
 

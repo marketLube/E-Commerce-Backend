@@ -5,12 +5,19 @@ const {
   editCategory,
   removeOfferFromCategory,
   searchCategory,
+  deleteCategory,
 } = require("../../controllers/categoryController");
 const autheticateToken = require("../../middlewares/authMiddleware");
+const upload = require("../../middlewares/multer");
 
 const categoryRouter = require("express").Router();
 
-categoryRouter.post("/addcategory", autheticateToken(["admin"]), addCategory);
+categoryRouter.post(
+  "/addcategory",
+  autheticateToken(["admin"]),
+  upload.any(),
+  addCategory
+);
 categoryRouter.get("/allcategories", getAllCategories);
 categoryRouter.patch(
   "/addoffer/:categoryId",
@@ -20,6 +27,7 @@ categoryRouter.patch(
 categoryRouter.patch(
   "/editcategory/:categoryId",
   autheticateToken(["admin"]),
+  upload.any(),
   editCategory
 );
 categoryRouter.patch(
@@ -28,5 +36,10 @@ categoryRouter.patch(
   removeOfferFromCategory
 );
 categoryRouter.get("/search", searchCategory);
+categoryRouter.delete(
+  "/deletecategory/:categoryId",
+  autheticateToken(["admin"]),
+  deleteCategory
+);
 
 module.exports = categoryRouter;
