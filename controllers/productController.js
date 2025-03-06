@@ -15,6 +15,7 @@ const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
 const addProduct = catchAsync(async (req, res) => {
+  console.log(req.body);
   const {
     name,
     brand,
@@ -38,20 +39,31 @@ const addProduct = catchAsync(async (req, res) => {
     const { fieldname } = file;
 
     if (fieldname.startsWith("productImages")) {
+      const imageIndex = parseInt(fieldname.match(/\[(\d+)\]/)[1]);
       const imageUrl = await uploadToCloudinary(file.buffer);
-      productImages.push(imageUrl);
+
+      productImages[imageIndex] = imageUrl;
     } else if (fieldname.startsWith("variants")) {
-      const match = fieldname.match(/variants\[(\d+)\]\[images\]/);
+      const match = fieldname.match(/variants\[(\d+)\]\[images\]\[(\d+)\]/);
       if (match) {
         const variantIndex = match[1];
+        const imageIndex = parseInt(match[2]);
+
         if (!variantImagesMap[variantIndex]) {
           variantImagesMap[variantIndex] = [];
         }
         const imageUrl = await uploadToCloudinary(file.buffer);
-        variantImagesMap[variantIndex].push(imageUrl);
+        variantImagesMap[variantIndex][imageIndex] = imageUrl;
       }
     }
   }
+
+  // Clean up variant images
+  Object.keys(variantImagesMap).forEach((variantIndex) => {
+    variantImagesMap[variantIndex] = variantImagesMap[variantIndex].filter(
+      (img) => img
+    );
+  });
 
   // Prepare product data
   const productData = {
@@ -67,9 +79,7 @@ const addProduct = catchAsync(async (req, res) => {
 
   if (variantsArray && variantsArray.length > 0) {
     // Parse the variants from strings to objects
-    const parsedVariants = variantsArray.map((variantStr) =>
-      JSON.parse(variantStr)
-    );
+    const parsedVariants = variantsArray;
 
     // Create variants with proper data structure
     const variantIds = await Promise.all(
@@ -214,7 +224,9 @@ const getProductDetails = catchAsync(async (req, res, next) => {
   const productDetails = await Product.findById(productId)
     .populate("category")
     .populate("createdBy", "username email role")
-    .populate("variants");
+    .populate("variants")
+    .populate("brand")
+    .populate("label");
   if (!productDetails) {
     return next(new AppError("Product not found", 404));
   }
@@ -223,71 +235,100 @@ const getProductDetails = catchAsync(async (req, res, next) => {
 });
 
 const updateProduct = catchAsync(async (req, res, next) => {
-  const { productId, variantId } = req.query;
-
+  const { productId } = req.query;
   const updateData = req.body;
+  03;
+  const product = await Product.findById(productId).populate("variants");
 
-  // Check if files are uploaded
+  if (!product) {
+    return next(new AppError("Product not found", 404));
+  }
+
+  const variantImagesMap = {};
   if (req.files && req.files.length > 0) {
-    // Upload images to Cloudinary
-    const imageUploadPromises = req.files.map((file) =>
-      uploadToCloudinary(file.buffer)
-    );
-    const imageUrls = await Promise.all(imageUploadPromises);
-    updateData.images = imageUrls; // Add image URLs to the update data
-  }
+    for (const file of req.files) {
+      const { fieldname } = file;
 
-  if (variantId) {
-    // Update specific variant
-    const variant = await Variant.findOneAndUpdate(
-      { _id: variantId, product: productId },
-      updateData,
-      { new: true, runValidators: true }
-    );
+      if (fieldname.startsWith("productImages")) {
+        const imageIndex = parseInt(fieldname.match(/\[(\d+)\]/)[1]);
+        const imageUrl = await uploadToCloudinary(file.buffer);
+        if (!updateData.images) updateData.images = [...product.images];
+        updateData.images[imageIndex] = imageUrl;
+      } else if (fieldname.startsWith("variants")) {
+        const match = fieldname.match(/variants\[(\d+)\]\[images\]\[(\d+)\]/);
+        if (match) {
+          const variantIndex = match[1];
+          const imageIndex = parseInt(match[2]);
 
-    if (!variant) {
-      return next(
-        new AppError(
-          "Variant not found or does not belong to the specified product",
-          404
-        )
-      );
-    }
-
-    res.status(200).json({
-      message: "Variant updated successfully",
-      variant,
-    });
-  } else {
-    // Check if the product has variants
-    const product = await Product.findById(productId).populate("variants");
-
-    if (!product) {
-      return next(new AppError("Product not found", 404));
-    }
-
-    if (product.variants && product.variants.length > 0) {
-      // Product has variants; prevent direct update
-      return next(
-        new AppError(
-          "This product has variants. Please update the specific variant.",
-          400
-        )
-      );
-    } else {
-      // No variants; proceed to update product directly
-      const updatedProduct = await Product.findByIdAndUpdate(
-        productId,
-        updateData,
-        { new: true, runValidators: true }
-      );
-
-      res.status(200).json({
-        message: "Product updated successfully",
-        product: updatedProduct,
-      });
+          if (!variantImagesMap[variantIndex]) {
+            // Initialize with existing images if it's an existing variant
+            const existingVariant = product.variants[variantIndex];
+            variantImagesMap[variantIndex] = existingVariant
+              ? [...existingVariant.images]
+              : [];
+          }
+          const imageUrl = await uploadToCloudinary(file.buffer);
+          variantImagesMap[variantIndex][imageIndex] = imageUrl;
+        }
+      }
     }
   }
+
+  let variantIds = [];
+  let newVariants = [];
+  if (updateData.variants) {
+    // Use Promise.all to handle async operations properly
+    await Promise.all(
+      updateData.variants.map(async (variant, index) => {
+        if (variant._id) {
+          variantIds.push(variant._id);
+          const variantId = variant._id;
+          delete variant._id;
+
+          // Update existing variant with new images if any
+          if (variantImagesMap[index]) {
+            variant.images = variantImagesMap[index].filter((img) => img);
+          }
+
+          await Variant.findByIdAndUpdate(variantId, variant, {
+            new: true,
+            runValidators: true,
+          });
+        } else {
+          // For new variants
+          variant.product = productId;
+          // Add images from variantImagesMap if any
+          if (variantImagesMap[index]) {
+            variant.images = variantImagesMap[index].filter((img) => img);
+          }
+          newVariants.push(variant);
+        }
+      })
+    );
+  }
+
+  // Create new variants
+  const newVariantIds = await Promise.all(
+    newVariants.map(async (variant) => {
+      const newVariant = new Variant(variant);
+      await newVariant.save();
+      return newVariant._id;
+    })
+  );
+
+  const updatedProduct = await Product.findByIdAndUpdate(
+    productId,
+    {
+      ...updateData,
+      variants: [...variantIds, ...newVariantIds],
+    },
+    { new: true, runValidators: true }
+  );
+
+  res.status(200).json({
+    message: "Product updated successfully",
+    product: updatedProduct,
+  });
 });
 
 const deleteProduct = catchAsync(async (req, res, next) => {

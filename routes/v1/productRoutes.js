@@ -31,6 +31,7 @@ productRouter.post(
 productRouter.patch(
   "/update-product",
   autheticateToken(["admin", "seller"]),
+  upload.any(),
   updateProduct
 );
 
