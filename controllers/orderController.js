@@ -4,6 +4,7 @@ const orderModel = require("../model/orderModel");
 const productModel = require("../model/productModel");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const { getOrderStats } = require("../helpers/aggregation/aggregations");
+const Variant = require("../model/variantsModel");
 
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
@@ -69,23 +70,118 @@ const { getOrderStats } = require("../helpers/aggregation/aggregations");
 const placeOrder = catchAsync(async (req, res, next) => {
   const { userId, products } = req.body;
 
-  // Calculate total amount
-  let totalAmount = 0;
-  products.forEach((item) => {
-    totalAmount += item.price * item.quantity;
-  });
+  // Validate products array
+  if (!products || !Array.isArray(products) || products.length === 0) {
+    return next(new AppError("No products in order", 400));
+  }
 
-  const newOrder = new orderModel({
+  // Validate and process each product
+  let totalAmount = 0;
+  const validatedProducts = [];
+
+  for (const item of products) {
+    const product = await productModel
+      .findById(item.productId)
+      .populate("variants");
+
+    if (!product) {
+      return next(new AppError(`Product not found: ${item.productId}`, 404));
+    }
+
+    let price;
+    let stock;
+
+    // Check if it's a variant product
+    if (item.variantId) {
+      // Find the variant in the product's variants array
+      const variant = product.variants.find(
+        (v) => v._id.toString() === item.variantId.toString()
+      );
+
+      if (!variant) {
+        return next(new AppError(`Variant not found: ${item.variantId}`, 404));
+      }
+
+      // Check variant stock
+      if (variant.stock < item.quantity) {
+        return next(
+          new AppError(
+            `Insufficient stock for variant ${variant.attributes.title} of ${product.name}`,
+            400
+          )
+        );
+      }
+
+      price = variant.offerPrice || variant.price;
+      stock = variant.stock;
+
+      // Update variant stock
+      await Variant.findByIdAndUpdate(variant._id, {
+        $inc: { stock: -item.quantity },
+      });
+    } else {
+      // Regular product without variants
+      if (product.stock < item.quantity) {
+        return next(
+          new AppError(`Insufficient stock for product ${product.name}`, 400)
+        );
+      }
+
+      price = product.offerPrice || product.price;
+      stock = product.stock;
+
+      // Update product stock
+      await productModel.findByIdAndUpdate(product._id, {
+        $inc: { stock: -item.quantity },
+      });
+    }
+
+    // Calculate item total
+    const itemTotal = price * item.quantity;
+    totalAmount += itemTotal;
+
+    validatedProducts.push({
+      productId: product._id,
+      variantId: item.variantId || null,
+      quantity: item.quantity,
+      price: price,
+    });
+  }
+
+  // Create the order
+  const newOrder = await orderModel.create({
     user: userId,
-    products,
+    products: validatedProducts,
     totalAmount,
   });
 
-  await newOrder.save();
+  // Populate the order with correct paths and models
+  const populatedOrder = await orderModel
+    .findById(newOrder._id)
+    .populate({
+      path: "products.productId",
+      model: "Product",
+      select: "name images brand category",
+    })
+    .populate({
+      path: "products.variantId",
+      model: "Variant",
+      select: "attributes images price offerPrice stock",
+    })
+    .populate({
+      path: "user",
+      model: "User",
+      select: "name email",
+    });
+
+  if (!populatedOrder) {
+    return next(new AppError("Error creating order", 400));
+  }
 
   res.status(201).json({
-    message: "Order created successfully",
-    order: newOrder,
+    success: true,
+    message: "Order placed successfully",
+    order: populatedOrder,
   });
 });
 
@@ -178,6 +274,11 @@ const filterOrders = catchAsync(async (req, res, next) => {
         select: "name",
       },
     })
+    .populate({
+      path: "products.variantId",
+      model: "Variant",
+      select: "attributes stock images",
+    })
     .populate("user", "username phonenumber address")
     .sort({ createdAt: -1 });
 
@@ -213,6 +314,11 @@ const getOrderById = catchAsync(async (req, res, next) => {
         model: "Category",
         select: "name description",
       },
+    })
+    .populate({
+      path: "products.variantId",
+      model: "Variant",
+      select: "attributes stock images",
     })
     .populate("userId", "username email");
 
