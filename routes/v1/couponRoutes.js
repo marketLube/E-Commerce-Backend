@@ -6,6 +6,7 @@ const {
   removeCoupon,
   searchCoupon,
   getAllCoupons,
+  removeCouponFromCart,
 } = require("../../controllers/couponController");
 const authenticateToken = require("../../middlewares/authMiddleware");
 
@@ -14,6 +15,7 @@ couponRouter.route("/search").get(searchCoupon);
 couponRouter
   .route("/")
   .post(authenticateToken(["admin"]), createCoupon)
+  .patch(authenticateToken(["user"]), removeCouponFromCart)
   .get(getAllCoupons);
 couponRouter
   .route("/:id")

@@ -67,7 +67,6 @@ const getAllReviews = catchAsync(async (req, res) => {
   const reviews = await Rating.find()
     .populate("userId", "username email")
     .populate("productId", "name");
-  console.log(reviews);
   res.status(200).json({ reviews });
 });
 

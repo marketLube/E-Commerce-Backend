@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 
 const addCategory = catchAsync(async (req, res, next) => {
   const { name, description, offer, parent } = req.body;
-  console.log(req.files);
 
   if (!name || !description) {
     return next(new AppError("All fields are required", 400));
@@ -103,7 +102,6 @@ const updateCategoryOffer = catchAsync(async (req, res, next) => {
 const editCategory = catchAsync(async (req, res, next) => {
   const { categoryId } = req.params;
   const { name, description, offer, parent } = req.body;
-  console.log(req.files);
 
   const category = await Category.findById(categoryId);
   if (!category) {
@@ -115,7 +113,6 @@ const editCategory = catchAsync(async (req, res, next) => {
   if (description) category.description = description;
   if (req.files[0]) {
     const uploadedImage = await uploadToCloudinary(req.files[0].buffer);
-    console.log(uploadedImage);
     category.image = uploadedImage;
   }
 

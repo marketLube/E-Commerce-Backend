@@ -104,10 +104,8 @@ const addToCart = catchAsync(async (req, res, next) => {
 });
 
 const removeFromCart = catchAsync(async (req, res, next) => {
-  console.log(req.body, "body");
   const { productId, variantId } = req.body;
   const userId = req.user;
-  console.log(userId);
 
   let cart = await cartModel.findOne({ user: userId });
   if (!cart) {
@@ -191,6 +189,10 @@ const getCart = catchAsync(async (req, res, next) => {
     .populate({
       path: "items.variant",
       select: "sku price offerPrice stock stockStatus attributes images",
+    })
+    .populate({
+      path: "couponApplied.couponId",
+      select: "code discountType description",
     });
 
   if (!cart) {
@@ -198,14 +200,30 @@ const getCart = catchAsync(async (req, res, next) => {
   }
 
   const formattedCart = formatCartResponse(cart);
-  const finalAmount = cart.couponApplied
-    ? cart.couponApplied.finalAmount
-    : cart.totalPrice;
+
+  // Add coupon details to the response if a coupon is applied
+  let responseData = { formattedCart };
+
+  if (cart.couponApplied) {
+    responseData.couponDetails = {
+      _id: cart?.couponApplied?.couponId?._id,
+      code: cart?.couponApplied?.couponId?.code,
+      discountType: cart?.couponApplied?.discountType,
+      originalAmount: cart?.couponApplied?.originalAmount,
+      discountAmount: cart?.couponApplied?.discountAmount,
+      finalAmount: cart?.couponApplied?.finalAmount,
+      savings: cart?.couponApplied?.discountAmount,
+      description: cart?.couponApplied?.couponId?.description,
+    };
+    responseData.finalAmount = cart?.couponApplied?.finalAmount;
+  } else {
+    responseData.finalAmount = cart?.totalPrice;
+  }
 
   res.status(200).json({
     success: true,
     message: "Cart retrieved successfully",
-    data: { formattedCart, finalAmount },
+    data: responseData,
   });
 });
 

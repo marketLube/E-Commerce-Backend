@@ -189,7 +189,6 @@ const placeOrder = catchAsync(async (req, res, next) => {
 const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { orderId } = req.params;
   const { status, type } = req.body; // type can be 'order' or 'payment'
-  console.log(status, type);
 
   // Define valid statuses for both order and payment
   const validStatuses = {

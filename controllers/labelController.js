@@ -21,7 +21,6 @@ const addLabel = catchAsync(async (req, res, next) => {
 const getLabels = getAll(LabelModel);
 
 const editLabel = catchAsync(async (req, res, next) => {
-  console.log(req.body, "req.body");
   const { id } = req.params;
   const { name } = req.body;
 

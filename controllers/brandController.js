@@ -121,7 +121,6 @@ const deleteBrand = catchAsync(async (req, res, next) => {
 });
 
 const searchBrand = catchAsync(async (req, res, next) => {
-  console.log(req.query, "clled");
   const { q } = req.query;
   const brands = await Brand.find({ name: { $regex: q, $options: "i" } });
   res.status(200).json({ brands });

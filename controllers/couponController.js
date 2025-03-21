@@ -79,7 +79,10 @@ const removeCoupon = catchAsync(async (req, res) => {
 });
 
 const getAllCoupons = catchAsync(async (req, res) => {
-  const coupons = await Coupon.find();
+  const coupons = await Coupon.find({
+    isActive: true,
+    expiryDate: { $gt: new Date() },
+  });
   res.status(200).json({ coupons });
 });
 
@@ -175,13 +178,30 @@ const applyCoupon = catchAsync(async (req, res, next) => {
 });
 
 const removeCouponFromCart = catchAsync(async (req, res, next) => {
+
   const userId = req.user;
 
-  // Find the cart
-  const cart = await Cart.findOne({ user: userId });
+  // Find the cart and populate necessary fields
+  const cart = await Cart.findOne({ user: userId })
+    .populate({
+      path: "items.product",
+      select: "name description images brand category",
+      populate: [
+        { path: "brand", select: "name" },
+        { path: "category", select: "name" },
+      ],
+    })
+    .populate({
+      path: "items.variant",
+      select: "sku price offerPrice stock stockStatus attributes images",
+    });
 
   if (!cart) {
     return next(new AppError("Cart not found", 404));
+  }
+
+  if (!cart.couponApplied) {
+    return next(new AppError("No coupon applied to remove", 400));
   }
 
   // Remove coupon details
@@ -191,10 +211,16 @@ const removeCouponFromCart = catchAsync(async (req, res, next) => {
   // Format the response using your existing cart formatter
   const formattedCart = formatCartResponse(updatedCart);
 
+  // Structure response data to match other cart operations
+  const responseData = {
+    formattedCart,
+    finalAmount: updatedCart.totalPrice,
+  };
+
   res.status(200).json({
     success: true,
     message: "Coupon removed successfully",
-    data: formattedCart,
+    data: responseData,
   });
 });
 

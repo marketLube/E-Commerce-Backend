@@ -17,7 +17,6 @@ const Rating = require("../model/ratingModel");
 const mongoose = require("mongoose");
 
 const addProduct = catchAsync(async (req, res) => {
-  console.log(req.body);
   const {
     name,
     brand,
@@ -198,7 +197,6 @@ const listProducts = catchAsync(async (req, res, next) => {
     search,
     labelId,
   } = req.query;
-  console.log(req.query);
 
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
