@@ -68,7 +68,8 @@ const Variant = require("../model/variantsModel");
 // });
 
 const placeOrder = catchAsync(async (req, res, next) => {
-  const { userId, products } = req.body;
+  const userId = req.user;
+  const { products } = req.body;
 
   // Validate products array
   if (!products || !Array.isArray(products) || products.length === 0) {

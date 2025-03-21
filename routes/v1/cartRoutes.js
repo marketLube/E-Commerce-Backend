@@ -1,14 +1,26 @@
-const { addToCart, removeFromCart, clearCart, getCart, updateCartItem } = require('../../controllers/cartController')
-const autheticateToken = require('../../middlewares/authMiddleware')
+const {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  getCart,
+  updateCartItem,
+} = require("../../controllers/cartController");
+const autheticateToken = require("../../middlewares/authMiddleware");
 
-const cartRouter = require('express').Router()
+const cartRouter = require("express").Router();
 
+cartRouter.post("/add-to-cart", autheticateToken(["user"]), addToCart);
+cartRouter.delete(
+  "/remove-from-cart",
+  autheticateToken(["user"]),
+  removeFromCart
+);
+cartRouter.post("/clear-cart", autheticateToken(["user"]), clearCart);
+cartRouter.get("/get-cart", autheticateToken(["user"]), getCart);
+cartRouter.patch(
+  "/update-cart-quantity",
+  autheticateToken(["user"]),
+  updateCartItem
+);
 
-cartRouter.post("/add-to-cart", autheticateToken(["user"]), addToCart)
-cartRouter.post("/remove-from-cart", autheticateToken(["user"]), removeFromCart)
-cartRouter.post("/clear-cart", autheticateToken(["user"]), clearCart)
-cartRouter.get("/get-cart", autheticateToken(["user"]), getCart)
-cartRouter.patch("/update-cart-quantity", autheticateToken(["user"]), updateCartItem)
-
-
-module.exports = cartRouter
+module.exports = cartRouter;

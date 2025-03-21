@@ -1,5 +1,8 @@
 const Coupon = require("../model/couponModel");
+const Cart = require("../model/cartModel");
+const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
+const { formatCartResponse } = require("../helpers/cartHelpers/cartHelper");
 
 const createCoupon = catchAsync(async (req, res) => {
   const {
@@ -80,10 +83,127 @@ const getAllCoupons = catchAsync(async (req, res) => {
   res.status(200).json({ coupons });
 });
 
+const applyCoupon = catchAsync(async (req, res, next) => {
+  const { couponId } = req.body;
+  const userId = req.user;
+
+  // Find the cart for the user
+  const cart = await Cart.findOne({ user: userId })
+    .populate({
+      path: "items.product",
+      select: "name description images brand category",
+    })
+    .populate({
+      path: "items.variant",
+      select: "sku price offerPrice stock stockStatus attributes images",
+    });
+
+  if (!cart || cart.items.length === 0) {
+    return next(new AppError("Cart not found or empty", 404));
+  }
+
+  // Find the coupon
+  const coupon = await Coupon.findOne({
+    _id: couponId,
+    isActive: true,
+    expiryDate: { $gt: new Date() },
+  });
+
+  if (!coupon) {
+    return next(new AppError("Invalid or expired coupon", 400));
+  }
+
+  // Calculate cart total (using the existing totalPrice)
+  const cartTotal = cart.totalPrice;
+
+  // Check minimum purchase requirement
+  if (cartTotal < coupon.minPurchase) {
+    return next(
+      new AppError(
+        `Minimum purchase of ₹${coupon.minPurchase} required to use this coupon`,
+        400
+      )
+    );
+  }
+
+  // Calculate discount
+  let discountAmount = 0;
+  if (coupon.discountType === "percentage") {
+    discountAmount = Math.floor((cartTotal * coupon.discountAmount) / 100);
+    // Apply maximum discount limit if set
+    if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
+      discountAmount = coupon.maxDiscount;
+    }
+  } else if (coupon.discountType === "fixed") {
+    discountAmount = coupon.discountAmount;
+  }
+
+  // Calculate final amount
+  const finalAmount = cartTotal - discountAmount;
+
+  // Update cart with coupon details
+  cart.couponApplied = {
+    couponId: coupon._id,
+    code: coupon.code,
+    discountType: coupon.discountType,
+    discountAmount: discountAmount,
+    originalAmount: cartTotal,
+    finalAmount: finalAmount,
+  };
+
+  const updatedCart = await cart.save();
+
+  // Format the response using your existing cart formatter
+  const formattedCart = {
+    ...formatCartResponse(updatedCart),
+    couponDetails: {
+      code: coupon.code,
+      discountType: coupon.discountType,
+      originalAmount: cartTotal,
+      discountAmount: discountAmount,
+      finalAmount: finalAmount,
+      savings: discountAmount,
+      description: coupon.description,
+    },
+  };
+
+  res.status(200).json({
+    success: true,
+    message: "Coupon applied successfully",
+    data: { formattedCart, finalAmount },
+  });
+});
+
+const removeCouponFromCart = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+
+  // Find the cart
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    return next(new AppError("Cart not found", 404));
+  }
+
+  // Remove coupon details
+  cart.couponApplied = undefined;
+  const updatedCart = await cart.save();
+
+  // Format the response using your existing cart formatter
+  const formattedCart = formatCartResponse(updatedCart);
+
+  res.status(200).json({
+    success: true,
+    message: "Coupon removed successfully",
+    data: formattedCart,
+  });
+});
+
 module.exports = {
   createCoupon,
   editCoupon,
   searchCoupon,
   removeCoupon,
   getAllCoupons,
+  applyCoupon,
+  removeCouponFromCart,
 };

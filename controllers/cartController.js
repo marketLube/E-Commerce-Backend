@@ -1,3 +1,4 @@
+const { formatCartResponse } = require("../helpers/cartHelpers/cartHelper");
 const cartModel = require("../model/cartModel");
 const productModel = require("../model/productModel");
 const Variant = require("../model/variantsModel");
@@ -15,6 +16,7 @@ const recalcTotalPrice = (cart) => {
 
 const addToCart = catchAsync(async (req, res, next) => {
   const { productId, variantId, quantity = 1 } = req.body;
+
   const userId = req.user;
 
   let product, variant;
@@ -76,15 +78,36 @@ const addToCart = catchAsync(async (req, res, next) => {
 
   await cart.save();
 
+  // Fetch the populated cart to format the response
+  const populatedCart = await cartModel
+    .findById(cart._id)
+    .populate({
+      path: "items.product",
+      select: "name description images brand category",
+      populate: [
+        { path: "brand", select: "name" },
+        { path: "category", select: "name" },
+      ],
+    })
+    .populate({
+      path: "items.variant",
+      select: "sku price offerPrice stock stockStatus attributes images",
+    });
+
+  const formattedCart = formatCartResponse(populatedCart);
+
   res.status(200).json({
+    success: true,
     message: "Item added to cart successfully",
-    cart,
+    data: formattedCart,
   });
 });
 
 const removeFromCart = catchAsync(async (req, res, next) => {
+  console.log(req.body, "body");
   const { productId, variantId } = req.body;
   const userId = req.user;
+  console.log(userId);
 
   let cart = await cartModel.findOne({ user: userId });
   if (!cart) {
@@ -105,9 +128,28 @@ const removeFromCart = catchAsync(async (req, res, next) => {
   recalcTotalPrice(cart);
   await cart.save();
 
+  // Fetch the populated cart to format the response
+  const populatedCart = await cartModel
+    .findById(cart._id)
+    .populate({
+      path: "items.product",
+      select: "name description images brand category",
+      populate: [
+        { path: "brand", select: "name" },
+        { path: "category", select: "name" },
+      ],
+    })
+    .populate({
+      path: "items.variant",
+      select: "sku price offerPrice stock stockStatus attributes images",
+    });
+
+  const formattedCart = formatCartResponse(populatedCart);
+
   res.status(200).json({
+    success: true,
     message: "Item removed from cart successfully",
-    cart,
+    data: formattedCart,
   });
 });
 
@@ -123,32 +165,47 @@ const clearCart = catchAsync(async (req, res, next) => {
   cart.totalPrice = 0;
   await cart.save();
 
+  const formattedCart = formatCartResponse(cart);
+
   res.status(200).json({
+    success: true,
     message: "Cart cleared successfully",
-    cart,
+    data: formattedCart,
   });
 });
 
 const getCart = catchAsync(async (req, res, next) => {
   const userId = req.user;
 
-  // Find the user's cart and populate product and variant details
+  // Find the user's cart and populate necessary fields
   const cart = await cartModel
     .findOne({ user: userId })
-    .populate("items.product")
-    .populate("items.variant");
+    .populate({
+      path: "items.product",
+      select: "name description images brand category",
+      populate: [
+        { path: "brand", select: "name" },
+        { path: "category", select: "name" },
+      ],
+    })
+    .populate({
+      path: "items.variant",
+      select: "sku price offerPrice stock stockStatus attributes images",
+    });
 
   if (!cart) {
     return next(new AppError("Cart not found", 404));
   }
 
-  // Calculate total quantity
-  const totalQuantity = cart.calculateTotalQuantity();
+  const formattedCart = formatCartResponse(cart);
+  const finalAmount = cart.couponApplied
+    ? cart.couponApplied.finalAmount
+    : cart.totalPrice;
 
   res.status(200).json({
+    success: true,
     message: "Cart retrieved successfully",
-    cart,
-    totalQuantity,
+    data: { formattedCart, finalAmount },
   });
 });
 
@@ -156,7 +213,6 @@ const updateCartItem = catchAsync(async (req, res, next) => {
   const { productId, variantId, action } = req.body;
   const userId = req.user;
 
-  // Validate input
   if (!productId && variantId) {
     return next(
       new AppError("Invalid request: variantId provided without productId", 400)
@@ -200,9 +256,28 @@ const updateCartItem = catchAsync(async (req, res, next) => {
   recalcTotalPrice(cart);
   await cart.save();
 
+  // Fetch the populated cart to format the response
+  const populatedCart = await cartModel
+    .findById(cart._id)
+    .populate({
+      path: "items.product",
+      select: "name description images brand category",
+      populate: [
+        { path: "brand", select: "name" },
+        { path: "category", select: "name" },
+      ],
+    })
+    .populate({
+      path: "items.variant",
+      select: "sku price offerPrice stock stockStatus attributes images",
+    });
+
+  const formattedCart = formatCartResponse(populatedCart);
+
   res.status(200).json({
+    success: true,
     message: "Cart item updated successfully",
-    cart,
+    data: formattedCart,
   });
 });
 

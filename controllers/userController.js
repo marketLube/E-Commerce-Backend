@@ -41,18 +41,13 @@ const login = catchAsync(async (req, res, next) => {
 
   const token = createToken(user._id, "user");
 
-  res.cookie("user-auth-token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-  });
-
   const userObj = user.toObject();
   delete userObj.password;
 
   res.status(200).json({
     message: "Logged in successfully",
     user: userObj,
+    token,
   });
 });
 
@@ -118,10 +113,17 @@ const searchUser = catchAsync(async (req, res, next) => {
   });
 });
 
+const checkUser = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+  const user = await NormalUser.findById(userId);
+  res.status(200).json({ user });
+});
+
 module.exports = {
   register,
   login,
   userLogOut,
   listUsers,
   searchUser,
+  checkUser,
 };

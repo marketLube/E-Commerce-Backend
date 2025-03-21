@@ -9,7 +9,6 @@ const productRouter = require("./productRoutes");
 const reviewRouter = require("./reviewRoutes");
 const sellerRouter = require("./sellerRoutes");
 const userRouter = require("./userRoutes");
-
 const v1Router = require("express").Router();
 
 v1Router.use("/user", userRouter);

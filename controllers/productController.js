@@ -13,6 +13,8 @@ const Variant = require("../model/variantsModel");
 const uploadToCloudinary = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
+const Rating = require("../model/ratingModel");
+const mongoose = require("mongoose");
 
 const addProduct = catchAsync(async (req, res) => {
   console.log(req.body);
@@ -129,9 +131,11 @@ const addProduct = catchAsync(async (req, res) => {
 
 const formatProductResponse = (product) => {
   let hasVariants = false;
-  if (Array.isArray(product.variants) && product.variants.length > 0) {
+  const variants = product.variantsData || product.variants || [];
+  if (Array.isArray(variants) && variants.length > 0) {
     hasVariants = true;
   }
+
   return {
     _id: product._id,
     name: product.name,
@@ -150,19 +154,19 @@ const formatProductResponse = (product) => {
           description: product.category.description,
         }
       : null,
-    description: product.description,
+    description: hasVariants
+      ? variants[0]?.attributes?.description || product.description
+      : product.description,
     hasVariants: hasVariants,
-    sku: hasVariants ? product.variants[0].sku : product.sku,
-    price: hasVariants ? product.variants[0].price : product.price,
-    offerPrice: hasVariants
-      ? product.variants[0].offerPrice
-      : product.offerPrice,
-    stock: hasVariants ? product.variants[0].stock : product.stock,
+    sku: hasVariants ? variants[0]?.sku : product.sku,
+    price: hasVariants ? variants[0]?.price : product.price,
+    offerPrice: hasVariants ? variants[0]?.offerPrice : product.offerPrice,
+    stock: hasVariants ? variants[0]?.stock : product.stock,
     mainImage:
       hasVariants &&
-      Array.isArray(product.variants[0].images) &&
-      product.variants[0].images.length > 0
-        ? product.variants[0].images[0]
+      Array.isArray(variants[0]?.images) &&
+      variants[0]?.images.length > 0
+        ? variants[0].images[0]
         : Array.isArray(product.images) && product.images.length > 0
         ? product.images[0]
         : null,
@@ -183,29 +187,178 @@ const formatProductResponse = (product) => {
 };
 
 const listProducts = catchAsync(async (req, res, next) => {
-  let { page, limit } = req.query;
+  let {
+    page,
+    limit,
+    categoryId,
+    subcategoryId,
+    minPrice,
+    maxPrice,
+    sort,
+    search,
+    labelId,
+  } = req.query;
+  console.log(req.query);
+
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
-
   const skip = (page - 1) * limit;
 
-  const productsPromise = Product.find()
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
-    .populate("brand")
-    .populate("variants")
-    .populate("category", "name description")
-    .populate("createdBy", "username email role");
+  // Build base filter object
+  const filter = {};
 
-  const countPromise = Product.countDocuments();
+  if (categoryId) {
+    filter.category = new mongoose.Types.ObjectId(categoryId);
+  }
 
-  const [products, totalProducts] = await Promise.all([
-    productsPromise,
-    countPromise,
+  if (subcategoryId) {
+    filter["variants.subcategory"] = new mongoose.Types.ObjectId(subcategoryId);
+  }
+
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  if (labelId) {
+    filter.label = {
+      $in: labelId.split(",").map((id) => new mongoose.Types.ObjectId(id)),
+    };
+  }
+
+  // Use aggregation pipeline for proper price handling
+  const aggregationPipeline = [
+    {
+      $lookup: {
+        from: "variants",
+        localField: "variants",
+        foreignField: "_id",
+        as: "variantsData",
+      },
+    },
+    {
+      $addFields: {
+        effectivePrice: {
+          $cond: {
+            if: { $gt: [{ $size: "$variantsData" }, 0] },
+            then: { $min: "$variantsData.offerPrice" },
+            else: "$offerPrice",
+          },
+        },
+      },
+    },
+    {
+      $match: {
+        ...filter,
+        ...(minPrice || maxPrice
+          ? {
+              effectivePrice: {
+                ...(minPrice && { $gte: parseInt(minPrice) }),
+                ...(maxPrice && { $lte: parseInt(maxPrice) }),
+              },
+            }
+          : {}),
+      },
+    },
+    {
+      $lookup: {
+        from: "brands",
+        localField: "brand",
+        foreignField: "_id",
+        as: "brand",
+      },
+    },
+    {
+      $lookup: {
+        from: "labels",
+        localField: "label",
+        foreignField: "_id",
+        as: "label",
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "createdBy",
+      },
+    },
+    { $unwind: { path: "$brand", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$label", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
+    {
+      $sort:
+        sort === "price-low"
+          ? { effectivePrice: 1 }
+          : sort === "price-high"
+          ? { effectivePrice: -1 }
+          : { createdAt: -1 },
+    },
+    { $skip: skip },
+    { $limit: limit },
+  ];
+
+  const countPipeline = [
+    {
+      $lookup: {
+        from: "variants",
+        localField: "variants",
+        foreignField: "_id",
+        as: "variantsData",
+      },
+    },
+    {
+      $addFields: {
+        effectivePrice: {
+          $cond: {
+            if: { $gt: [{ $size: "$variantsData" }, 0] },
+            then: { $min: "$variantsData.price" },
+            else: "$price",
+          },
+        },
+      },
+    },
+    {
+      $match: {
+        ...filter,
+        ...(minPrice || maxPrice
+          ? {
+              effectivePrice: {
+                ...(minPrice && { $gte: parseInt(minPrice) }),
+                ...(maxPrice && { $lte: parseInt(maxPrice) }),
+              },
+            }
+          : {}),
+      },
+    },
+    { $count: "total" },
+  ];
+
+  const [products, countResult] = await Promise.all([
+    Product.aggregate(aggregationPipeline),
+    Product.aggregate(countPipeline),
   ]);
 
-  const formattedProducts = products.map(formatProductResponse);
+  // const totalProducts = countResult[0]?.total || 0;
+  const totalProducts = products.length;
+  const formattedProducts = products.map((product) => {
+    const formatted = formatProductResponse(product);
+    // Add variants data separately
+    formatted.variants = product.variantsData || [];
+    return formatted;
+  });
 
   res.status(200).json({
     success: true,
@@ -214,6 +367,13 @@ const listProducts = catchAsync(async (req, res, next) => {
       totalProducts,
       totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,
+      filters: {
+        categoryId,
+        subcategoryId,
+        minPrice,
+        maxPrice,
+        sort,
+      },
     },
   });
 });
@@ -221,23 +381,70 @@ const listProducts = catchAsync(async (req, res, next) => {
 const getProductDetails = catchAsync(async (req, res, next) => {
   const { productId } = req.params;
 
+  // Get product details with populated fields
   const productDetails = await Product.findById(productId)
     .populate("category")
     .populate("createdBy", "username email role")
     .populate("variants")
     .populate("brand")
     .populate("label");
+
   if (!productDetails) {
     return next(new AppError("Product not found", 404));
   }
 
-  res.status(200).json(productDetails);
+  // Get rating distribution
+  const ratingDistribution = await Rating.aggregate([
+    { $match: { productId: new mongoose.Types.ObjectId(productDetails._id) } },
+    {
+      $group: {
+        _id: "$rating",
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: -1 } },
+  ]);
+
+  // Get all ratings with user details
+  const ratings = await Rating.find({ productId: productDetails._id })
+    .populate("userId", "username email profileImage") // Add the fields you want from the user
+    .sort({ createdAt: -1 }); // Sort by newest first
+
+  // Convert rating distribution to an object with all ratings (1-5)
+  const ratingCounts = {
+    5: 0,
+    4: 0,
+    3: 0,
+    2: 0,
+    1: 0,
+  };
+
+  ratingDistribution.forEach((rating) => {
+    ratingCounts[rating._id] = rating.count;
+  });
+
+  // Calculate rating statistics
+  const totalRatings = ratings.length;
+  const averageRating =
+    totalRatings > 0
+      ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / totalRatings
+      : 0;
+
+  const updated = productDetails.toObject();
+  updated.ratingDistribution = ratingCounts;
+  updated.ratings = ratings;
+  updated.ratingStats = {
+    totalRatings,
+    averageRating: Number(averageRating.toFixed(1)),
+    ratingCounts,
+  };
+
+  res.status(200).json(updated);
 });
 
 const updateProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.query;
   const updateData = req.body;
-  03;
   const product = await Product.findById(productId).populate("variants");
 
   if (!product) {
