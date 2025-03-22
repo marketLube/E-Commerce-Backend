@@ -6,8 +6,7 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const { getOrderStats } = require("../helpers/aggregation/aggregations");
 const Variant = require("../model/variantsModel");
 const Cart = require("../model/cartModel");
-const userModel = require("../model/userModel");
-
+const { NormalUser } = require("../model/userModel");
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
 //     const { products, address, paymentMethod, transactionId } = req.body
@@ -72,18 +71,19 @@ const userModel = require("../model/userModel");
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
   const { address } = req.body;
-
+  console.log(address, "address", userId, "userId");
+  let deliveryAddress;
   if (mongoose.Types.ObjectId.isValid(address)) {
-    const user = await userModel.findById(userId);
-    if (!user) {
-      return next(new AppError("User not found", 404));
-    }
-
-    const userAddress = user.address.find(
+    const user = await NormalUser.findById(userId);
+    deliveryAddress = user.address.find(
       (addr) => addr._id.toString() === address
     );
-    if (!userAddress) {
-      return next(new AppError("Address not found", 404));
+  } else {
+    deliveryAddress = address;
+    if (address.saveAddress) {
+      const updateUserAddress = await NormalUser.findByIdAndUpdate(userId, {
+        $push: { address: address },
+      });
     }
   }
   const cart = await Cart.findOne({ user: userId });
@@ -167,6 +167,7 @@ const placeOrder = catchAsync(async (req, res, next) => {
     products: validatedProducts,
     totalAmount: finalAmount,
     couponApplied: cart.couponApplied,
+    deliveryAddress,
   });
 
   // Delete the cart after placing the order
@@ -345,14 +346,17 @@ const getOrderById = catchAsync(async (req, res, next) => {
 
 const getUserOrders = catchAsync(async (req, res, next) => {
   const userId = req.user;
-  const orders = await orderModel.find({ user: userId }).populate({
-    path: "products.productId",
-    populate: {
-      path: "category",
-      model: "Category",
-      select: "name description",
-    },
-  });
+  const orders = await orderModel
+    .find({ user: userId })
+    .populate({
+      path: "products.productId",
+      populate: {
+        path: "category",
+        model: "Category",
+        select: "name description",
+      },
+    })
+    .sort({ createdAt: -1 });
 
   res.status(200).json({
     message: "User orders retrieved successfully",
