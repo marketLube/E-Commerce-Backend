@@ -119,6 +119,30 @@ const checkUser = catchAsync(async (req, res, next) => {
   res.status(200).json({ user });
 });
 
+const updateUser = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+  const updateData = req.body;
+
+  let updatedUser;
+  if (updateData.address) {
+    updatedUser = await NormalUser.findByIdAndUpdate(
+      userId,
+      {
+        $push: { address: updateData.address },
+      },
+      { new: true }
+    );
+  } else {
+    updatedUser = await NormalUser.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
+  }
+
+  const userObj = updatedUser.toObject();
+  delete userObj.password;
+  res.status(200).json(userObj);
+});
+
 module.exports = {
   register,
   login,
@@ -126,4 +150,5 @@ module.exports = {
   listUsers,
   searchUser,
   checkUser,
+  updateUser,
 };

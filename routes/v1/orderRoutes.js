@@ -10,6 +10,7 @@ const {
 const autheticateToken = require("../../middlewares/authMiddleware");
 
 const orderRouter = require("express").Router();
+orderRouter.get("/get-user-orders", autheticateToken(["user"]), getUserOrders);
 
 orderRouter.post("/placeorder", autheticateToken(["user"]), placeOrder);
 orderRouter.patch(
@@ -33,7 +34,6 @@ orderRouter.get(
   autheticateToken(["admin", "seller"]),
   getOrderById
 );
-orderRouter.get("/get-user-orders", autheticateToken(["user"]), getUserOrders);
 orderRouter.post(
   "/cancel-order/:orderId",
   autheticateToken(["user"]),

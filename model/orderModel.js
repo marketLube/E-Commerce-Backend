@@ -30,18 +30,24 @@ const orderSchema = new Schema(
       ],
       default: "pending",
     },
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date },
+    couponApplied: { type: Object },
+    expectedDelivery: {
+      type: Date,
+      default: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+    },
+    paymentMethod: { type: String, enum: ["COD", "ONLINE"], default: "COD" },
+    paymentId: { type: String },
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed", "refunded", "onrefund", "processed"],
       default: "pending",
     },
-    isDeleted: { type: Boolean, default: false },
-    deletedAt: { type: Date },
   },
   { timestamps: true }
 );
 
-// Middleware to exclude soft-deleted orders from queries by default
 orderSchema.pre(/^find/, function (next) {
   this.where({ isDeleted: false });
   next();

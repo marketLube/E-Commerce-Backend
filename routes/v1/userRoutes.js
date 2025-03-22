@@ -5,6 +5,7 @@ const {
   listUsers,
   searchUser,
   checkUser,
+  updateUser,
 } = require("../../controllers/userController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 const userRouter = require("express").Router();
@@ -15,5 +16,5 @@ userRouter.post("/logout", userLogOut);
 userRouter.get("/list", autheticateToken(["admin"]), listUsers);
 userRouter.get("/search", autheticateToken(["admin"]), searchUser);
 userRouter.get("/check-user", autheticateToken(["user"]), checkUser);
-
+userRouter.patch("/update-user", autheticateToken(["user"]), updateUser);
 module.exports = userRouter;

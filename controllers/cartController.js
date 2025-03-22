@@ -196,7 +196,14 @@ const getCart = catchAsync(async (req, res, next) => {
     });
 
   if (!cart) {
-    return next(new AppError("Cart not found", 404));
+    const newCart = new cartModel({ user: userId, items: [] });
+    await newCart.save();
+    return res.status(200).json({
+      success: true,
+      message: "Cart retrieved successfully",
+      data: newCart,
+    });
+    // return next(new AppError("Cart not found", 404));
   }
 
   const formattedCart = formatCartResponse(cart);

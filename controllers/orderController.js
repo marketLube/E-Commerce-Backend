@@ -5,6 +5,8 @@ const productModel = require("../model/productModel");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const { getOrderStats } = require("../helpers/aggregation/aggregations");
 const Variant = require("../model/variantsModel");
+const Cart = require("../model/cartModel");
+const userModel = require("../model/userModel");
 
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
@@ -69,41 +71,50 @@ const Variant = require("../model/variantsModel");
 
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
-  const { products } = req.body;
+  const { address } = req.body;
 
-  // Validate products array
-  if (!products || !Array.isArray(products) || products.length === 0) {
-    return next(new AppError("No products in order", 400));
+  if (mongoose.Types.ObjectId.isValid(address)) {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return next(new AppError("User not found", 404));
+    }
+
+    const userAddress = user.address.find(
+      (addr) => addr._id.toString() === address
+    );
+    if (!userAddress) {
+      return next(new AppError("Address not found", 404));
+    }
+  }
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart || cart.items.length === 0) {
+    return next(new AppError("No items in cart to place an order", 400));
   }
 
-  // Validate and process each product
   let totalAmount = 0;
   const validatedProducts = [];
 
-  for (const item of products) {
+  for (const item of cart.items) {
     const product = await productModel
-      .findById(item.productId)
+      .findById(item.product)
       .populate("variants");
 
     if (!product) {
-      return next(new AppError(`Product not found: ${item.productId}`, 404));
+      return next(new AppError(`Product not found: ${item.product}`, 404));
     }
 
     let price;
     let stock;
 
-    // Check if it's a variant product
-    if (item.variantId) {
-      // Find the variant in the product's variants array
+    if (item.variant) {
       const variant = product.variants.find(
-        (v) => v._id.toString() === item.variantId.toString()
+        (v) => v._id.toString() === item.variant.toString()
       );
 
       if (!variant) {
-        return next(new AppError(`Variant not found: ${item.variantId}`, 404));
+        return next(new AppError(`Variant not found: ${item.variant}`, 404));
       }
 
-      // Check variant stock
       if (variant.stock < item.quantity) {
         return next(
           new AppError(
@@ -116,12 +127,10 @@ const placeOrder = catchAsync(async (req, res, next) => {
       price = variant.offerPrice || variant.price;
       stock = variant.stock;
 
-      // Update variant stock
       await Variant.findByIdAndUpdate(variant._id, {
         $inc: { stock: -item.quantity },
       });
     } else {
-      // Regular product without variants
       if (product.stock < item.quantity) {
         return next(
           new AppError(`Insufficient stock for product ${product.name}`, 400)
@@ -131,32 +140,38 @@ const placeOrder = catchAsync(async (req, res, next) => {
       price = product.offerPrice || product.price;
       stock = product.stock;
 
-      // Update product stock
       await productModel.findByIdAndUpdate(product._id, {
         $inc: { stock: -item.quantity },
       });
     }
 
-    // Calculate item total
     const itemTotal = price * item.quantity;
     totalAmount += itemTotal;
 
     validatedProducts.push({
       productId: product._id,
-      variantId: item.variantId || null,
+      variantId: item.variant || null,
       quantity: item.quantity,
       price: price,
     });
   }
 
-  // Create the order
+  // Apply coupon discount if available
+  let finalAmount = totalAmount;
+  if (cart.couponApplied && cart.couponApplied.discountAmount) {
+    finalAmount -= cart.couponApplied.discountAmount;
+  }
+
   const newOrder = await orderModel.create({
     user: userId,
     products: validatedProducts,
-    totalAmount,
+    totalAmount: finalAmount,
+    couponApplied: cart.couponApplied,
   });
 
-  // Populate the order with correct paths and models
+  // Delete the cart after placing the order
+  await Cart.findOneAndDelete({ user: userId });
+
   const populatedOrder = await orderModel
     .findById(newOrder._id)
     .populate({
@@ -188,9 +203,8 @@ const placeOrder = catchAsync(async (req, res, next) => {
 
 const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { orderId } = req.params;
-  const { status, type } = req.body; // type can be 'order' or 'payment'
+  const { status, type } = req.body;
 
-  // Define valid statuses for both order and payment
   const validStatuses = {
     order: [
       "pending",
@@ -204,14 +218,12 @@ const updateOrderStatus = catchAsync(async (req, res, next) => {
     payment: ["pending", "paid", "failed", "refunded", "onrefund"],
   };
 
-  // Validate the status type
   if (!type || !["order", "payment"].includes(type)) {
     return next(
       new AppError("Invalid status type. Must be 'order' or 'payment'.", 400)
     );
   }
 
-  // Validate the status value
   if (!validStatuses[type].includes(status)) {
     return next(
       new AppError(
@@ -223,7 +235,6 @@ const updateOrderStatus = catchAsync(async (req, res, next) => {
     );
   }
 
-  // Create update object based on type
   const updateField = type === "order" ? { status } : { paymentStatus: status };
 
   const updatedOrder = await orderModel
@@ -334,7 +345,7 @@ const getOrderById = catchAsync(async (req, res, next) => {
 
 const getUserOrders = catchAsync(async (req, res, next) => {
   const userId = req.user;
-  const orders = await orderModel.find({ userId }).populate({
+  const orders = await orderModel.find({ user: userId }).populate({
     path: "products.productId",
     populate: {
       path: "category",
@@ -342,10 +353,6 @@ const getUserOrders = catchAsync(async (req, res, next) => {
       select: "name description",
     },
   });
-
-  if (!orders.length) {
-    return next(new AppError("No orders found for this user", 404));
-  }
 
   res.status(200).json({
     message: "User orders retrieved successfully",
