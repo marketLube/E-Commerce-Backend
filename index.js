@@ -27,6 +27,7 @@ app.use(
       "https://millstore.marketlube.in",
       "https://mill-store.vercel.app",
       "https://northlux-user.vercel.app",
+      "https://northlux.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
