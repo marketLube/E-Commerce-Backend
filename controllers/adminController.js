@@ -13,6 +13,7 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const Label = require("../model/labelModel");
 
 const adminRegister = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const { username, email, phonenumber, password } = req.body;
   if (!username || !email || !phonenumber || !password) {
     return next(new AppError("All fields are required", 400));

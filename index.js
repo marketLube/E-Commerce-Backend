@@ -21,10 +21,12 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:5174",
       process.env.FRONTEND_URL,
       "https://milistore-marketlubes-projects.vercel.app",
       "https://millstore.marketlube.in",
       "https://mill-store.vercel.app",
+      "https://northlux-user.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
