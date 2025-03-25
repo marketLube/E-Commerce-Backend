@@ -196,6 +196,7 @@ const listProducts = catchAsync(async (req, res, next) => {
     sort,
     search,
     labelId,
+    brandId,
   } = req.query;
 
   page = parseInt(page) || 1;
@@ -211,6 +212,10 @@ const listProducts = catchAsync(async (req, res, next) => {
 
   if (subcategoryId) {
     filter["variants.subcategory"] = new mongoose.Types.ObjectId(subcategoryId);
+  }
+
+  if (brandId) {
+    filter.brand = new mongoose.Types.ObjectId(brandId);
   }
 
   if (search) {

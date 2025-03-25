@@ -1,4 +1,5 @@
 const adminRouter = require("./adminRoutes");
+const bannerRouter = require("./bannerRoutes");
 const brandRouter = require("./brandRoutes");
 const cartRouter = require("./cartRoutes");
 const categoryRouter = require("./categoryRoutes");
@@ -22,5 +23,6 @@ v1Router.use("/review", reviewRouter);
 v1Router.use("/order", orderRouter);
 v1Router.use("/brand", brandRouter);
 v1Router.use("/coupon", couponRouter);
+v1Router.use("/banner", bannerRouter);
 
 module.exports = v1Router;

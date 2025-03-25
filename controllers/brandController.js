@@ -16,11 +16,20 @@ const createBrand = catchAsync(async (req, res, next) => {
 
   const brandData = { name, description };
 
-  // Handle image upload
   if (req.files && req.files.length > 0) {
-    const imageFile = req.files[0];
-    const uploadedImage = await uploadToCloudinary(imageFile.buffer);
-    brandData.image = uploadedImage;
+    // Handle main brand image
+    const imageFile = req.files.find(file => file.fieldname === 'image');
+    if (imageFile) {
+      const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+      brandData.image = uploadedImage;
+    }
+
+    // Handle banner image
+    const bannerFile = req.files.find(file => file.fieldname === 'bannerImage');
+    if (bannerFile) {
+      const uploadedBanner = await uploadToCloudinary(bannerFile.buffer);
+      brandData.bannerImage = uploadedBanner;
+    }
   }
 
   const newBrand = await Brand.create(brandData);
@@ -49,7 +58,7 @@ const getAllBrands = catchAsync(async (req, res, next) => {
 // Get a single brand by ID
 const getBrandById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-
+  console.log("get brand by id", id);
   const brand = await Brand.findById(id);
 
   if (!brand) {
@@ -75,11 +84,19 @@ const updateBrand = catchAsync(async (req, res, next) => {
   }
 
   if (req.files && req.files.length > 0) {
-    // Delete old image if exists
+    // Handle main brand image
+    const imageFile = req.files.find(file => file.fieldname === 'image');
+    if (imageFile) {
+      const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+      brand.image = uploadedImage;
+    }
 
-    const imageFile = req.files[0];
-    const uploadedImage = await uploadToCloudinary(imageFile.buffer);
-    brand.image = uploadedImage;
+    // Handle banner image
+    const bannerFile = req.files.find(file => file.fieldname === 'bannerImage');
+    if (bannerFile) {
+      const uploadedBanner = await uploadToCloudinary(bannerFile.buffer);
+      brand.bannerImage = uploadedBanner;
+    }
   }
 
   brand.name = name || brand.name;

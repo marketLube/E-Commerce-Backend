@@ -17,4 +17,5 @@ userRouter.get("/list", autheticateToken(["admin"]), listUsers);
 userRouter.get("/search", autheticateToken(["admin"]), searchUser);
 userRouter.get("/check-user", autheticateToken(["user"]), checkUser);
 userRouter.patch("/update-user", autheticateToken(["user"]), updateUser);
+
 module.exports = userRouter;

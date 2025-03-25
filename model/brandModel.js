@@ -22,6 +22,10 @@ const brandSchema = new Schema(
       type: String,
       default: null,
     },
+    bannerImage: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );
