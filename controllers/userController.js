@@ -9,7 +9,7 @@ const register = catchAsync(async (req, res, next) => {
     return next(new AppError("All fields are required", 400));
   }
 
-  const newUser = new NormalUser({ username, email, phonenumber, password });
+  const newUser = new NormalUser({ userName, email, phoneNumber, password });
   const user = await newUser.save();
   const userObj = user.toObject();
   delete userObj.password;
@@ -19,7 +19,7 @@ const register = catchAsync(async (req, res, next) => {
     secure: process.env.NODE_ENV === "production",
     maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
   });
-  return res.status(201).json({ message: "user created", userObj });
+  return res.status(201).json({ message: "user created", user:userObj , token });
 });
 
 const login = catchAsync(async (req, res, next) => {
