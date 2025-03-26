@@ -143,6 +143,8 @@ const updateUser = catchAsync(async (req, res, next) => {
   res.status(200).json(userObj);
 });
 
+//push
+
 module.exports = {
   register,
   login,
