@@ -6,12 +6,15 @@ const {
   getUserOrders,
   cancelOrder,
   orderStats,
+  payment,
+  verifyPayment,
 } = require("../../controllers/orderController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 
 const orderRouter = require("express").Router();
 orderRouter.get("/get-user-orders", autheticateToken(["user"]), getUserOrders);
-
+orderRouter.post("/paymentIntent", autheticateToken(["user"]), payment);
+orderRouter.post("/paymentVerify", autheticateToken(["user"]), verifyPayment);
 orderRouter.post("/placeorder", autheticateToken(["user"]), placeOrder);
 orderRouter.patch(
   "/change-status/:orderId",

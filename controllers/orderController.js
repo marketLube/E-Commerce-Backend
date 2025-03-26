@@ -7,6 +7,7 @@ const { getOrderStats } = require("../helpers/aggregation/aggregations");
 const Variant = require("../model/variantsModel");
 const Cart = require("../model/cartModel");
 const { NormalUser } = require("../model/userModel");
+const Razorpay = require("razorpay");
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
 //     const { products, address, paymentMethod, transactionId } = req.body
@@ -68,9 +69,82 @@ const { NormalUser } = require("../model/userModel");
 
 // });
 
+const payment = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findOne({ user: req.user });
+  let totalAmount = 0;
+  if (cart.couponApplied) {
+    totalAmount = cart.couponApplied.finalAmount;
+  } else {
+    totalAmount = cart.totalPrice;
+  }
+  // initializing razorpay
+  const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+
+  // setting up options for razorpay order.
+  const options = {
+    amount: totalAmount * 100,
+    currency: "INR",
+    receipt: "any unique id for every order",
+    payment_capture: 1,
+  };
+
+  try {
+    const response = await razorpay.orders.create(options);
+    res.json({
+      order_id: response.id,
+      currency: response.currency,
+      amount: response.amount,
+    });
+  } catch (err) {
+    res.status(400).send("Not able to create order. Please try again!");
+  }
+});
+
+const verifyPayment = catchAsync(async (req, res, next) => {
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+    req.body;
+
+  const secret = process.env.RAZORPAY_KEY_SECRET;
+  const generated_signature = crypto
+    .createHmac("sha256", secret)
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .digest("hex");
+
+  if (generated_signature !== razorpay_signature) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid signature, payment verification failed!",
+    });
+  }
+
+  // // Find the order and update it
+  const order = await orderModel.create({
+    // order_id: razorpay_order_id,
+    paymentStatus: "paid",
+    paymentId: razorpay_payment_id,
+  });
+
+  if (!order) {
+    return res.status(404).json({ success: false, message: "Order not found" });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Payment verified successfully",
+    data: {
+      razorpay_payment_id,
+      razorpay_order_id,
+      razorpay_signature,
+    },
+  });
+});
+
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
-  const { address } = req.body;
+  const { address, paymentMethod } = req.body;
   console.log(address, "address", userId, "userId");
   let deliveryAddress;
   if (mongoose.Types.ObjectId.isValid(address)) {
@@ -162,13 +236,40 @@ const placeOrder = catchAsync(async (req, res, next) => {
     finalAmount -= cart.couponApplied.discountAmount;
   }
 
-  const newOrder = await orderModel.create({
-    user: userId,
-    products: validatedProducts,
-    totalAmount: finalAmount,
-    couponApplied: cart.couponApplied,
-    deliveryAddress,
-  });
+  let newOrder;
+
+  if (paymentMethod === "ONLINE") {
+    newOrder = await orderModel.findOneAndUpdate(
+      { paymentId: razorpay_payment_id },
+      {
+        paymentStatus: "paid",
+        paymentMethod: "ONLINE",
+        products: validatedProducts,
+        totalAmount: finalAmount,
+        couponApplied: cart.couponApplied,
+        deliveryAddress,
+        paymentId: razorpay_payment_id,
+      }
+    );
+  } else {
+    newOrder = await orderModel.create({
+      user: userId,
+      products: validatedProducts,
+      totalAmount: finalAmount,
+      couponApplied: cart.couponApplied,
+      deliveryAddress,
+      paymentMethod: "COD",
+      paymentStatus: "pending",
+    });
+  }
+
+  // const newOrder = await orderModel.create({
+  //   user: userId,
+  //   products: validatedProducts,
+  //   totalAmount: finalAmount,
+  //   couponApplied: cart.couponApplied,
+  //   deliveryAddress,
+  // });
 
   // Delete the cart after placing the order
   await Cart.findOneAndDelete({ user: userId });
@@ -291,7 +392,7 @@ const filterOrders = catchAsync(async (req, res, next) => {
       model: "Variant",
       select: "attributes stock images",
     })
-    .populate("user", "username phonenumber address")
+    .populate("user", "username phoneNumber address")
     .sort({ createdAt: -1 });
 
   if (category) {
@@ -487,4 +588,6 @@ module.exports = {
   getUserOrders,
   cancelOrder,
   orderStats,
+  payment,
+  verifyPayment,
 };

@@ -1,5 +1,6 @@
 const Product = require("../model/productModel");
 const Rating = require("../model/ratingModel");
+const uploadToCloudinary = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
@@ -44,14 +45,29 @@ const addOrUpdateRating = catchAsync(async (req, res, next) => {
     return next(new AppError("All Fields are required", 400));
   }
   const existingRating = await Rating.findOne({ productId, userId });
+  let image;
+
+  if (req.files && req.files.length > 0) {
+    // Handle main brand image
+console.log(req.files,"req.files");
+    const imageFile = req.files.find(file => file.fieldname === 'image');
+console.log(imageFile,"imageFile");
+    if (imageFile) {
+      const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+      image = uploadedImage;
+    }
+  }
+
+  console.log(image,"image");
 
   let latestRating;
   if (existingRating) {
     existingRating.rating = rating;
     existingRating.review = review;
+    existingRating.image = image;
     latestRating = await existingRating.save();
   } else {
-    const newRating = new Rating({ productId, userId, rating, review });
+    const newRating = new Rating({ productId, userId, rating, review, image });
     latestRating = await newRating.save();
   }
 
