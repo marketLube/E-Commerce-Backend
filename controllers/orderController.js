@@ -508,7 +508,7 @@ const cancelOrder = catchAsync(async (req, res, next) => {
     order,
   });
 });
-//fds
+
 // const getAllOrders = catchAsync(async (req, res, next) => {
 //   // Get page and limit from query params, set defaults if not provided
 //   const page = parseInt(req.query.page) || 1;

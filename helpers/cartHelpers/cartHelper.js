@@ -10,19 +10,19 @@ const formatCartResponse = (cart) => {
     const mainImage = hasVariant
       ? variant.images && variant.images.length > 0
         ? variant.images[0]
-        : product.images && product.images.length > 0
-        ? product.images[0]
+        : product?.images && product?.images?.length > 0
+        ? product?.images[0]
         : null
-      : product.images && product.images.length > 0
-      ? product.images[0]
+      : product?.images && product?.images?.length > 0
+      ? product?.images[0]
       : null;
 
     // Determine all images
     const images = hasVariant
       ? variant.images && variant.images.length > 0
         ? variant.images
-        : product.images || []
-      : product.images || [];
+        : product?.images || []
+      : product?.images || [];
 
     return {
       _id: item._id,
