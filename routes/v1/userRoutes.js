@@ -7,6 +7,7 @@ const {
   checkUser,
   updateUser,
   deleteUserAddress,
+  autheticateUser,
 } = require("../../controllers/userController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 const userRouter = require("express").Router();
