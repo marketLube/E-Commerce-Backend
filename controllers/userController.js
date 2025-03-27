@@ -9,7 +9,7 @@ const register = catchAsync(async (req, res, next) => {
     return next(new AppError("All fields are required", 400));
   }
 
-  const newUser = new NormalUser({ userName, email, phoneNumber, password });
+  const newUser = new NormalUser({ username, email, phonenumber, password });
   const user = await newUser.save();
   const userObj = user.toObject();
   delete userObj.password;
