@@ -145,7 +145,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
   const { address, paymentMethod } = req.body;
-  console.log(address, "address", userId, "userId");
+
   let deliveryAddress;
   if (mongoose.Types.ObjectId.isValid(address)) {
     const user = await NormalUser.findById(userId);

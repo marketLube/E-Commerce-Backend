@@ -8,7 +8,14 @@ const register = catchAsync(async (req, res, next) => {
   if (!username || !email || !phonenumber || !password) {
     return next(new AppError("All fields are required", 400));
   }
-
+  const isUserExist = await NormalUser.findOne({ email });
+  const isPhoneNumberExist = await NormalUser.findOne({ phonenumber });
+  if (isUserExist) {
+    return next(new AppError("User already exists", 400));
+  }
+  if (isPhoneNumberExist) {
+    return next(new AppError("Phone number already exists", 400));
+  }
   const newUser = new NormalUser({ username, email, phonenumber, password });
   const user = await newUser.save();
   const userObj = user.toObject();
@@ -19,7 +26,9 @@ const register = catchAsync(async (req, res, next) => {
     secure: process.env.NODE_ENV === "production",
     maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
   });
-  return res.status(201).json({ message: "user created", user:userObj , token });
+  return res
+    .status(201)
+    .json({ message: "user created", user: userObj, token });
 });
 
 const login = catchAsync(async (req, res, next) => {
@@ -143,6 +152,27 @@ const updateUser = catchAsync(async (req, res, next) => {
   res.status(200).json(userObj);
 });
 
+const deleteUserAddress = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+  const addressId = req.params.id;
+
+  const updatedUser = await NormalUser.findByIdAndUpdate(
+    userId,
+    { $pull: { address: { _id: addressId } } },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    return next(new AppError("User not found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Address deleted successfully",
+    data: updatedUser,
+  });
+});
+
 //push
 
 module.exports = {
@@ -153,4 +183,5 @@ module.exports = {
   searchUser,
   checkUser,
   updateUser,
+  deleteUserAddress,
 };
