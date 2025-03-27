@@ -1,9 +1,11 @@
 const { formatCartResponse } = require("../helpers/cartHelpers/cartHelper");
 const cartModel = require("../model/cartModel");
+const Coupon = require("../model/couponModel");
 const productModel = require("../model/productModel");
 const Variant = require("../model/variantsModel");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
+const { checkCoupon } = require("../helpers/cartHelpers/cartHelper");
 
 // Helper function to recalculate total price
 const recalcTotalPrice = (cart) => {
@@ -13,6 +15,7 @@ const recalcTotalPrice = (cart) => {
 
   return cart;
 };
+
 
 const addToCart = catchAsync(async (req, res, next) => {
   const { productId, variantId, quantity = 1 } = req.body;
@@ -76,6 +79,8 @@ const addToCart = catchAsync(async (req, res, next) => {
     return total + (item.offerPrice || item.price) * item.quantity;
   }, 0);
 
+  // After recalculating total price
+  cart = await checkCoupon(cart);
   await cart.save();
 
   // Fetch the populated cart to format the response
@@ -112,9 +117,9 @@ const removeFromCart = catchAsync(async (req, res, next) => {
     return next(new AppError("Cart not found", 404));
   }
 
-  // Filter out the product/variant from the cart items
-  cart.items = cart.items.filter(
-    (item) =>
+    // Filter out the product/variant from the cart items
+    cart.items = cart.items.filter(
+      (item) =>
       (variantId && item.variant && item.variant.toString() !== variantId) ||
       (productId &&
         !variantId &&
@@ -122,9 +127,33 @@ const removeFromCart = catchAsync(async (req, res, next) => {
         item.product.toString() !== productId)
   );
 
-  // Recalculate total price
+
+  // Recalculate total price;
   recalcTotalPrice(cart);
-  await cart.save();
+  // Replace the existing coupon check with this
+  cart = await checkCoupon(cart);
+  const updatedCart = await cart.save();
+  // console.log(updatedCart ,"cart",variant.offerPrice,"<u></u>");
+  // updatedCart.couponApplied.finalAmount -= variant ? variant.offerPrice : product.offerPrice;
+  // await updatedCart.save();
+
+  if (updatedCart.couponApplied) {
+    if (updatedCart.items.length === 0) {
+      updatedCart.couponApplied = null;
+      await updatedCart.save();
+    } else if (updatedCart.items.length > 0 ) {
+
+      // const isCouponApplied = await Coupon.findOne({_id: updatedCart.couponApplied.couponId});
+
+      // if (isCouponApplied && isCouponApplied.minCartAmount > updatedCart.totalPrice) {
+      //   updatedCart.couponApplied = null;
+      //   updatedCart.coupon.finalAmount = 0;
+      //   await updatedCart.save();
+      // }
+    }
+  }
+
+
 
   // Fetch the populated cart to format the response
   const populatedCart = await cartModel
@@ -279,6 +308,8 @@ const updateCartItem = catchAsync(async (req, res, next) => {
 
   // Recalculate total price
   recalcTotalPrice(cart);
+  // Add coupon check before saving
+  cart = await checkCoupon(cart);
   await cart.save();
 
   // Fetch the populated cart to format the response

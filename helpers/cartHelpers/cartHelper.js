@@ -1,3 +1,5 @@
+const Coupon = require("../../model/couponModel");
+
 const formatCartResponse = (cart) => {
   if (!cart) return null;
 
@@ -69,4 +71,42 @@ const formatCartResponse = (cart) => {
   };
 };
 
-module.exports = { formatCartResponse };
+
+const checkCoupon = async (cart) => {
+  if (!cart.couponApplied) return cart;
+
+  const coupon = await Coupon.findById(cart.couponApplied.couponId);
+
+  if (!coupon || !coupon.isActive || coupon.expiryDate < new Date()) {
+    cart.couponApplied = null;
+    return cart;
+  }
+
+  // Check minimum purchase requirement
+  if (cart.totalPrice < coupon.minPurchase) {
+    cart.couponApplied = null;
+    return cart;
+  }
+
+  // Calculate discount
+  let discountAmount = 0;
+  if (coupon.discountType === 'percentage') {
+    discountAmount = (cart.totalPrice * coupon.discountAmount) / 100;
+    // Apply maximum discount cap if exists
+    if (coupon.maxDiscount) {
+      discountAmount = Math.min(discountAmount, coupon.maxDiscount);
+    }
+  } else {
+    discountAmount = coupon.discountAmount;
+  }
+
+  // Update coupon details
+  cart.couponApplied.originalAmount = cart.totalPrice;
+  cart.couponApplied.discountAmount = discountAmount;
+  cart.couponApplied.finalAmount = cart.totalPrice - discountAmount;
+  cart.couponApplied.discountType = coupon.discountType;
+
+  return cart;
+};
+
+module.exports = { formatCartResponse , checkCoupon};
