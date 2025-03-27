@@ -457,6 +457,11 @@ const getUserOrders = catchAsync(async (req, res, next) => {
         select: "name description",
       },
     })
+    .populate({
+      path: "products.variantId",
+      model: "Variant",
+      select: "attributes stock images",
+    })
     .sort({ createdAt: -1 });
 
   res.status(200).json({
