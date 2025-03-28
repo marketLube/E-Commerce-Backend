@@ -22,6 +22,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
+      "http://localhost:5175",
       process.env.FRONTEND_URL,
       "https://milistore-marketlubes-projects.vercel.app",
       "https://millstore.marketlube.in",

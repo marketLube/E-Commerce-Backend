@@ -146,6 +146,8 @@ const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
   const { address, paymentMethod } = req.body;
 
+  console.log(req.body);
+
   let deliveryAddress;
   if (mongoose.Types.ObjectId.isValid(address)) {
     const user = await NormalUser.findById(userId);
@@ -392,7 +394,7 @@ const filterOrders = catchAsync(async (req, res, next) => {
       model: "Variant",
       select: "attributes stock images",
     })
-    .populate("user", "username phoneNumber address")
+    .populate("user", "username phonenumber address")
     .sort({ createdAt: -1 });
 
   if (category) {
