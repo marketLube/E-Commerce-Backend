@@ -492,6 +492,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
     // Use Promise.all to handle async operations properly
     await Promise.all(
       updateData.variants.map(async (variant, index) => {
+        console.log(variant, "variant");
         if (variant._id) {
           variantIds.push(variant._id);
           const variantId = variant._id;

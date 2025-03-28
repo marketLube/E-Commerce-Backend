@@ -54,14 +54,21 @@ const addCategory = catchAsync(async (req, res, next) => {
 });
 
 const getAllCategories = catchAsync(async (req, res) => {
-  const categories = await Category.find().populate({
+  const { brandId } = req.query;
+  let filter = {};
+
+  if (brandId) {
+
+    filter.brand = new mongoose.Types.ObjectId(brandId);
+  }
+
+  const categories = await Category.find(filter).populate({
     path: "subcategories",
     populate: {
       path: "subcategories",
     },
   });
 
-  // Filter to only return root categories for the frontend
   const rootCategories = categories.filter((cat) => !cat.parent);
 
   res.status(200).json({
