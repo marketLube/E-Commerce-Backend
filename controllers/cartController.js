@@ -117,16 +117,17 @@ const removeFromCart = catchAsync(async (req, res, next) => {
     return next(new AppError("Cart not found", 404));
   }
 
-    // Filter out the product/variant from the cart items
-    cart.items = cart.items.filter(
-      (item) =>
-      (variantId && item.variant && item.variant.toString() !== variantId) ||
-      (productId &&
-        !variantId &&
-        item.product &&
-        item.product.toString() !== productId)
-  );
-
+  // Updated filter logic to correctly handle variant and non-variant products
+  cart.items = cart.items.filter((item) => {
+    if (variantId) {
+      // If removing a variant product, only remove the specific variant
+      return !(item.variant && item.variant.toString() === variantId);
+    } else if (productId) {
+      // If removing a non-variant product, only remove products without variants
+      return !(item.product.toString() === productId && !item.variant);
+    }
+    return true;
+  });
 
   // Recalculate total price;
   recalcTotalPrice(cart);

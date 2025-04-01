@@ -450,11 +450,13 @@ const getProductDetails = catchAsync(async (req, res, next) => {
 const updateProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.query;
   const updateData = req.body;
+
   const product = await Product.findById(productId).populate("variants");
 
   if (!product) {
     return next(new AppError("Product not found", 404));
   }
+
 
   const variantImagesMap = {};
   if (req.files && req.files.length > 0) {
