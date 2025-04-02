@@ -5,6 +5,7 @@ const uploadToCloudinary = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const mongoose = require("mongoose");
+const Product = require("../model/productModel");
 
 const addCategory = catchAsync(async (req, res, next) => {
   const { name, description, offer, parent } = req.body;
@@ -55,14 +56,38 @@ const addCategory = catchAsync(async (req, res, next) => {
 
 const getAllCategories = catchAsync(async (req, res) => {
   const { brandId } = req.query;
-  let filter = {};
 
+  // If brandId is provided, find categories through products
   if (brandId) {
+    // First get all product categories for this brand
+    const brandProducts = await Product.find({ brand: brandId })
+      .distinct('category');
 
-    filter.brand = new mongoose.Types.ObjectId(brandId);
+    // Then get these categories with their subcategories
+    const categories = await Category.find({
+      $or: [
+        { _id: { $in: brandProducts } },
+        { parent: { $in: brandProducts } }
+      ]
+    }).populate({
+      path: "subcategories",
+      populate: {
+        path: "subcategories",
+      },
+    });
+
+    const rootCategories = categories.filter((cat) => !cat.parent);
+
+    return res.status(200).json({
+      success: true,
+      envelop: {
+        data: rootCategories,
+      },
+    });
   }
 
-  const categories = await Category.find(filter).populate({
+  // If no brandId, return all categories (existing logic)
+  const categories = await Category.find().populate({
     path: "subcategories",
     populate: {
       path: "subcategories",
