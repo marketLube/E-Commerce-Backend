@@ -8,6 +8,7 @@ const {
   getGroupedProductsByLabel,
   getGroupedProductsByRating,
   searchProducts,
+  softDeleteProduct,
 } = require("../../controllers/productController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 const upload = require("../../middlewares/multer");
@@ -41,4 +42,5 @@ productRouter.delete(
   deleteProduct
 );
 
+productRouter.patch("/soft-delete",autheticateToken(["admin"]), softDeleteProduct);
 module.exports = productRouter;

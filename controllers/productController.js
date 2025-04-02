@@ -199,14 +199,16 @@ const listProducts = catchAsync(async (req, res, next) => {
     brandId,
   } = req.query;
 
-console.log(req.query);
+  console.log(req.query);
 
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   const skip = (page - 1) * limit;
 
   // Build base filter object
-  const filter = {};
+  const filter = {
+    isDeleted: { $ne: true }
+  };
 
   if (categoryId) {
     filter.category = new mongoose.Types.ObjectId(categoryId);
@@ -457,7 +459,6 @@ const updateProduct = catchAsync(async (req, res, next) => {
     return next(new AppError("Product not found", 404));
   }
 
-
   const variantImagesMap = {};
   if (req.files && req.files.length > 0) {
     for (const file of req.files) {
@@ -607,26 +608,91 @@ const searchProducts = catchAsync(async (req, res, next) => {
 
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 3;
-
   const skip = (page - 1) * limit;
 
-  const query = keyword ? { name: { $regex: keyword, $options: "i" } } : {};
+  // Create aggregation pipeline for better search
+  const aggregationPipeline = [
+    {
+      $lookup: {
+        from: "variants",
+        localField: "variants",
+        foreignField: "_id",
+        as: "variantsData"
+      }
+    },
+    {
+      $match: keyword ? {
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+          { "variantsData.sku": { $regex: keyword, $options: "i" } }
+        ]
+      } : {}
+    },
+    {
+      $lookup: {
+        from: "brands",
+        localField: "brand",
+        foreignField: "_id",
+        as: "brand"
+      }
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "createdBy"
+      }
+    },
+    { $unwind: { path: "$brand", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
+    { $skip: skip },
+    { $limit: limit }
+  ];
 
-  const productsPromise = Product.find(query)
-    .skip(skip)
-    .limit(limit)
-    .populate("brand")
-    .populate("category", "name description")
-    .populate("createdBy", "username email role");
+  const countPipeline = [
+    {
+      $lookup: {
+        from: "variants",
+        localField: "variants",
+        foreignField: "_id",
+        as: "variantsData"
+      }
+    },
+    {
+      $match: keyword ? {
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+          { "variantsData.sku": { $regex: keyword, $options: "i" } }
+        ]
+      } : {}
+    },
+    { $count: "total" }
+  ];
 
-  const countPromise = Product.countDocuments(query);
-
-  const [products, totalProducts] = await Promise.all([
-    productsPromise,
-    countPromise,
+  const [products, countResult] = await Promise.all([
+    Product.aggregate(aggregationPipeline),
+    Product.aggregate(countPipeline)
   ]);
 
-  const formattedProducts = products.map(formatProductResponse);
+  const totalProducts = countResult[0]?.total || 0;
+  const formattedProducts = products.map(product => {
+    const formatted = formatProductResponse(product);
+    // Add variants data separately
+    formatted.variants = product.variantsData || [];
+    return formatted;
+  });
 
   res.status(200).json({
     success: true,
@@ -636,6 +702,27 @@ const searchProducts = catchAsync(async (req, res, next) => {
       totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,
     },
+  });
+});
+
+const softDeleteProduct = catchAsync(async (req, res, next) => {
+  const { productId } = req.query;
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    return next(new AppError('Product not found', 404));
+  }
+
+  // Update the product status to indicate it's deleted
+  await Product.findByIdAndUpdate(productId, {
+    isDeleted: true,
+    deletedAt: new Date()
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Product has been soft deleted'
   });
 });
 
@@ -649,4 +736,5 @@ module.exports = {
   getGroupedProductsByLabel,
   getGroupedProductsByRating,
   searchProducts,
+  softDeleteProduct,
 };

@@ -18,6 +18,8 @@ const productSchema = new Schema({
     label: { type: Schema.Types.ObjectId, ref: 'Label' },
     averageRating: { type: Number, default: 0 },
     totalRatings: { type: Number, default: 0 },
+    isDeleted: { type: Boolean, default: false },
+
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
