@@ -16,7 +16,7 @@ const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const Rating = require("../model/ratingModel");
 const mongoose = require("mongoose");
 
-const addProduct = catchAsync(async (req, res) => {
+const addProduct = catchAsync(async (req, res, next) => {
   const {
     name,
     brand,
@@ -29,7 +29,13 @@ const addProduct = catchAsync(async (req, res) => {
     stock,
     label,
     units,
+    stockStatus,
   } = req.body;
+
+  // Add stock validation
+  if (stockStatus === 'outofstock' && stock > 0) {
+    return next(new AppError('Stock status cannot be out of stock when stock quantity is greater than 0', 400));
+  }
 
   const createdBy = req.user;
   const productImages = [];
@@ -76,9 +82,17 @@ const addProduct = catchAsync(async (req, res) => {
     createdBy,
     label,
     units,
+    stockStatus,
   };
 
   if (variantsArray && variantsArray.length > 0) {
+    // Add variant stock validation
+    for (const variant of variantsArray) {
+      if (variant.stockStatus === 'outofstock' && variant.stock > 0) {
+        return next(new AppError('Variant stock status cannot be out of stock when stock quantity is greater than 0', 400));
+      }
+    }
+
     // Parse the variants from strings to objects
     const parsedVariants = variantsArray;
 
@@ -452,6 +466,20 @@ const getProductDetails = catchAsync(async (req, res, next) => {
 const updateProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.query;
   const updateData = req.body;
+
+  // Add stock validation for main product
+  if (updateData.stockStatus === 'outofstock' && updateData.stock > 0) {
+    return next(new AppError('Stock status cannot be out of stock when stock quantity is greater than 0', 400));
+  }
+
+  // Add stock validation for variants
+  if (updateData.variants) {
+    for (const variant of updateData.variants) {
+      if (variant.stockStatus === 'outofstock' && variant.stock > 0) {
+        return next(new AppError('Variant stock status cannot be out of stock when stock quantity is greater than 0', 400));
+      }
+    }
+  }
 
   const product = await Product.findById(productId).populate("variants");
 

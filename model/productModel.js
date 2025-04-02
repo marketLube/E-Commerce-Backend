@@ -19,6 +19,7 @@ const productSchema = new Schema({
     averageRating: { type: Number, default: 0 },
     totalRatings: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
+    stockStatus: { type: String, enum: ['instock', 'outofstock'], default: 'instock' },
 
 }, { timestamps: true });
 
