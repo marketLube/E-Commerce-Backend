@@ -213,8 +213,6 @@ const listProducts = catchAsync(async (req, res, next) => {
     brandId,
   } = req.query;
 
-  console.log(req.query);
-
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   const skip = (page - 1) * limit;
@@ -372,8 +370,8 @@ const listProducts = catchAsync(async (req, res, next) => {
     Product.aggregate(countPipeline),
   ]);
 
-  // const totalProducts = countResult[0]?.total || 0;
-  const totalProducts = products.length;
+  // Use the count from countResult instead of products.length
+  const totalProducts = countResult[0]?.total || 0;
   const formattedProducts = products.map((product) => {
     const formatted = formatProductResponse(product);
     // Add variants data separately
