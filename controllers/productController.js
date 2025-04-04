@@ -650,7 +650,7 @@ const searchProducts = catchAsync(async (req, res, next) => {
       $match: keyword ? {
         $or: [
           { name: { $regex: keyword, $options: "i" } },
-          { description: { $regex: keyword, $options: "i" } },
+          // { description: { $regex: keyword, $options: "i" } },
           { "variantsData.sku": { $regex: keyword, $options: "i" } }
         ]
       } : {}
@@ -699,7 +699,7 @@ const searchProducts = catchAsync(async (req, res, next) => {
       $match: keyword ? {
         $or: [
           { name: { $regex: keyword, $options: "i" } },
-          { description: { $regex: keyword, $options: "i" } },
+          // { description: { $regex: keyword, $options: "i" } },
           { "variantsData.sku": { $regex: keyword, $options: "i" } }
         ]
       } : {}
