@@ -61,7 +61,11 @@ const editCoupon = catchAsync(async (req, res) => {
 const searchCoupon = catchAsync(async (req, res) => {
   const { q } = req.query;
 
-  const coupons = await Coupon.find({ code: { $regex: q, $options: "i" } });
+  const coupons = await Coupon.find({
+    code: { $regex: q, $options: "i" },
+    isActive: true,
+    expiryDate: { $gt: new Date() }
+  });
 
   res.status(200).json({
     status: "success",
