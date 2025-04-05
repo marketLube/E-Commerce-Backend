@@ -373,6 +373,8 @@ const filterOrders = catchAsync(async (req, res, next) => {
     filterCriteria.status = status;
   }
 
+  console.log(startDate, endDate);
+
   if (startDate || endDate) {
     filterCriteria.createdAt = {};
     if (startDate) filterCriteria.createdAt.$gte = new Date(startDate);
