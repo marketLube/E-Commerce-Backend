@@ -32,9 +32,65 @@ const addProduct = catchAsync(async (req, res, next) => {
     stockStatus,
   } = req.body;
 
-  // Add stock validation
-  if (stockStatus === 'outofstock' && stock > 0) {
-    return next(new AppError('Stock status cannot be out of stock when stock quantity is greater than 0', 400));
+  console.log("req.body", req.body); // Add stock validation
+  if (stockStatus === "outofstock" && stock > 0) {
+    return next(
+      new AppError(
+        "Stock status cannot be out of stock when stock quantity is greater than 0",
+        400
+      )
+    );
+  }
+
+  const queryConditions = [];
+
+  if (sku !== undefined) {
+    queryConditions.push({ sku });
+  }
+
+  if (name !== undefined) {
+    queryConditions.push({ name });
+  }
+
+  const productExists = await Product.findOne({
+    $or: queryConditions,
+  });
+
+  console.log("productExists", productExists);
+  if (productExists) {
+    return next(new AppError("Product already exists", 400));
+  }
+
+  if (variantsArray && variantsArray.length > 0) {
+    try {
+      await Promise.all(
+        variantsArray.map(async (variant) => {
+          const skuExists =
+            (await Variant.findOne({
+              $or: [
+                { sku: variant.sku },
+                { "attributes.title": variant.attributes.title },
+              ],
+            })) ||
+            (await Product.findOne({
+              $or: [{ sku: variant.sku }],
+            }));
+          console.log("skuExists", skuExists);
+          if (skuExists) {
+            if (skuExists.sku === variant.sku) {
+              return Promise.reject(
+                `${variant?.attributes?.title}'s SKU ${variant.sku} already exists`
+              );
+            } else {
+              return Promise.reject(`Variant Title already exists`);
+            }
+          }
+        })
+      );
+    } catch (err) {
+      console.log("err", err);
+      return next(new AppError(err, 400));
+    }
   }
 
   const createdBy = req.user;
@@ -88,8 +144,13 @@ const addProduct = catchAsync(async (req, res, next) => {
   if (variantsArray && variantsArray.length > 0) {
     // Add variant stock validation
     for (const variant of variantsArray) {
-      if (variant.stockStatus === 'outofstock' && variant.stock > 0) {
-        return next(new AppError('Variant stock status cannot be out of stock when stock quantity is greater than 0', 400));
+      if (variant.stockStatus === "outofstock" && variant.stock > 0) {
+        return next(
+          new AppError(
+            "Variant stock status cannot be out of stock when stock quantity is greater than 0",
+            400
+          )
+        );
       }
     }
 
@@ -219,7 +280,7 @@ const listProducts = catchAsync(async (req, res, next) => {
 
   // Build base filter object
   const filter = {
-    isDeleted: { $ne: true }
+    isDeleted: { $ne: true },
   };
 
   if (categoryId) {
@@ -465,16 +526,56 @@ const updateProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.query;
   const updateData = req.body;
 
+  try {
+    await Promise.all(
+      updateData.variants.map(async (variant) => {
+        const skuExists =
+          (await Variant.findOne({
+            $or: [
+              { sku: variant.sku },
+              { "attributes.title": variant.attributes.title },
+            ],
+          })) ||
+          (await Product.findOne({
+            $or: [{ sku: variant.sku }],
+          }));
+        console.log("skuExists", skuExists);
+        if (skuExists) {
+          if (skuExists.sku === variant.sku) {
+            return Promise.reject(
+              `${variant?.attributes?.title}'s SKU ${variant.sku} already exists`
+            );
+          } else {
+            return Promise.reject(`Variant Title already exists`);
+          }
+        }
+      })
+    );
+  } catch (err) {
+    console.log("err", err);
+    return next(new AppError(err, 400));
+  }
+
   // Add stock validation for main product
-  if (updateData.stockStatus === 'outofstock' && updateData.stock > 0) {
-    return next(new AppError('Stock status cannot be out of stock when stock quantity is greater than 0', 400));
+  if (updateData.stockStatus === "outofstock" && updateData.stock > 0) {
+    return next(
+      new AppError(
+        "Stock status cannot be out of stock when stock quantity is greater than 0",
+        400
+      )
+    );
   }
 
   // Add stock validation for variants
   if (updateData.variants) {
     for (const variant of updateData.variants) {
-      if (variant.stockStatus === 'outofstock' && variant.stock > 0) {
-        return next(new AppError('Variant stock status cannot be out of stock when stock quantity is greater than 0', 400));
+      if (variant.stockStatus === "outofstock" && variant.stock > 0) {
+        return next(
+          new AppError(
+            "Variant stock status cannot be out of stock when stock quantity is greater than 0",
+            400
+          )
+        );
       }
     }
   }
@@ -521,7 +622,6 @@ const updateProduct = catchAsync(async (req, res, next) => {
     // Use Promise.all to handle async operations properly
     await Promise.all(
       updateData.variants.map(async (variant, index) => {
-        console.log(variant, "variant");
         if (variant._id) {
           variantIds.push(variant._id);
           const variantId = variant._id;
@@ -643,47 +743,49 @@ const searchProducts = catchAsync(async (req, res, next) => {
         from: "variants",
         localField: "variants",
         foreignField: "_id",
-        as: "variantsData"
-      }
+        as: "variantsData",
+      },
     },
     {
-      $match: keyword ? {
-        $or: [
-          { name: { $regex: keyword, $options: "i" } },
-          // { description: { $regex: keyword, $options: "i" } },
-          { "variantsData.sku": { $regex: keyword, $options: "i" } }
-        ]
-      } : {}
+      $match: keyword
+        ? {
+            $or: [
+              { name: { $regex: keyword, $options: "i" } },
+              // { description: { $regex: keyword, $options: "i" } },
+              { "variantsData.sku": { $regex: keyword, $options: "i" } },
+            ],
+          }
+        : {},
     },
     {
       $lookup: {
         from: "brands",
         localField: "brand",
         foreignField: "_id",
-        as: "brand"
-      }
+        as: "brand",
+      },
     },
     {
       $lookup: {
         from: "categories",
         localField: "category",
         foreignField: "_id",
-        as: "category"
-      }
+        as: "category",
+      },
     },
     {
       $lookup: {
         from: "users",
         localField: "createdBy",
         foreignField: "_id",
-        as: "createdBy"
-      }
+        as: "createdBy",
+      },
     },
     { $unwind: { path: "$brand", preserveNullAndEmptyArrays: true } },
     { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
     { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
     { $skip: skip },
-    { $limit: limit }
+    { $limit: limit },
   ];
 
   const countPipeline = [
@@ -692,28 +794,30 @@ const searchProducts = catchAsync(async (req, res, next) => {
         from: "variants",
         localField: "variants",
         foreignField: "_id",
-        as: "variantsData"
-      }
+        as: "variantsData",
+      },
     },
     {
-      $match: keyword ? {
-        $or: [
-          { name: { $regex: keyword, $options: "i" } },
-          // { description: { $regex: keyword, $options: "i" } },
-          { "variantsData.sku": { $regex: keyword, $options: "i" } }
-        ]
-      } : {}
+      $match: keyword
+        ? {
+            $or: [
+              { name: { $regex: keyword, $options: "i" } },
+              // { description: { $regex: keyword, $options: "i" } },
+              { "variantsData.sku": { $regex: keyword, $options: "i" } },
+            ],
+          }
+        : {},
     },
-    { $count: "total" }
+    { $count: "total" },
   ];
 
   const [products, countResult] = await Promise.all([
     Product.aggregate(aggregationPipeline),
-    Product.aggregate(countPipeline)
+    Product.aggregate(countPipeline),
   ]);
 
   const totalProducts = countResult[0]?.total || 0;
-  const formattedProducts = products.map(product => {
+  const formattedProducts = products.map((product) => {
     const formatted = formatProductResponse(product);
     // Add variants data separately
     formatted.variants = product.variantsData || [];
@@ -737,18 +841,18 @@ const softDeleteProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findById(productId);
 
   if (!product) {
-    return next(new AppError('Product not found', 404));
+    return next(new AppError("Product not found", 404));
   }
 
   // Update the product status to indicate it's deleted
   await Product.findByIdAndUpdate(productId, {
     isDeleted: true,
-    deletedAt: new Date()
+    deletedAt: new Date(),
   });
 
   res.status(200).json({
-    status: 'success',
-    message: 'Product has been soft deleted'
+    status: "success",
+    message: "Product has been soft deleted",
   });
 });
 

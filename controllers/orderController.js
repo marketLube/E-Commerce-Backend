@@ -146,7 +146,6 @@ const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
   const { address, paymentMethod } = req.body;
 
-  console.log(req.body);
 
   let deliveryAddress;
   if (mongoose.Types.ObjectId.isValid(address)) {
@@ -373,7 +372,7 @@ const filterOrders = catchAsync(async (req, res, next) => {
     filterCriteria.status = status;
   }
 
-  console.log(startDate, endDate);
+ 
 
   if (startDate || endDate) {
     filterCriteria.createdAt = {};

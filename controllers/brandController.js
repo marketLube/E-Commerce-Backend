@@ -58,7 +58,6 @@ const getAllBrands = catchAsync(async (req, res, next) => {
 // Get a single brand by ID
 const getBrandById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  console.log("get brand by id", id);
   const brand = await Brand.findById(id);
 
   if (!brand) {

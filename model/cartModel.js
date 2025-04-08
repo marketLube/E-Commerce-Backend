@@ -68,12 +68,21 @@ const cartSchema = new Schema(
       originalAmount: Number,
       finalAmount: Number,
     },
+    totalQuantity: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
 cartSchema.methods.calculateTotalQuantity = function () {
-  return this.items.reduce((total, item) => total + item.quantity, 0);
+  this.totalQuantity = this.items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+  return this.totalQuantity;
 };
 
 module.exports = mongoose.model("Cart", cartSchema);

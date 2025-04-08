@@ -36,7 +36,6 @@ const getAllBanners = catchAsync(async (req, res, next) => {
 
 const deleteBanner = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  console.log("delete banner", id);
   const banner = await Banner.findById(id);
 
   if (!banner) {

@@ -22,7 +22,8 @@ const updateAverageRating = async (productId) => {
     // Calculate total ratings and average
     const totalRatings = ratings.length;
     const sumRatings = ratings.reduce((sum, r) => sum + r.rating, 0);
-    const average = totalRatings > 0 ? Math.round((sumRatings / totalRatings) * 10) / 10 : 0;
+    const average =
+      totalRatings > 0 ? Math.round((sumRatings / totalRatings) * 10) / 10 : 0;
 
     // Update rating distribution
     const ratingDistribution = {
@@ -30,9 +31,9 @@ const updateAverageRating = async (productId) => {
       2: 0,
       3: 0,
       4: 0,
-      5: 0
+      5: 0,
     };
-    ratings.forEach(r => {
+    ratings.forEach((r) => {
       ratingDistribution[r.rating]++;
     });
 
@@ -40,7 +41,7 @@ const updateAverageRating = async (productId) => {
     const ratingStats = {
       totalRatings,
       averageRating: average,
-      ratingCounts: ratingDistribution
+      ratingCounts: ratingDistribution,
     };
 
     // Update the product with all rating information
@@ -51,7 +52,7 @@ const updateAverageRating = async (productId) => {
         totalRatings,
         ratingDistribution,
         ratingStats,
-        ratings: ratings // Include all ratings
+        ratings: ratings, // Include all ratings
       },
       { new: true }
     );
@@ -76,16 +77,14 @@ const addOrUpdateRating = catchAsync(async (req, res, next) => {
 
   if (req.files && req.files.length > 0) {
     // Handle main brand image
-console.log(req.files,"req.files");
-    const imageFile = req.files.find(file => file.fieldname === 'image');
-console.log(imageFile,"imageFile");
+
+    const imageFile = req.files.find((file) => file.fieldname === "image");
+
     if (imageFile) {
       const uploadedImage = await uploadToCloudinary(imageFile.buffer);
       image = uploadedImage;
     }
   }
-
-  console.log(image,"image");
 
   let latestRating;
   if (existingRating) {
@@ -119,7 +118,7 @@ const deleteReview = catchAsync(async (req, res, next) => {
   // Find the review first to get the productId
   const review = await Rating.findById(reviewId);
   if (!review) {
-    return next(new AppError('Review not found', 404));
+    return next(new AppError("Review not found", 404));
   }
 
   // Delete the review
@@ -131,7 +130,8 @@ const deleteReview = catchAsync(async (req, res, next) => {
   // Calculate new rating values
   const totalRatings = remainingRatings.length;
   const sumRatings = remainingRatings.reduce((sum, r) => sum + r.rating, 0);
-  const average = totalRatings > 0 ? Math.round((sumRatings / totalRatings) * 10) / 10 : 0;
+  const average =
+    totalRatings > 0 ? Math.round((sumRatings / totalRatings) * 10) / 10 : 0;
 
   // Update the product directly
   const updatedProduct = await Product.findByIdAndUpdate(
@@ -139,21 +139,21 @@ const deleteReview = catchAsync(async (req, res, next) => {
     {
       averageRating: average,
       totalRatings: totalRatings,
-      ratings: remainingRatings
+      ratings: remainingRatings,
     },
     { new: true }
   );
 
   if (!updatedProduct) {
-    return next(new AppError('Error updating product rating', 500));
+    return next(new AppError("Error updating product rating", 500));
   }
 
   res.status(200).json({
     message: "Review deleted",
     updatedRating: {
       average,
-      totalRatings
-    }
+      totalRatings,
+    },
   });
 });
 
