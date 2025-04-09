@@ -7,7 +7,7 @@ const { getOrderStats } = require("../helpers/aggregation/aggregations");
 const Variant = require("../model/variantsModel");
 const Cart = require("../model/cartModel");
 const { NormalUser } = require("../model/userModel");
-const Razorpay = require("razorpay");
+const razorpayInstance = require("../config/razorPay");
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
 //     const { products, address, paymentMethod, transactionId } = req.body
@@ -77,11 +77,6 @@ const payment = catchAsync(async (req, res, next) => {
   } else {
     totalAmount = cart.totalPrice;
   }
-  // initializing razorpay
-  const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
 
   // setting up options for razorpay order.
   const options = {
@@ -92,7 +87,7 @@ const payment = catchAsync(async (req, res, next) => {
   };
 
   try {
-    const response = await razorpay.orders.create(options);
+    const response = await razorpayInstance.orders.create(options);
     res.json({
       order_id: response.id,
       currency: response.currency,
@@ -145,7 +140,6 @@ const verifyPayment = catchAsync(async (req, res, next) => {
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
   const { address, paymentMethod } = req.body;
-
 
   let deliveryAddress;
   if (mongoose.Types.ObjectId.isValid(address)) {
@@ -371,8 +365,6 @@ const filterOrders = catchAsync(async (req, res, next) => {
   if (status) {
     filterCriteria.status = status;
   }
-
- 
 
   if (startDate || endDate) {
     filterCriteria.createdAt = {};

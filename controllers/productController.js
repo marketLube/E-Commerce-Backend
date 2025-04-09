@@ -274,6 +274,8 @@ const listProducts = catchAsync(async (req, res, next) => {
     brandId,
   } = req.query;
 
+  console.log(req.query);
+
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   const skip = (page - 1) * limit;
@@ -288,7 +290,7 @@ const listProducts = catchAsync(async (req, res, next) => {
   }
 
   if (subcategoryId) {
-    filter["variants.subcategory"] = new mongoose.Types.ObjectId(subcategoryId);
+    filter.category = new mongoose.Types.ObjectId(subcategoryId);
   }
 
   if (brandId) {
