@@ -8,6 +8,7 @@ const Variant = require("../model/variantsModel");
 const Cart = require("../model/cartModel");
 const { NormalUser } = require("../model/userModel");
 const razorpayInstance = require("../config/razorPay");
+const crypto = require("crypto");
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
 //     const { products, address, paymentMethod, transactionId } = req.body
@@ -70,20 +71,20 @@ const razorpayInstance = require("../config/razorPay");
 // });
 
 const payment = catchAsync(async (req, res, next) => {
+  console.log(req.body, "req.body in payment");
   const cart = await Cart.findOne({ user: req.user });
   let totalAmount = 0;
-  if (cart.couponApplied) {
-    totalAmount = cart.couponApplied.finalAmount;
-  } else {
-    totalAmount = cart.totalPrice;
-  }
+  totalAmount = cart?.totalPrice;
+
+  // if (cart?.couponApplied) {
+  //   totalAmount = cart?.couponApplied?.finalAmount;
+  // }
 
   // setting up options for razorpay order.
   const options = {
     amount: totalAmount * 100,
     currency: "INR",
     receipt: "any unique id for every order",
-    payment_capture: 1,
   };
 
   try {
@@ -94,11 +95,13 @@ const payment = catchAsync(async (req, res, next) => {
       amount: response.amount,
     });
   } catch (err) {
+    console.log(err, "error");
     res.status(400).send("Not able to create order. Please try again!");
   }
 });
 
 const verifyPayment = catchAsync(async (req, res, next) => {
+  console.log(req.body, "req.body");
   const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
     req.body;
 

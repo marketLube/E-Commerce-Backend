@@ -20,6 +20,7 @@ productRouter.get("/get-product/:productId", getProductDetails);
 productRouter.get("/get-product-bylabel/:labelId", getProductsByLabel);
 productRouter.get("/get-grouped-products-label", getGroupedProductsByLabel);
 productRouter.get("/get-grouped-products-rating", getGroupedProductsByRating);
+
 productRouter.get("/search", searchProducts);
 
 productRouter.post(
@@ -42,5 +43,9 @@ productRouter.delete(
   deleteProduct
 );
 
-productRouter.patch("/soft-delete",autheticateToken(["admin"]), softDeleteProduct);
+productRouter.patch(
+  "/soft-delete",
+  autheticateToken(["admin"]),
+  softDeleteProduct
+);
 module.exports = productRouter;

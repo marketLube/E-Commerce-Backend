@@ -32,7 +32,6 @@ const addProduct = catchAsync(async (req, res, next) => {
     stockStatus,
   } = req.body;
 
-  console.log("req.body", req.body); // Add stock validation
   if (stockStatus === "outofstock" && stock > 0) {
     return next(
       new AppError(
@@ -56,7 +55,6 @@ const addProduct = catchAsync(async (req, res, next) => {
     $or: queryConditions,
   });
 
-  console.log("productExists", productExists);
   if (productExists) {
     return next(new AppError("Product already exists", 400));
   }
@@ -75,7 +73,6 @@ const addProduct = catchAsync(async (req, res, next) => {
             (await Product.findOne({
               $or: [{ sku: variant.sku }],
             }));
-          console.log("skuExists", skuExists);
           if (skuExists) {
             if (skuExists.sku === variant.sku) {
               return Promise.reject(
@@ -274,7 +271,6 @@ const listProducts = catchAsync(async (req, res, next) => {
     brandId,
   } = req.query;
 
-  console.log(req.query);
 
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
@@ -541,7 +537,6 @@ const updateProduct = catchAsync(async (req, res, next) => {
           (await Product.findOne({
             $or: [{ sku: variant.sku }],
           }));
-        console.log("skuExists", skuExists);
         if (skuExists) {
           if (skuExists.sku === variant.sku) {
             return Promise.reject(
