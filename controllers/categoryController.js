@@ -60,15 +60,16 @@ const getAllCategories = catchAsync(async (req, res) => {
   // If brandId is provided, find categories through products
   if (brandId) {
     // First get all product categories for this brand
-    const brandProducts = await Product.find({ brand: brandId })
-      .distinct('category');
+    const brandProducts = await Product.find({ brand: brandId }).distinct(
+      "category"
+    );
 
     // Then get these categories with their subcategories
     const categories = await Category.find({
       $or: [
         { _id: { $in: brandProducts } },
-        { parent: { $in: brandProducts } }
-      ]
+        { parent: { $in: brandProducts } },
+      ],
     }).populate({
       path: "subcategories",
       populate: {

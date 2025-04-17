@@ -18,7 +18,7 @@ orderRouter.post("/paymentVerify", autheticateToken(["user"]), verifyPayment);
 orderRouter.post("/placeorder", autheticateToken(["user"]), placeOrder);
 orderRouter.patch(
   "/change-status/:orderId",
-  autheticateToken(["admin", "seller"]),
+  autheticateToken(["admin", "seller", "user"]),
   updateOrderStatus
 );
 orderRouter.get(

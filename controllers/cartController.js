@@ -6,6 +6,7 @@ const Variant = require("../model/variantsModel");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const { checkCoupon } = require("../helpers/cartHelpers/cartHelper");
+const utilitesModel = require("../model/utilitesModel");
 
 // Helper function to recalculate total price
 const recalcTotalPrice = (cart) => {
@@ -15,7 +16,6 @@ const recalcTotalPrice = (cart) => {
 
   return cart;
 };
-
 
 const addToCart = catchAsync(async (req, res, next) => {
   const { productId, variantId, quantity = 1 } = req.body;
@@ -142,10 +142,8 @@ const removeFromCart = catchAsync(async (req, res, next) => {
     if (updatedCart.items.length === 0) {
       updatedCart.couponApplied = null;
       await updatedCart.save();
-    } else if (updatedCart.items.length > 0 ) {
-
+    } else if (updatedCart.items.length > 0) {
       // const isCouponApplied = await Coupon.findOne({_id: updatedCart.couponApplied.couponId});
-
       // if (isCouponApplied && isCouponApplied.minCartAmount > updatedCart.totalPrice) {
       //   updatedCart.couponApplied = null;
       //   updatedCart.coupon.finalAmount = 0;
@@ -153,8 +151,6 @@ const removeFromCart = catchAsync(async (req, res, next) => {
       // }
     }
   }
-
-
 
   // Fetch the populated cart to format the response
   const populatedCart = await cartModel
@@ -241,6 +237,9 @@ const getCart = catchAsync(async (req, res, next) => {
   // Add coupon details to the response if a coupon is applied
   let responseData = { formattedCart };
 
+  responseData.formattedCart.subTotal = responseData.formattedCart.totalPrice;
+  console.log(responseData, "log");
+
   if (cart.couponApplied) {
     responseData.couponDetails = {
       _id: cart?.couponApplied?.couponId?._id,
@@ -256,6 +255,22 @@ const getCart = catchAsync(async (req, res, next) => {
   } else {
     responseData.finalAmount = cart?.totalPrice;
   }
+
+  let deliveryCharges = 0;
+
+  const utilites = await utilitesModel.find();
+  if (responseData.formattedCart.totalPrice < utilites[0].minimumOrderAmount) {
+    deliveryCharges = utilites[0].deliveryCharges;
+    responseData.formattedCart.subTotal = responseData.formattedCart.totalPrice;
+    responseData.formattedCart.totalPrice =
+      responseData.formattedCart.totalPrice + deliveryCharges;
+
+    if (cart.couponApplied) {
+      responseData.finalAmount = responseData.finalAmount + deliveryCharges;
+    }
+  }
+
+  responseData.deliveryCharges = deliveryCharges;
 
   res.status(200).json({
     success: true,

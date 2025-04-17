@@ -271,7 +271,6 @@ const listProducts = catchAsync(async (req, res, next) => {
     brandId,
   } = req.query;
 
-
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   const skip = (page - 1) * limit;
@@ -521,36 +520,39 @@ const getProductDetails = catchAsync(async (req, res, next) => {
 });
 
 const updateProduct = catchAsync(async (req, res, next) => {
+  console.log(req.body, req.query, "req.body");
   const { productId } = req.query;
   const updateData = req.body;
 
-  try {
-    await Promise.all(
-      updateData.variants.map(async (variant) => {
-        const skuExists =
-          (await Variant.findOne({
-            $or: [
-              { sku: variant.sku },
-              { "attributes.title": variant.attributes.title },
-            ],
-          })) ||
-          (await Product.findOne({
-            $or: [{ sku: variant.sku }],
-          }));
-        if (skuExists) {
-          if (skuExists.sku === variant.sku) {
-            return Promise.reject(
-              `${variant?.attributes?.title}'s SKU ${variant.sku} already exists`
-            );
-          } else {
-            return Promise.reject(`Variant Title already exists`);
+  if (updateData.variants) {
+    try {
+      await Promise.all(
+        updateData.variants.map(async (variant) => {
+          const skuExists =
+            (await Variant.findOne({
+              $or: [
+                { sku: variant.sku },
+                { "attributes.title": variant.attributes.title },
+              ],
+            })) ||
+            (await Product.findOne({
+              $or: [{ sku: variant.sku }],
+            }));
+          if (skuExists) {
+            if (skuExists.sku === variant.sku) {
+              return Promise.reject(
+                `${variant?.attributes?.title}'s SKU ${variant.sku} already exists`
+              );
+            } else {
+              return Promise.reject(`Variant Title already exists`);
+            }
           }
-        }
-      })
-    );
-  } catch (err) {
-    console.log("err", err);
-    return next(new AppError(err, 400));
+        })
+      );
+    } catch (err) {
+      console.log("err", err);
+      return next(new AppError(err, 400));
+    }
   }
 
   // Add stock validation for main product

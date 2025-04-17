@@ -71,7 +71,6 @@ const crypto = require("crypto");
 // });
 
 const payment = catchAsync(async (req, res, next) => {
-  console.log(req.body, "req.body in payment");
   const cart = await Cart.findOne({ user: req.user });
   let totalAmount = 0;
   totalAmount = cart?.totalPrice;
@@ -101,7 +100,6 @@ const payment = catchAsync(async (req, res, next) => {
 });
 
 const verifyPayment = catchAsync(async (req, res, next) => {
-  console.log(req.body, "req.body");
   const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
     req.body;
 
@@ -118,30 +116,93 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     });
   }
 
-  // // Find the order and update it
-  const order = await orderModel.create({
-    // order_id: razorpay_order_id,
-    paymentStatus: "paid",
-    paymentId: razorpay_payment_id,
-  });
+  // Assuming you have access to userId, validatedProducts, finalAmount, and deliveryAddress
+  const userId = req.user;
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart || cart.items.length === 0) {
+    return next(new AppError("No items in cart to place an order", 400));
+  }
 
-  if (!order) {
+  let totalAmount = 0;
+  const validatedProducts = [];
+
+  for (const item of cart.items) {
+    const product = await productModel
+      .findById(item.product)
+      .populate("variants");
+    if (!product) {
+      return next(new AppError(`Product not found: ${item.product}`, 404));
+    }
+
+    let price;
+    if (item.variant) {
+      const variant = product.variants.find(
+        (v) => v._id.toString() === item.variant.toString()
+      );
+      if (!variant) {
+        return next(new AppError(`Variant not found: ${item.variant}`, 404));
+      }
+      price = variant.offerPrice || variant.price;
+    } else {
+      price = product.offerPrice || product.price;
+    }
+
+    const itemTotal = price * item.quantity;
+    totalAmount += itemTotal;
+
+    validatedProducts.push({
+      productId: product._id,
+      variantId: item.variant || null,
+      quantity: item.quantity,
+      price: price,
+    });
+  }
+
+  let finalAmount = totalAmount;
+  if (cart.couponApplied && cart.couponApplied.discountAmount) {
+    finalAmount -= cart.couponApplied.discountAmount;
+  }
+
+  let deliveryAddress = req.body.address;
+  if (mongoose.Types.ObjectId.isValid(deliveryAddress)) {
+    const user = await NormalUser.findById(userId);
+    deliveryAddress = user.address.find(
+      (addr) => addr._id.toString() === deliveryAddress
+    );
+  }
+  const paymentMethod = "ONLINE";
+
+  const newOrder = await createOrder(
+    userId,
+    validatedProducts,
+    finalAmount,
+    deliveryAddress,
+    paymentMethod,
+    razorpay_payment_id
+  );
+
+  if (!newOrder) {
     return res.status(404).json({ success: false, message: "Order not found" });
   }
 
+  // Delete the cart after placing the order
+  await Cart.findOneAndDelete({ user: userId });
+
   res.status(200).json({
     success: true,
-    message: "Payment verified successfully",
+    message: "Payment verified and order created successfully",
     data: {
       razorpay_payment_id,
       razorpay_order_id,
       razorpay_signature,
+      order: newOrder,
     },
   });
 });
 
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
+  console.log(req.body, "userId");
   const { address, paymentMethod } = req.body;
 
   let deliveryAddress;
@@ -582,6 +643,32 @@ const orderStats = catchAsync(async (req, res, next) => {
     stats,
   });
 });
+
+async function createOrder(
+  userId,
+  validatedProducts,
+  finalAmount,
+  deliveryAddress,
+  paymentMethod,
+  paymentId = null
+) {
+  const orderData = {
+    user: userId,
+    products: validatedProducts,
+    totalAmount: finalAmount,
+    deliveryAddress,
+    paymentMethod,
+    paymentStatus: paymentMethod === "ONLINE" ? "paid" : "pending",
+  };
+
+  if (paymentId) {
+    orderData.paymentId = paymentId;
+  }
+
+  const newOrder = await orderModel.create(orderData);
+
+  return newOrder;
+}
 
 module.exports = {
   placeOrder,
