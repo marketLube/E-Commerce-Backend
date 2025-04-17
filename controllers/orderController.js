@@ -422,7 +422,7 @@ const updateOrderStatus = catchAsync(async (req, res, next) => {
 });
 
 const filterOrders = catchAsync(async (req, res, next) => {
-  const { status, startDate, endDate, category } = req.query;
+  const { status, startDate, endDate, category, page, limit } = req.query;
 
   let filterCriteria = {};
 
@@ -435,6 +435,8 @@ const filterOrders = catchAsync(async (req, res, next) => {
     if (startDate) filterCriteria.createdAt.$gte = new Date(startDate);
     if (endDate) filterCriteria.createdAt.$lte = new Date(endDate);
   }
+
+  const skip = (page - 1) * limit;
 
   let orders = await orderModel
     .find(filterCriteria)
@@ -452,7 +454,12 @@ const filterOrders = catchAsync(async (req, res, next) => {
       select: "attributes stock images",
     })
     .populate("user", "username phonenumber address")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const totalOrders = await orderModel.countDocuments(filterCriteria);
+  const totalPages = Math.ceil(totalOrders / limit);
 
   if (category) {
     orders = orders.filter((order) =>
@@ -471,6 +478,8 @@ const filterOrders = catchAsync(async (req, res, next) => {
   res.status(200).json({
     message: "Orders retrieved successfully",
     orders,
+    totalOrders,
+    totalPages,
   });
 });
 

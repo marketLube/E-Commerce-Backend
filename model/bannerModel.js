@@ -13,6 +13,15 @@ const bannerSchema = new Schema({
     type: String,
     default: null,
   },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+    default: null,
+  },
+  percentage: {
+    type: Number,
+    default: null,
+  },
 });
 
 const Banner = mongoose.model("Banner", bannerSchema);
