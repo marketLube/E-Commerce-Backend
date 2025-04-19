@@ -3,11 +3,11 @@ const { Schema } = mongoose;
 
 const productSchema = new Schema(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     brand: { type: Schema.Types.ObjectId, ref: "Brand" },
     category: { type: Schema.Types.ObjectId, ref: "Category" },
     description: { type: String },
-    variants: [{ type: Schema.Types.ObjectId, ref: "Variant" }], // References to Variant documents
+    variants: [{ type: Schema.Types.ObjectId, ref: "Variant" }],
     // Fields for non-variant products
     sku: { type: String, unique: true, sparse: true },
     price: { type: Number },

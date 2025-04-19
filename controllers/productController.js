@@ -767,6 +767,7 @@ const searchProducts = catchAsync(async (req, res, next) => {
     {
       $match: keyword
         ? {
+            isDeleted: false,
             $or: [
               { name: { $regex: keyword, $options: "i" } },
               // { description: { $regex: keyword, $options: "i" } },
