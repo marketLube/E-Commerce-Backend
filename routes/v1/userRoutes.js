@@ -25,6 +25,7 @@ userRouter.patch(
   autheticateToken(["user"]),
   deleteUserAddress
 );
+
 userRouter.post("/submit-user-details", submitUserDetails);
 userRouter.get("/subscribers", getAllSubscribers);
 module.exports = userRouter;

@@ -317,11 +317,28 @@ const listProducts = catchAsync(async (req, res, next) => {
     },
     {
       $addFields: {
+        maxVariantPrice: { $max: "$variantsData.offerPrice" },
+        minVariantPrice: { $min: "$variantsData.offerPrice" },
+      },
+    },
+    {
+      $addFields: {
         effectivePrice: {
           $cond: {
-            if: { $gt: [{ $size: "$variantsData" }, 0] },
-            then: { $min: "$variantsData.offerPrice" },
-            else: "$offerPrice",
+            if: {
+              $and: [
+                { $gt: [{ $size: "$variantsData" }, 0] },
+                { $lt: [parseInt(minPrice), "$minVariantPrice"] },
+              ],
+            },
+            then: "$minVariantPrice",
+            else: {
+              $cond: {
+                if: { $gt: [{ $size: "$variantsData" }, 0] },
+                then: "$maxVariantPrice",
+                else: "$offerPrice",
+              },
+            },
           },
         },
       },
@@ -427,6 +444,8 @@ const listProducts = catchAsync(async (req, res, next) => {
     Product.aggregate(aggregationPipeline),
     Product.aggregate(countPipeline),
   ]);
+
+  console.log(products, " countResult");
 
   // Use the count from countResult instead of products.length
   const totalProducts = countResult[0]?.total || 0;
