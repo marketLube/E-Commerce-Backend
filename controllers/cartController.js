@@ -187,6 +187,7 @@ const clearCart = catchAsync(async (req, res, next) => {
 
   cart.items = [];
   cart.totalPrice = 0;
+  cart.couponStatus = false;
   await cart.save();
 
   const formattedCart = formatCartResponse(cart);
@@ -238,9 +239,8 @@ const getCart = catchAsync(async (req, res, next) => {
   let responseData = { formattedCart };
 
   responseData.formattedCart.subTotal = responseData.formattedCart.totalPrice;
-  console.log(responseData, "log");
 
-  if (cart.couponApplied) {
+  if (cart.couponStatus) {
     responseData.couponDetails = {
       _id: cart?.couponApplied?.couponId?._id,
       code: cart?.couponApplied?.couponId?.code,
@@ -259,15 +259,14 @@ const getCart = catchAsync(async (req, res, next) => {
   let deliveryCharges = 0;
 
   const utilites = await utilitesModel.find();
-  if (responseData.formattedCart.totalPrice < utilites[0].minimumOrderAmount) {
+
+  if (!cart.couponStatus && cart.totalPrice < utilites[0].minimumOrderAmount) {
     deliveryCharges = utilites[0].deliveryCharges;
     responseData.formattedCart.subTotal = responseData.formattedCart.totalPrice;
     responseData.formattedCart.totalPrice =
       responseData.formattedCart.totalPrice + deliveryCharges;
 
-    if (cart.couponApplied) {
-      responseData.finalAmount = responseData.finalAmount + deliveryCharges;
-    }
+    responseData.finalAmount = responseData.finalAmount + deliveryCharges;
   }
 
   responseData.deliveryCharges = deliveryCharges;

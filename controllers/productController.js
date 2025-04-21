@@ -445,7 +445,7 @@ const listProducts = catchAsync(async (req, res, next) => {
     Product.aggregate(countPipeline),
   ]);
 
-  console.log(products, " countResult");
+
 
   // Use the count from countResult instead of products.length
   const totalProducts = countResult[0]?.total || 0;
@@ -547,18 +547,29 @@ const updateProduct = catchAsync(async (req, res, next) => {
     try {
       await Promise.all(
         updateData.variants.map(async (variant) => {
-          const skuExists =
-            (await Variant.findOne({
-              $or: [
-                { sku: variant.sku },
-                { "attributes.title": variant.attributes.title },
-              ],
-            })) ||
-            (await Product.findOne({
-              $or: [{ sku: variant.sku }],
-            }));
-          if (skuExists) {
-            if (skuExists.sku === variant.sku) {
+          const queryConditions = [
+            { sku: variant.sku },
+            { "attributes.title": variant.attributes.title },
+          ];
+
+          // Exclude the current variant from the check
+          const skuExists = await Variant.findOne({
+            $or: queryConditions,
+            _id: { $ne: variant._id }, // Exclude the current variant
+          });
+
+          console.log(skuExists, "skuExists");
+
+          const productSkuExists = await Product.findOne({
+            sku: variant.sku,
+            _id: { $ne: productId }, // Exclude the current variant
+          });
+
+          if (skuExists || productSkuExists) {
+            if (
+              skuExists?.sku === variant.sku ||
+              productSkuExists?.sku === variant.sku
+            ) {
               return Promise.reject(
                 `${variant?.attributes?.title}'s SKU ${variant.sku} already exists`
               );

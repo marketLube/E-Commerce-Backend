@@ -64,7 +64,7 @@ const searchCoupon = catchAsync(async (req, res) => {
   const coupons = await Coupon.find({
     code: { $regex: q, $options: "i" },
     isActive: true,
-    expiryDate: { $gt: new Date() }
+    expiryDate: { $gt: new Date() },
   });
 
   res.status(200).json({
@@ -157,6 +157,7 @@ const applyCoupon = catchAsync(async (req, res, next) => {
     originalAmount: cartTotal,
     finalAmount: finalAmount,
   };
+  cart.couponStatus = true;
 
   const updatedCart = await cart.save();
 
@@ -182,7 +183,6 @@ const applyCoupon = catchAsync(async (req, res, next) => {
 });
 
 const removeCouponFromCart = catchAsync(async (req, res, next) => {
-
   const userId = req.user;
 
   // Find the cart and populate necessary fields
@@ -210,6 +210,7 @@ const removeCouponFromCart = catchAsync(async (req, res, next) => {
 
   // Remove coupon details
   cart.couponApplied = undefined;
+  cart.couponStatus = false;
   const updatedCart = await cart.save();
 
   // Format the response using your existing cart formatter

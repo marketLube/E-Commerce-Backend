@@ -61,17 +61,14 @@ const cartSchema = new Schema(
       originalAmount: Number,
       finalAmount: Number,
     },
-    coupon: {
-      code: String,
-      discountType: String,
-      discountAmount: Number,
-      originalAmount: Number,
-      finalAmount: Number,
-    },
     totalQuantity: {
       type: Number,
       required: true,
       default: 0,
+    },
+    couponStatus: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

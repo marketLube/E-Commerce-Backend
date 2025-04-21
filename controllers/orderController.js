@@ -9,6 +9,8 @@ const Cart = require("../model/cartModel");
 const { NormalUser } = require("../model/userModel");
 const razorpayInstance = require("../config/razorPay");
 const crypto = require("crypto");
+
+const utilitesModel = require("../model/utilitesModel");
 // const placeOrder = catchAsync(async (req, res, next) => {
 //     const userId = req.user
 //     const { products, address, paymentMethod, transactionId } = req.body
@@ -72,14 +74,26 @@ const crypto = require("crypto");
 
 const payment = catchAsync(async (req, res, next) => {
   const cart = await Cart.findOne({ user: req.user });
+  console.log(cart, "cart");
+
   let totalAmount = 0;
-  totalAmount = cart?.totalPrice;
+  let deliveryCharges = 0;
+  if (cart.couponStatus) {
+    totalAmount = cart.couponApplied.finalAmount;
+  } else {
+    totalAmount = cart.totalPrice;
+  }
+  const utilites = await utilitesModel.find();
 
-  // if (cart?.couponApplied) {
-  //   totalAmount = cart?.couponApplied?.finalAmount;
-  // }
+  if (!cart.couponStatus && totalAmount < utilites[0].minimumOrderAmount) {
+    deliveryCharges = utilites[0].deliveryCharges;
+    totalAmount = totalAmount + deliveryCharges;
+  }
 
-  // setting up options for razorpay order.
+  //the 5% off on total amount
+  const discount = totalAmount * 0.05;
+  totalAmount = totalAmount - discount;
+
   const options = {
     amount: totalAmount * 100,
     currency: "INR",
