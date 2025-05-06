@@ -24,6 +24,7 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5175",
       process.env.FRONTEND_URL,
+      "https://panel.tradelinesmillstores.com",
       "https://milistore-marketlubes-projects.vercel.app",
       "https://millstore.marketlube.in",
       "https://mill-store.vercel.app",
