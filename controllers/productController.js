@@ -272,7 +272,7 @@ const listProducts = catchAsync(async (req, res, next) => {
   } = req.query;
 
   page = parseInt(page) || 1;
-  limit = parseInt(limit) || 10;
+  limit = parseInt(limit) || 20;
   const skip = (page - 1) * limit;
 
   // Build base filter object
@@ -462,6 +462,7 @@ const listProducts = catchAsync(async (req, res, next) => {
       products: formattedProducts,
       totalProducts,
       totalPages: Math.ceil(totalProducts / limit),
+      hasMore: page * limit < totalProducts,
       currentPage: page,
       filters: {
         categoryId,
@@ -539,7 +540,6 @@ const getProductDetails = catchAsync(async (req, res, next) => {
 });
 
 const updateProduct = catchAsync(async (req, res, next) => {
-  console.log(req.body, req.query, "req.body");
   const { productId } = req.query;
   const updateData = req.body;
 
@@ -558,7 +558,6 @@ const updateProduct = catchAsync(async (req, res, next) => {
             _id: { $ne: variant._id }, // Exclude the current variant
           });
 
-          console.log(skuExists, "skuExists");
 
           const productSkuExists = await Product.findOne({
             sku: variant.sku,
