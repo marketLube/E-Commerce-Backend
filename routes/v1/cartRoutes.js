@@ -4,6 +4,7 @@ const {
   clearCart,
   getCart,
   updateCartItem,
+  checkStock,
 } = require("../../controllers/cartController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 
@@ -22,5 +23,5 @@ cartRouter.patch(
   autheticateToken(["user"]),
   updateCartItem
 );
-
+cartRouter.get("/check-stock", autheticateToken(["user"]), checkStock);
 module.exports = cartRouter;

@@ -352,10 +352,37 @@ const updateCartItem = catchAsync(async (req, res, next) => {
   });
 });
 
+const checkStock = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+
+  const cart = await cartModel.findOne({ user: userId });
+
+  for (const item of cart.items) {
+    const product = await productModel.findById(item.product);
+    const variant = await Variant.findById(item.variant);
+
+    if (variant) {
+      if (variant.stock < item.quantity) {
+        return next(new AppError(`Insufficient stock for variant ${variant.attributes.title} of ${product.name}`, 400));
+      }
+    } else {
+      if (product.stock < item.quantity) {
+        return next(new AppError(`Insufficient stock for product ${product.name}`, 400));
+      }
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Stock is available",
+  });
+});
+
 module.exports = {
   addToCart,
   clearCart,
   removeFromCart,
   getCart,
   updateCartItem,
-};
+  checkStock,
+}
