@@ -149,6 +149,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     }
 
     let price;
+    let stock;
     if (item.variant) {
       const variant = product.variants.find(
         (v) => v._id.toString() === item.variant.toString()
@@ -156,9 +157,35 @@ const verifyPayment = catchAsync(async (req, res, next) => {
       if (!variant) {
         return next(new AppError(`Variant not found: ${item.variant}`, 404));
       }
+
+      if (variant.stock < item.quantity) {
+        return next(
+          new AppError(
+            `Insufficient stock for variant ${variant.attributes.title} of ${product.name}`,
+            400
+          )
+        );
+      }
+
       price = variant.offerPrice || variant.price;
+      stock = variant.stock;
+
+       await Variant.findByIdAndUpdate(variant._id, {
+        $inc: { stock: -item.quantity },
+      });
     } else {
-      price = product.offerPrice || product.price;
+     if (product.stock < item.quantity) {
+        return next(
+          new AppError(`Insufficient stock for product ${product.name}`, 400)
+        );
+      }
+
+       price = product.offerPrice || product.price;
+      stock = product.stock;
+
+      await productModel.findByIdAndUpdate(product._id, {
+        $inc: { stock: -item.quantity },
+      });
     }
 
     const itemTotal = price * item.quantity;
