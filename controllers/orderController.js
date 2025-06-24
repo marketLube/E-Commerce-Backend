@@ -74,7 +74,7 @@ const utilitesModel = require("../model/utilitesModel");
 
 const payment = catchAsync(async (req, res, next) => {
   const cart = await Cart.findOne({ user: req.user });
-  console.log(cart, "cart");
+
 
   let totalAmount = 0;
   let deliveryCharges = 0;
@@ -216,7 +216,6 @@ const verifyPayment = catchAsync(async (req, res, next) => {
 
 const placeOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
-  console.log(req.body, "userId");
   const { address, paymentMethod } = req.body;
 
   let deliveryAddress;

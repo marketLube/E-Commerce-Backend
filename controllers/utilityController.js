@@ -2,15 +2,12 @@ const utilitesModel = require("../model/utilitesModel");
 
 const getUtilites = async (req, res, next) => {
   const utilites = await utilitesModel.find();
-  console.log(utilites, "log");
   res.status(200).json(utilites);
 };
 
 const deliveryCharges = async (req, res, next) => {
-  console.log(req.body, "log");
   // Find the existing document
   let utilites = await utilitesModel.find();
-  console.log(utilites, "log");
 
   if (utilites.length > 0) {
     // Update the existing document
@@ -24,7 +21,6 @@ const deliveryCharges = async (req, res, next) => {
       },
       { new: true }
     );
-    console.log(updateUtilites, "log");
     utilites = updateUtilites;
   } else {
     const newUtilites = new utilitesModel({
