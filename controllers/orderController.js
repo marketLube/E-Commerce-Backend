@@ -114,7 +114,7 @@ const payment = catchAsync(async (req, res, next) => {
 });
 
 const verifyPayment = catchAsync(async (req, res, next) => {
-  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature, amount } =
     req.body;
 
   const secret = process.env.RAZORPAY_KEY_SECRET;
@@ -137,7 +137,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     return next(new AppError("No items in cart to place an order", 400));
   }
 
-  let totalAmount = 0;
+  // let totalAmount = amount;
   const validatedProducts = [];
 
   for (const item of cart.items) {
@@ -154,18 +154,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
       const variant = product.variants.find(
         (v) => v._id.toString() === item.variant.toString()
       );
-      if (!variant) {
-        return next(new AppError(`Variant not found: ${item.variant}`, 404));
-      }
 
-      if (variant.stock < item.quantity) {
-        return next(
-          new AppError(
-            `Insufficient stock for variant ${variant.attributes.title} of ${product.name}`,
-            400
-          )
-        );
-      }
 
       price = variant.offerPrice || variant.price;
       stock = variant.stock;
@@ -188,8 +177,8 @@ const verifyPayment = catchAsync(async (req, res, next) => {
       });
     }
 
-    const itemTotal = price * item.quantity;
-    totalAmount += itemTotal;
+    // const itemTotal = price * item.quantity;
+    
 
     validatedProducts.push({
       productId: product._id,
@@ -199,10 +188,10 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     });
   }
 
-  let finalAmount = totalAmount;
-  if (cart.couponApplied && cart.couponApplied.discountAmount) {
-    finalAmount -= cart.couponApplied.discountAmount;
-  }
+  let finalAmount = amount;
+  // if (cart.couponApplied && cart.couponApplied.discountAmount) {
+  //   finalAmount -= cart.couponApplied.discountAmount;
+  // }
 
   let deliveryAddress = req.body.address;
   if (mongoose.Types.ObjectId.isValid(deliveryAddress)) {
