@@ -427,6 +427,43 @@ const updateOrderStatus = catchAsync(async (req, res, next) => {
 
   const updateField = type === "order" ? { status } : { paymentStatus: status };
 
+  const order = await orderModel.findById(orderId);
+  if(order.status === "cancelled"){
+    return next(new AppError("Order is already cancelled", 400));
+  }
+
+  if(status === "cancelled"){
+    const variantBulkOperations = [];
+    const productBulkOperations = [];
+    
+    for (const product of order.products) {
+      if(product?.variantId && product?.variantId !== null){  
+        variantBulkOperations.push({
+          updateOne: {
+            filter: { _id: product.variantId },
+            update: { $inc: { stock: product.quantity } },
+          },
+        });
+      } else {
+        productBulkOperations.push({
+          updateOne: {
+            filter: { _id: product.productId },
+            update: { $inc: { stock: product.quantity } },
+          },
+        });
+      }
+    }
+
+    // Execute bulk operations separately for variants and products
+    if (variantBulkOperations.length > 0) {
+      await Variant.bulkWrite(variantBulkOperations);
+    }
+    
+    if (productBulkOperations.length > 0) {
+      await productModel.bulkWrite(productBulkOperations);
+    }
+  }
+
   const updatedOrder = await orderModel
     .findByIdAndUpdate(orderId, updateField, { new: true })
     .populate({
@@ -572,6 +609,9 @@ const cancelOrder = catchAsync(async (req, res, next) => {
   const userId = req.user;
 
   const order = await orderModel.findById(orderId);
+
+  console.log(order , "order Details>>>");
+
 
   if (!order) {
     return next(new AppError("Order not found", 404));
