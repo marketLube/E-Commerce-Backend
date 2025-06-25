@@ -16,21 +16,22 @@ const autheticateToken = (allowedRoles) => {
 
       // First check Authorization header for Bearer token
       const authHeader = req.headers.authorization;
+
       if (authHeader && authHeader.startsWith("Bearer ")) {
         token = authHeader.split(" ")[1];
       }
 
       // If no Bearer token, check cookies
-      if (!token) {
-        // Loop through allowed roles and find the correct token in cookies
-        for (const role of allowedRoles) {
-          if (req.cookies[roleTokenMap[role]]) {
-            token = req.cookies[roleTokenMap[role]];
-            userRole = role;
-            break;
-          }
-        }
-      }
+      // if (!token) {
+      //   // Loop through allowed roles and find the correct token in cookies
+      //   for (const role of allowedRoles) {
+      //     if (req.cookies[roleTokenMap[role]]) {
+      //       token = req.cookies[roleTokenMap[role]];
+      //       userRole = role;
+      //       break;
+      //     }
+      //   }
+      // }
 
       if (!token) {
         return next(new AppError("Authentication token not found", 401));

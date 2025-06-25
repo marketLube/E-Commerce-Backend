@@ -607,12 +607,7 @@ const getUserOrders = catchAsync(async (req, res, next) => {
 const cancelOrder = catchAsync(async (req, res, next) => {
   const { orderId } = req.params;
   const userId = req.user;
-
   const order = await orderModel.findById(orderId);
-
-  console.log(order , "order Details>>>");
-
-
   if (!order) {
     return next(new AppError("Order not found", 404));
   }
