@@ -8,6 +8,7 @@ const formatCartResponse = (cart) => {
     const variant = item.variant;
     const hasVariant = !!variant;
 
+
     // Determine the main image based on whether there's a variant or not
     const mainImage = hasVariant
       ? variant.images && variant.images.length > 0
@@ -40,6 +41,8 @@ const formatCartResponse = (cart) => {
             images,
             brand: product.brand,
             category: product.category,
+            stock: product.stock,
+            stockStatus: product.stockStatus,
           }
         : null,
       variant: variant
@@ -52,6 +55,8 @@ const formatCartResponse = (cart) => {
             stockStatus: variant.stockStatus,
             attributes: variant.attributes,
             images: variant.images,
+            stock: variant.stock,
+            stockStatus: variant.stockStatus,
           }
         : null,
       itemTotal: item.quantity * (item.offerPrice || item.price),

@@ -207,7 +207,7 @@ const getCart = catchAsync(async (req, res, next) => {
     .findOne({ user: userId })
     .populate({
       path: "items.product",
-      select: "name description images brand category",
+      select: "name description images brand category stock stockStatus",
       populate: [
         { path: "brand", select: "name" },
         { path: "category", select: "name" },
@@ -270,6 +270,7 @@ const getCart = catchAsync(async (req, res, next) => {
   }
 
   responseData.deliveryCharges = deliveryCharges;
+
 
   res.status(200).json({
     success: true,
