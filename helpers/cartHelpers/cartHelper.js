@@ -65,6 +65,8 @@ const formatCartResponse = (cart) => {
     };
   });
 
+ 
+
   return {
     _id: cart._id,
     user: cart.user,
@@ -84,12 +86,14 @@ const checkCoupon = async (cart) => {
 
   if (!coupon || !coupon.isActive || coupon.expiryDate < new Date()) {
     cart.couponApplied = null;
+    cart.couponStatus = false;
     return cart;
   }
 
   // Check minimum purchase requirement
   if (cart.totalPrice < coupon.minPurchase) {
     cart.couponApplied = null;
+    cart.couponStatus = false;
     return cart;
   }
 
@@ -110,7 +114,7 @@ const checkCoupon = async (cart) => {
   cart.couponApplied.discountAmount = discountAmount;
   cart.couponApplied.finalAmount = cart.totalPrice - discountAmount;
   cart.couponApplied.discountType = coupon.discountType;
-
+  cart.couponStatus = true;
   return cart;
 };
 

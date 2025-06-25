@@ -324,6 +324,18 @@ const placeOrder = catchAsync(async (req, res, next) => {
     finalAmount -= cart.couponApplied.discountAmount;
   }
 
+
+  let deliveryCharges = 0;
+
+  const utilites = await utilitesModel.find();
+
+  if (!cart.couponStatus && cart.totalPrice < utilites[0].minimumOrderAmount) {
+    deliveryCharges = utilites[0].deliveryCharges;
+    finalAmount = finalAmount + deliveryCharges;
+  }
+
+
+
   let newOrder;
 
   if (paymentMethod === "ONLINE") {
