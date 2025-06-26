@@ -335,6 +335,11 @@ const getDashBoardDetails = () => {
         },
         { $unwind: "$productDetails" },
         {
+          $match: {
+            "productDetails.isDeleted": { $ne: true } // Exclude deleted products
+          }
+        },
+        {
           $lookup: {
             from: "variants",
             let: { productId: { $toObjectId: "$_id" } }, // Convert productId to ObjectId
