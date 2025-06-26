@@ -536,8 +536,11 @@ const filterOrders = catchAsync(async (req, res, next) => {
     .skip(skip)
     .limit(limit);
 
-  const totalOrders = await orderModel.countDocuments(filterCriteria);
-  const totalPages = Math.ceil(totalOrders / limit);
+  let totalOrders = await orderModel.countDocuments(filterCriteria);
+  if(status === "cancelled"){
+    totalOrders = await orderModel.countDocuments({status: "cancelled"});
+  }
+  let totalPages = Math.ceil(totalOrders / limit);
 
   if (category) {
     orders = orders.filter((order) =>
@@ -545,6 +548,8 @@ const filterOrders = catchAsync(async (req, res, next) => {
         (product) => product.productId?.category?._id.toString() === category
       )
     );
+    totalOrders = orders.length;
+    totalPages = Math.ceil(totalOrders / limit);
   }
 
   if (orders.length === 0) {
