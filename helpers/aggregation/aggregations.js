@@ -336,7 +336,8 @@ const getDashBoardDetails = () => {
         { $unwind: "$productDetails" },
         {
           $match: {
-            "productDetails.isDeleted": { $ne: true } // Exclude deleted products
+            "productDetails.isDeleted": { $ne: true } 
+            // Exclude deleted products
           }
         },
         {
