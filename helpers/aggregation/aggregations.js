@@ -324,7 +324,6 @@ const getDashBoardDetails = () => {
           },
         },
         { $sort: { totalOrdered: -1 } }, // Sort in descending order
-        { $limit: 4 }, // Get top 4 products
         {
           $lookup: {
             from: "products",
@@ -337,9 +336,10 @@ const getDashBoardDetails = () => {
         {
           $match: {
             "productDetails.isDeleted": { $ne: true } 
-            // Exclude deleted products
+            // Exclude deleted products BEFORE limiting
           }
         },
+        { $limit: 4 }, // Get top 4 products AFTER filtering deleted ones
         {
           $lookup: {
             from: "variants",
