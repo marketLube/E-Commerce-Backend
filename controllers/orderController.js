@@ -85,7 +85,7 @@ const payment = catchAsync(async (req, res, next) => {
   }
   const utilites = await utilitesModel.find();
 
-  if (!cart.couponStatus && totalAmount < utilites[0].minimumOrderAmount) {
+  if ( totalAmount < utilites[0].minimumOrderAmount) {
     deliveryCharges = utilites[0].deliveryCharges;
     totalAmount = totalAmount + deliveryCharges;
   }
@@ -95,7 +95,7 @@ const payment = catchAsync(async (req, res, next) => {
   totalAmount = totalAmount - discount;
 
   const options = {
-    amount: totalAmount * 100,
+    amount: Math.round(totalAmount * 100), // Ensure it's an integer
     currency: "INR",
     receipt: "any unique id for every order",
   };
@@ -329,7 +329,7 @@ const placeOrder = catchAsync(async (req, res, next) => {
 
   const utilites = await utilitesModel.find();
 
-  if (!cart.couponStatus && cart.totalPrice < utilites[0].minimumOrderAmount) {
+  if (cart.totalPrice < utilites[0].minimumOrderAmount) {
     deliveryCharges = utilites[0].deliveryCharges;
     finalAmount = finalAmount + deliveryCharges;
   }

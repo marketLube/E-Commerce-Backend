@@ -260,7 +260,7 @@ const getCart = catchAsync(async (req, res, next) => {
 
   const utilites = await utilitesModel.find();
 
-  if (!cart.couponStatus && cart.totalPrice < utilites[0].minimumOrderAmount) {
+  if (cart.totalPrice < utilites[0].minimumOrderAmount) {
     deliveryCharges = utilites[0].deliveryCharges;
     responseData.formattedCart.subTotal = responseData.formattedCart.totalPrice;
     responseData.formattedCart.totalPrice =
