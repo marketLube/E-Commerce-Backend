@@ -16,7 +16,7 @@ const addressSchema = new Schema({
 
 const userSchema = new Schema(
   {
-    username: { type: String, required: true, trim: true },
+    username: { type: String ,trim: true },
     email: {
       type: String,
       required: true,
@@ -25,7 +25,7 @@ const userSchema = new Schema(
     },
     phonenumber: {
       type: String,
-      required: true,
+     
       validate: {
         validator: function (v) {
           return /^\+?[0-9]{7,15}$/.test(v);
@@ -33,7 +33,7 @@ const userSchema = new Schema(
         message: (props) => `${props.value} is not a valid phone number!`,
       },
     },
-    password: { type: String, required: true },
+    password: { type: String },
     address: {
       type: [addressSchema],
       validate: {

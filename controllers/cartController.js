@@ -362,6 +362,17 @@ const checkStock = catchAsync(async (req, res, next) => {
     const product = await productModel.findById(item.product);
     const variant = await Variant.findById(item.variant);
 
+    
+    if (!product) {
+      return next(new AppError("Product not found", 404));
+    }
+
+    if(product.isDeleted){
+      return next(new AppError("Product is Not Available", 400));
+    }
+
+    
+
     if (variant) {
       if (variant.stock < item.quantity) {
         return next(new AppError(`Insufficient stock for variant ${variant.attributes.title} of ${product.name}`, 400));

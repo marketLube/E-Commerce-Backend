@@ -1,6 +1,6 @@
 const {
   register,
-  login,
+  sendOtp,
   userLogOut,
   listUsers,
   searchUser,
@@ -9,12 +9,16 @@ const {
   deleteUserAddress,
   submitUserDetails,
   getAllSubscribers,
+  verifyOtp,
+  resendOtp,
 } = require("../../controllers/userController");
 const autheticateToken = require("../../middlewares/authMiddleware");
 const userRouter = require("express").Router();
 
 userRouter.post("/register", register);
-userRouter.post("/login", login);
+userRouter.post("/login", sendOtp);
+userRouter.post("/verify-otp", verifyOtp);
+userRouter.post("/resend-otp", resendOtp);
 userRouter.post("/logout", userLogOut);
 userRouter.get("/list", autheticateToken(["admin"]), listUsers);
 userRouter.get("/search", autheticateToken(["admin"]), searchUser);
