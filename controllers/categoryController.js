@@ -1,7 +1,7 @@
 const { getAll } = require("../helpers/handlerFactory/handlerFactory");
 const categoryModel = require("../model/categoryModel");
 const Category = require("../model/categoryModel");
-const uploadToCloudinary = require("../utilities/cloudinaryUpload");
+const { uploadToS3 } = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const mongoose = require("mongoose");
@@ -40,7 +40,7 @@ const addCategory = catchAsync(async (req, res, next) => {
   }
 
   if (req.files[0]) {
-    const uploadedImage = await uploadToCloudinary(req.files[0].buffer);
+    const uploadedImage = await uploadToS3(req.files[0].buffer, req.files[0].originalname, 'categories');
     categoryData.image = uploadedImage;
   }
 
@@ -145,7 +145,7 @@ const editCategory = catchAsync(async (req, res, next) => {
   if (name) category.name = name;
   if (description) category.description = description;
   if (req.files[0]) {
-    const uploadedImage = await uploadToCloudinary(req.files[0].buffer);
+    const uploadedImage = await uploadToS3(req.files[0].buffer, req.files[0].originalname, 'categories');
     category.image = uploadedImage;
   }
 

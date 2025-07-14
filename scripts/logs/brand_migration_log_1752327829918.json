@@ -1,0 +1,39 @@
+{
+  "summary": {
+    "totalImages": 3,
+    "processedImages": 3,
+    "successfulMigrations": 3,
+    "failedMigrations": 0,
+    "successRate": "100.00%",
+    "startTime": "2025-07-12T13:43:49.919Z"
+  },
+  "details": [
+    {
+      "brandId": "680233997f3dee208bd784ea",
+      "brandName": "BCLEAN",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1745133845/products/zxdddmmlfkyfgupvcyly.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/brands/680233997f3dee208bd784ea_bclean/image/zxdddmmlfkyfgupvcyly_1752327823693.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:43:44.006Z"
+    },
+    {
+      "brandId": "68023ae8ca9b80eac0a819c0",
+      "brandName": "VINKA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1745133950/products/oyykqam3riv3yr82mred.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/brands/68023ae8ca9b80eac0a819c0_vinka/image/oyykqam3riv3yr82mred_1752327825486.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:43:45.719Z"
+    },
+    {
+      "brandId": "68048f0f934d7cd36c5f5a56",
+      "brandName": "ROOTS",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1745133983/products/ggor0lzlbgb3gdilfhyn.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/brands/68048f0f934d7cd36c5f5a56_roots/image/ggor0lzlbgb3gdilfhyn_1752327827932.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:43:48.549Z"
+    }
+  ]
+}

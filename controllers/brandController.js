@@ -1,5 +1,5 @@
 const Brand = require("../model/brandModel");
-const uploadToCloudinary = require("../utilities/cloudinaryUpload");
+const { uploadToS3 } = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 // const { saveImage } = require("../utilities/imageUpload"); // Use the same helper from categories
@@ -20,14 +20,14 @@ const createBrand = catchAsync(async (req, res, next) => {
     // Handle main brand image
     const imageFile = req.files.find(file => file.fieldname === 'image');
     if (imageFile) {
-      const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+      const uploadedImage = await uploadToS3(imageFile.buffer, imageFile.originalname, 'brands');
       brandData.image = uploadedImage;
     }
 
     // Handle banner image
     const bannerFile = req.files.find(file => file.fieldname === 'bannerImage');
     if (bannerFile) {
-      const uploadedBanner = await uploadToCloudinary(bannerFile.buffer);
+      const uploadedBanner = await uploadToS3(bannerFile.buffer, bannerFile.originalname, 'brands');
       brandData.bannerImage = uploadedBanner;
     }
   }
@@ -86,14 +86,14 @@ const updateBrand = catchAsync(async (req, res, next) => {
     // Handle main brand image
     const imageFile = req.files.find(file => file.fieldname === 'image');
     if (imageFile) {
-      const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+      const uploadedImage = await uploadToS3(imageFile.buffer, imageFile.originalname, 'brands');
       brand.image = uploadedImage;
     }
 
     // Handle banner image
     const bannerFile = req.files.find(file => file.fieldname === 'bannerImage');
     if (bannerFile) {
-      const uploadedBanner = await uploadToCloudinary(bannerFile.buffer);
+      const uploadedBanner = await uploadToS3(bannerFile.buffer, bannerFile.originalname, 'brands');
       brand.bannerImage = uploadedBanner;
     }
   }

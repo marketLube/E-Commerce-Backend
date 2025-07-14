@@ -1,0 +1,102 @@
+{
+  "summary": {
+    "totalImages": 10,
+    "processedImages": 10,
+    "successfulMigrations": 10,
+    "failedMigrations": 0,
+    "successRate": "100.00%",
+    "startTime": "2025-07-07T12:44:39.191Z"
+  },
+  "details": [
+    {
+      "bannerId": "6838543ac420d3e6e7fb69b6",
+      "section": 2,
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749629279/Northlux/ef33wwsalu6wricolz0o.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-2/6838543ac420d3e6e7fb69b6/desktop/ef33wwsalu6wricolz0o_1751892266399.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:27.056Z"
+    },
+    {
+      "bannerId": "6838543ac420d3e6e7fb69b6",
+      "section": 2,
+      "imageType": "mobile",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749663261/Northlux/e7jrym7aq7anmapwle48.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-2/6838543ac420d3e6e7fb69b6/mobile/e7jrym7aq7anmapwle48_1751892267150.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:27.589Z"
+    },
+    {
+      "bannerId": "683855d7c420d3e6e7fb6ac2",
+      "section": 1,
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dznxxalrb/image/upload/v1748586679/Northlux/aupixzrjgdq8qtab0aic.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-1/683855d7c420d3e6e7fb6ac2/desktop/aupixzrjgdq8qtab0aic_1751892268789.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:29.245Z"
+    },
+    {
+      "bannerId": "683855d7c420d3e6e7fb6ac2",
+      "section": 1,
+      "imageType": "mobile",
+      "originalUrl": "https://res.cloudinary.com/dznxxalrb/image/upload/v1748605498/Northlux/qnxafiqnrwne5bnskeyn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-1/683855d7c420d3e6e7fb6ac2/mobile/qnxafiqnrwne5bnskeyn_1751892269368.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:29.898Z"
+    },
+    {
+      "bannerId": "683943462cd5cf758a15b5ea",
+      "section": 3,
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749630641/Northlux/isfctsuh7ihd2rx6xvgg.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-3/683943462cd5cf758a15b5ea/desktop/isfctsuh7ihd2rx6xvgg_1751892271229.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:32.387Z"
+    },
+    {
+      "bannerId": "683943462cd5cf758a15b5ea",
+      "section": 3,
+      "imageType": "mobile",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749663209/Northlux/h7vetrp19xexud1qh5ox.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-3/683943462cd5cf758a15b5ea/mobile/h7vetrp19xexud1qh5ox_1751892272506.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:33.029Z"
+    },
+    {
+      "bannerId": "68399e67614a0329c9fecd9d",
+      "section": 5,
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749664267/Northlux/lup77l3bahywuxblwqy0.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-5/68399e67614a0329c9fecd9d/desktop/lup77l3bahywuxblwqy0_1751892274235.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:34.880Z"
+    },
+    {
+      "bannerId": "68399e67614a0329c9fecd9d",
+      "section": 5,
+      "imageType": "mobile",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749664268/Northlux/gztvqelgocur9lj0dqin.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-5/68399e67614a0329c9fecd9d/mobile/gztvqelgocur9lj0dqin_1751892274958.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:35.472Z"
+    },
+    {
+      "bannerId": "68399f87614a0329c9fece35",
+      "section": 4,
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749663069/Northlux/apqf9rccrprtoyujdgkn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-4/68399f87614a0329c9fece35/desktop/apqf9rccrprtoyujdgkn_1751892276751.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:37.472Z"
+    },
+    {
+      "bannerId": "68399f87614a0329c9fece35",
+      "section": 4,
+      "imageType": "mobile",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749663070/Northlux/yvhgczao8ugidfhspmdz.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/offer-banners/section-4/68399f87614a0329c9fece35/mobile/yvhgczao8ugidfhspmdz_1751892277583.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:44:38.121Z"
+    }
+  ]
+}

@@ -1,0 +1,1119 @@
+{
+  "summary": {
+    "totalImages": 123,
+    "processedImages": 123,
+    "successfulMigrations": 123,
+    "failedMigrations": 0,
+    "successRate": "100.00%",
+    "startTime": "2025-07-07T12:36:30.813Z"
+  },
+  "details": [
+    {
+      "brandId": "68317969c7bdedbf888172ce",
+      "brandName": "Deen.in",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748073913/Northlux/yzvgcnvb7oqek7lk5c3j.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68317969c7bdedbf888172ce_deen-in/image/yzvgcnvb7oqek7lk5c3j_1751891669996.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:30.332Z"
+    },
+    {
+      "brandId": "68317969c7bdedbf888172ce",
+      "brandName": "Deen.in",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748073191/Northlux/xxhlf2zprj4f5lavekqu.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68317969c7bdedbf888172ce_deen-in/mobile-banner/xxhlf2zprj4f5lavekqu_1751891670416.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:30.641Z"
+    },
+    {
+      "brandId": "683188e7c7bdedbf8881779d",
+      "brandName": "MAK",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748076774/Northlux/hxeljwqb7meteqdknvqu.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683188e7c7bdedbf8881779d_mak/image/hxeljwqb7meteqdknvqu_1751891671833.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:32.231Z"
+    },
+    {
+      "brandId": "683188e7c7bdedbf8881779d",
+      "brandName": "MAK",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246553/Northlux/hr7yeo1u7p6zsw6nmggn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683188e7c7bdedbf8881779d_mak/mobile-banner/hr7yeo1u7p6zsw6nmggn_1751891672291.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:32.602Z"
+    },
+    {
+      "brandId": "6831897dc7bdedbf888177e9",
+      "brandName": "Sana Boutique",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077017/Northlux/jl0kl5sbfacukojlwfku.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831897dc7bdedbf888177e9_sana-boutique/image/jl0kl5sbfacukojlwfku_1751891673723.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:33.933Z"
+    },
+    {
+      "brandId": "6831897dc7bdedbf888177e9",
+      "brandName": "Sana Boutique",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748076925/Northlux/bi0hiqt0o1xzbd1aadfq.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831897dc7bdedbf888177e9_sana-boutique/mobile-banner/bi0hiqt0o1xzbd1aadfq_1751891673997.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:34.230Z"
+    },
+    {
+      "brandId": "68318a33c7bdedbf8881788e",
+      "brandName": "Cadon",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077105/Northlux/cnm23acyevsq8oj2gddc.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318a33c7bdedbf8881788e_cadon/image/cnm23acyevsq8oj2gddc_1751891675371.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:35.742Z"
+    },
+    {
+      "brandId": "68318a33c7bdedbf8881788e",
+      "brandName": "Cadon",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077106/Northlux/c8nra6n3kqlzivhfdoht.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318a33c7bdedbf8881788e_cadon/mobile-banner/c8nra6n3kqlzivhfdoht_1751891675799.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:36.064Z"
+    },
+    {
+      "brandId": "68318ab7c7bdedbf888178cd",
+      "brandName": "Tarz Clothing",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077237/Northlux/ckyhwrpnqa0xjyrelpxp.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318ab7c7bdedbf888178cd_tarz-clothing/image/ckyhwrpnqa0xjyrelpxp_1751891677245.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:37.646Z"
+    },
+    {
+      "brandId": "68318ab7c7bdedbf888178cd",
+      "brandName": "Tarz Clothing",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077238/Northlux/lqagyrga6adfynlk57tn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318ab7c7bdedbf888178cd_tarz-clothing/mobile-banner/lqagyrga6adfynlk57tn_1751891677714.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:38.078Z"
+    },
+    {
+      "brandId": "68318b50c7bdedbf8881793c",
+      "brandName": "Milen Designs",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748702034/Northlux/ye756v4inwzioihmu7co.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318b50c7bdedbf8881793c_milen-designs/image/ye756v4inwzioihmu7co_1751891679279.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:39.719Z"
+    },
+    {
+      "brandId": "68318b50c7bdedbf8881793c",
+      "brandName": "Milen Designs",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077533/Northlux/xy5cxmfhdhly0xrpwq0n.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318b50c7bdedbf8881793c_milen-designs/mobile-banner/xy5cxmfhdhly0xrpwq0n_1751891679789.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:40.140Z"
+    },
+    {
+      "brandId": "68318c17c7bdedbf88817992",
+      "brandName": "ZERAC",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748702016/Northlux/ozytzjiiuo8upqryzyii.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318c17c7bdedbf88817992_zerac/image/ozytzjiiuo8upqryzyii_1751891681258.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:41.506Z"
+    },
+    {
+      "brandId": "68318c17c7bdedbf88817992",
+      "brandName": "ZERAC",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077590/Northlux/axpdp4nwiuhgpttkkomi.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318c17c7bdedbf88817992_zerac/mobile-banner/axpdp4nwiuhgpttkkomi_1751891681564.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:41.767Z"
+    },
+    {
+      "brandId": "68318c8ac7bdedbf888179fc",
+      "brandName": "Chimkki",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748702004/Northlux/twiru6eb8gzw6dvjreqo.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318c8ac7bdedbf888179fc_chimkki/image/twiru6eb8gzw6dvjreqo_1751891682986.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:43.335Z"
+    },
+    {
+      "brandId": "68318c8ac7bdedbf888179fc",
+      "brandName": "Chimkki",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748077706/Northlux/isoe0hktr1dxp03gwvfe.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318c8ac7bdedbf888179fc_chimkki/mobile-banner/isoe0hktr1dxp03gwvfe_1751891683399.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:43.671Z"
+    },
+    {
+      "brandId": "68318ccdc7bdedbf88817a14",
+      "brandName": "Dewberry Design",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701990/Northlux/q5jopoa7vvfgicizbd1j.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318ccdc7bdedbf88817a14_dewberry-design/image/q5jopoa7vvfgicizbd1j_1751891684812.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:45.230Z"
+    },
+    {
+      "brandId": "68318ccdc7bdedbf88817a14",
+      "brandName": "Dewberry Design",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246632/Northlux/qhvomircfqrvjct6yzwp.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318ccdc7bdedbf88817a14_dewberry-design/mobile-banner/qhvomircfqrvjct6yzwp_1751891685308.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:45.580Z"
+    },
+    {
+      "brandId": "68318d4bc7bdedbf88817a45",
+      "brandName": "CHIC RAGE",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701966/Northlux/kqwyywhamxw13ykcjrzd.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318d4bc7bdedbf88817a45_chic-rage/image/kqwyywhamxw13ykcjrzd_1751891686717.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:47.064Z"
+    },
+    {
+      "brandId": "68318d4bc7bdedbf88817a45",
+      "brandName": "CHIC RAGE",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246652/Northlux/zbawm2ygrmeeatjobive.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318d4bc7bdedbf88817a45_chic-rage/mobile-banner/zbawm2ygrmeeatjobive_1751891687127.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:47.427Z"
+    },
+    {
+      "brandId": "68318dd1c7bdedbf88817a75",
+      "brandName": "Aura Cosmetics",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244436/Northlux/blpzvnkajqydoew6fyzo.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318dd1c7bdedbf88817a75_aura-cosmetics/image/blpzvnkajqydoew6fyzo_1751891688537.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:48.916Z"
+    },
+    {
+      "brandId": "68318dd1c7bdedbf88817a75",
+      "brandName": "Aura Cosmetics",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246692/Northlux/qm0dn1wqaijudcrqch9l.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318dd1c7bdedbf88817a75_aura-cosmetics/mobile-banner/qm0dn1wqaijudcrqch9l_1751891688988.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:49.289Z"
+    },
+    {
+      "brandId": "68318ea7c7bdedbf88817aee",
+      "brandName": "Bayt",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701946/Northlux/enl9wfzjkzekrzzvxvug.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318ea7c7bdedbf88817aee_bayt/image/enl9wfzjkzekrzzvxvug_1751891690428.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:50.825Z"
+    },
+    {
+      "brandId": "68318ea7c7bdedbf88817aee",
+      "brandName": "Bayt",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246720/Northlux/cwyoavdlwzjv8eldrkhy.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68318ea7c7bdedbf88817aee_bayt/mobile-banner/cwyoavdlwzjv8eldrkhy_1751891690893.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:51.156Z"
+    },
+    {
+      "brandId": "6831951ac7bdedbf88817c56",
+      "brandName": "ATHENA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701839/Northlux/kr7frg6vjkcijoxhcdfd.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831951ac7bdedbf88817c56_athena/image/kr7frg6vjkcijoxhcdfd_1751891692306.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:52.671Z"
+    },
+    {
+      "brandId": "6831951ac7bdedbf88817c56",
+      "brandName": "ATHENA",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246735/Northlux/zu1sbi3ornuhpvptbedx.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831951ac7bdedbf88817c56_athena/mobile-banner/zu1sbi3ornuhpvptbedx_1751891692730.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:53.067Z"
+    },
+    {
+      "brandId": "68319559c7bdedbf88817c59",
+      "brandName": "UMRKA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748079960/Northlux/nb5yoagzrzlypps5a2iy.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319559c7bdedbf88817c59_umrka/image/nb5yoagzrzlypps5a2iy_1751891694189.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:54.498Z"
+    },
+    {
+      "brandId": "68319559c7bdedbf88817c59",
+      "brandName": "UMRKA",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748079960/Northlux/giim81f7tfdam6op8est.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319559c7bdedbf88817c59_umrka/mobile-banner/giim81f7tfdam6op8est_1751891694556.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:54.817Z"
+    },
+    {
+      "brandId": "6831959ac7bdedbf88817c5c",
+      "brandName": "Emenark",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701804/Northlux/gjfzpbvzy0igmaxso8kk.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831959ac7bdedbf88817c5c_emenark/image/gjfzpbvzy0igmaxso8kk_1751891695953.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:56.187Z"
+    },
+    {
+      "brandId": "6831959ac7bdedbf88817c5c",
+      "brandName": "Emenark",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080026/Northlux/fb6zm9unby2qcfbvyxcd.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831959ac7bdedbf88817c5c_emenark/mobile-banner/fb6zm9unby2qcfbvyxcd_1751891696239.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:56.460Z"
+    },
+    {
+      "brandId": "683195c7c7bdedbf88817c5f",
+      "brandName": "Ek TAARA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701786/Northlux/x3wielf6rr5avrvrpe4c.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683195c7c7bdedbf88817c5f_ek-taara/image/x3wielf6rr5avrvrpe4c_1751891697591.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:57.963Z"
+    },
+    {
+      "brandId": "683195c7c7bdedbf88817c5f",
+      "brandName": "Ek TAARA",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080071/Northlux/tdzb35bkcaq7hbulefu7.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683195c7c7bdedbf88817c5f_ek-taara/mobile-banner/tdzb35bkcaq7hbulefu7_1751891698064.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:34:58.329Z"
+    },
+    {
+      "brandId": "6831960cc7bdedbf88817c62",
+      "brandName": "OWN SHOPEE",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080138/Northlux/devuoxiqv1uiykyd12fa.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831960cc7bdedbf88817c62_own-shopee/image/devuoxiqv1uiykyd12fa_1751891699504.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:00.012Z"
+    },
+    {
+      "brandId": "6831960cc7bdedbf88817c62",
+      "brandName": "OWN SHOPEE",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080139/Northlux/kzcztdtzpvm5ttc3fshg.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831960cc7bdedbf88817c62_own-shopee/mobile-banner/kzcztdtzpvm5ttc3fshg_1751891700151.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:00.488Z"
+    },
+    {
+      "brandId": "68319650c7bdedbf88817c65",
+      "brandName": "ZAHWA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701872/Northlux/zgeac9bjtdtyhaur72sp.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319650c7bdedbf88817c65_zahwa/image/zgeac9bjtdtyhaur72sp_1751891701659.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:02.046Z"
+    },
+    {
+      "brandId": "68319650c7bdedbf88817c65",
+      "brandName": "ZAHWA",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080208/Northlux/warwa9mmuhfdku1yowqw.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319650c7bdedbf88817c65_zahwa/mobile-banner/warwa9mmuhfdku1yowqw_1751891702104.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:02.443Z"
+    },
+    {
+      "brandId": "6831969fc7bdedbf88817c68",
+      "brandName": "Mariyam's",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080285/Northlux/ozyikwvuarxewuahtjbp.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831969fc7bdedbf88817c68_mariyam-s/image/ozyikwvuarxewuahtjbp_1751891703601.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:03.927Z"
+    },
+    {
+      "brandId": "6831969fc7bdedbf88817c68",
+      "brandName": "Mariyam's",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080286/Northlux/mzlevtsz5ignn33pm9ot.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831969fc7bdedbf88817c68_mariyam-s/mobile-banner/mzlevtsz5ignn33pm9ot_1751891703991.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:04.277Z"
+    },
+    {
+      "brandId": "683196f4c7bdedbf88817c6b",
+      "brandName": "Zahara's",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701770/Northlux/vhjcygvyunomarxucorz.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683196f4c7bdedbf88817c6b_zahara-s/image/vhjcygvyunomarxucorz_1751891705401.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:05.729Z"
+    },
+    {
+      "brandId": "683196f4c7bdedbf88817c6b",
+      "brandName": "Zahara's",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246771/Northlux/nnlnrb2zs1n4fevs8x78.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683196f4c7bdedbf88817c6b_zahara-s/mobile-banner/nnlnrb2zs1n4fevs8x78_1751891705802.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:06.037Z"
+    },
+    {
+      "brandId": "68319726c7bdedbf88817c6e",
+      "brandName": "Oswa Perfume",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080421/Northlux/veblywrmxstoywzx1hb2.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319726c7bdedbf88817c6e_oswa-perfume/image/veblywrmxstoywzx1hb2_1751891707209.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:07.667Z"
+    },
+    {
+      "brandId": "68319726c7bdedbf88817c6e",
+      "brandName": "Oswa Perfume",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080422/Northlux/cu3mjuudkssdn9ufqvaf.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319726c7bdedbf88817c6e_oswa-perfume/mobile-banner/cu3mjuudkssdn9ufqvaf_1751891707742.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:08.351Z"
+    },
+    {
+      "brandId": "6831974fc7bdedbf88817c71",
+      "brandName": "FLORIA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244383/Northlux/eejvoekei2vx5hxdylkw.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831974fc7bdedbf88817c71_floria/image/eejvoekei2vx5hxdylkw_1751891709509.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:09.937Z"
+    },
+    {
+      "brandId": "6831974fc7bdedbf88817c71",
+      "brandName": "FLORIA",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246790/Northlux/rttzcgo7yskfu07dve0p.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831974fc7bdedbf88817c71_floria/mobile-banner/rttzcgo7yskfu07dve0p_1751891710026.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:21.032Z"
+    },
+    {
+      "brandId": "6831978cc7bdedbf88817c74",
+      "brandName": "Medina Moda",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701752/Northlux/b0vjdtfkxobvdunb7l0m.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831978cc7bdedbf88817c74_medina-moda/image/b0vjdtfkxobvdunb7l0m_1751891722341.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:22.757Z"
+    },
+    {
+      "brandId": "6831978cc7bdedbf88817c74",
+      "brandName": "Medina Moda",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246823/Northlux/soesac6h4ptilfd0sa0g.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831978cc7bdedbf88817c74_medina-moda/mobile-banner/soesac6h4ptilfd0sa0g_1751891722826.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:23.044Z"
+    },
+    {
+      "brandId": "683197b2c7bdedbf88817c77",
+      "brandName": "BAG TASTIC",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701736/Northlux/ycqivdy1eyy2qa5u6kx2.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683197b2c7bdedbf88817c77_bag-tastic/image/ycqivdy1eyy2qa5u6kx2_1751891724162.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:24.516Z"
+    },
+    {
+      "brandId": "683197b2c7bdedbf88817c77",
+      "brandName": "BAG TASTIC",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246834/Northlux/xco1al7nrk5tfeoeqoxw.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683197b2c7bdedbf88817c77_bag-tastic/mobile-banner/xco1al7nrk5tfeoeqoxw_1751891724632.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:24.872Z"
+    },
+    {
+      "brandId": "683197dbc7bdedbf88817c7a",
+      "brandName": "Dress Bit",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244407/Northlux/dwjae6pw0umkaznyerkj.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683197dbc7bdedbf88817c7a_dress-bit/image/dwjae6pw0umkaznyerkj_1751891726091.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:26.463Z"
+    },
+    {
+      "brandId": "683197dbc7bdedbf88817c7a",
+      "brandName": "Dress Bit",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246888/Northlux/wfeaeylc9hefmtjhyaen.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683197dbc7bdedbf88817c7a_dress-bit/mobile-banner/wfeaeylc9hefmtjhyaen_1751891726528.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:26.835Z"
+    },
+    {
+      "brandId": "68319807c7bdedbf88817c7d",
+      "brandName": "Riayat Lawns",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750072693/Northlux/bpkhklx52axra6rfa3v7.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319807c7bdedbf88817c7d_riayat-lawns/image/bpkhklx52axra6rfa3v7_1751891727960.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:28.258Z"
+    },
+    {
+      "brandId": "68319807c7bdedbf88817c7d",
+      "brandName": "Riayat Lawns",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748427454/Northlux/nwogwbzjlhcbwqkj0y1u.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319807c7bdedbf88817c7d_riayat-lawns/banner/nwogwbzjlhcbwqkj0y1u_1751891728313.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:28.563Z"
+    },
+    {
+      "brandId": "68319807c7bdedbf88817c7d",
+      "brandName": "Riayat Lawns",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748427649/Northlux/oxz0cpshlumwwuecmwxn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319807c7bdedbf88817c7d_riayat-lawns/mobile-banner/oxz0cpshlumwwuecmwxn_1751891728635.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:29.012Z"
+    },
+    {
+      "brandId": "68319833c7bdedbf88817c80",
+      "brandName": "EINSTEINIQ",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748325746/Northlux/exhkhey2fzrt0yyrfqcv.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319833c7bdedbf88817c80_einsteiniq/image/exhkhey2fzrt0yyrfqcv_1751891730128.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:30.382Z"
+    },
+    {
+      "brandId": "68319833c7bdedbf88817c80",
+      "brandName": "EINSTEINIQ",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246263/Northlux/iqrucbzjoxmmnlybpwfg.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319833c7bdedbf88817c80_einsteiniq/mobile-banner/iqrucbzjoxmmnlybpwfg_1751891730453.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:30.679Z"
+    },
+    {
+      "brandId": "6831986dc7bdedbf88817c83",
+      "brandName": "Hana Abayas",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701720/Northlux/ofhrzybfpnmt30kzx3uf.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831986dc7bdedbf88817c83_hana-abayas/image/ofhrzybfpnmt30kzx3uf_1751891731808.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:32.132Z"
+    },
+    {
+      "brandId": "6831986dc7bdedbf88817c83",
+      "brandName": "Hana Abayas",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080748/Northlux/sz7b6becg4l4im229e9a.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831986dc7bdedbf88817c83_hana-abayas/banner/sz7b6becg4l4im229e9a_1751891732188.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:32.483Z"
+    },
+    {
+      "brandId": "6831986dc7bdedbf88817c83",
+      "brandName": "Hana Abayas",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246290/Northlux/ftcvedy51wb2ctjowdw2.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6831986dc7bdedbf88817c83_hana-abayas/mobile-banner/ftcvedy51wb2ctjowdw2_1751891732533.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:32.735Z"
+    },
+    {
+      "brandId": "68319889c7bdedbf88817c86",
+      "brandName": "INNUZ",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080776/Northlux/fxfmquxndik5ghqynx46.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319889c7bdedbf88817c86_innuz/image/fxfmquxndik5ghqynx46_1751891733879.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:34.242Z"
+    },
+    {
+      "brandId": "68319889c7bdedbf88817c86",
+      "brandName": "INNUZ",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080777/Northlux/laeqorwghlqqzkjtyo0m.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319889c7bdedbf88817c86_innuz/mobile-banner/laeqorwghlqqzkjtyo0m_1751891734303.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:34.561Z"
+    },
+    {
+      "brandId": "683198b4c7bdedbf88817c89",
+      "brandName": "Pyjama Pantry",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701700/Northlux/hauerg7htkzsz8is58u7.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683198b4c7bdedbf88817c89_pyjama-pantry/image/hauerg7htkzsz8is58u7_1751891735701.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:36.098Z"
+    },
+    {
+      "brandId": "683198b4c7bdedbf88817c89",
+      "brandName": "Pyjama Pantry",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080819/Northlux/vxe5vvlctoanrb6zamvk.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683198b4c7bdedbf88817c89_pyjama-pantry/mobile-banner/vxe5vvlctoanrb6zamvk_1751891736175.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:36.431Z"
+    },
+    {
+      "brandId": "683198e8c7bdedbf88817c8c",
+      "brandName": "Siza",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080871/Northlux/ig18joltguoednznbqrc.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683198e8c7bdedbf88817c8c_siza/image/ig18joltguoednznbqrc_1751891737611.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:37.985Z"
+    },
+    {
+      "brandId": "683198e8c7bdedbf88817c8c",
+      "brandName": "Siza",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080872/Northlux/j20rh0qu5yviwbybd37c.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683198e8c7bdedbf88817c8c_siza/mobile-banner/j20rh0qu5yviwbybd37c_1751891738041.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:38.245Z"
+    },
+    {
+      "brandId": "68319911c7bdedbf88817c8f",
+      "brandName": "Signature",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080911/Northlux/jz4vw2bsxudcznzysqno.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319911c7bdedbf88817c8f_signature/image/jz4vw2bsxudcznzysqno_1751891739389.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:39.757Z"
+    },
+    {
+      "brandId": "68319911c7bdedbf88817c8f",
+      "brandName": "Signature",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748080912/Northlux/wrcuwot6gt0xf6tdtuxy.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319911c7bdedbf88817c8f_signature/mobile-banner/wrcuwot6gt0xf6tdtuxy_1751891739829.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:40.152Z"
+    },
+    {
+      "brandId": "68319978c7bdedbf88817c9e",
+      "brandName": "T design",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701679/Northlux/cnr6nto5thmym26jeswz.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319978c7bdedbf88817c9e_t-design/image/cnr6nto5thmym26jeswz_1751891741252.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:41.569Z"
+    },
+    {
+      "brandId": "68319978c7bdedbf88817c9e",
+      "brandName": "T design",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246337/Northlux/poi2r77o2adzvzfsswwg.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68319978c7bdedbf88817c9e_t-design/mobile-banner/poi2r77o2adzvzfsswwg_1751891741622.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:41.817Z"
+    },
+    {
+      "brandId": "683199acc7bdedbf88817ca1",
+      "brandName": "Murat",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701528/Northlux/b17celtbfnl8qgcpbuck.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683199acc7bdedbf88817ca1_murat/image/b17celtbfnl8qgcpbuck_1751891742934.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:43.324Z"
+    },
+    {
+      "brandId": "683199acc7bdedbf88817ca1",
+      "brandName": "Murat",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246374/Northlux/mon2bybl0bedxyiw6nzj.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683199acc7bdedbf88817ca1_murat/mobile-banner/mon2bybl0bedxyiw6nzj_1751891743378.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:43.640Z"
+    },
+    {
+      "brandId": "683199ecc7bdedbf88817ca4",
+      "brandName": "Hawwas",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748081131/Northlux/cewcjgfakuszihhlsx3t.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683199ecc7bdedbf88817ca4_hawwas/image/cewcjgfakuszihhlsx3t_1751891744750.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:45.135Z"
+    },
+    {
+      "brandId": "683199ecc7bdedbf88817ca4",
+      "brandName": "Hawwas",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748081132/Northlux/oijxsundyzmiduh65y0g.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683199ecc7bdedbf88817ca4_hawwas/mobile-banner/oijxsundyzmiduh65y0g_1751891745215.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:45.463Z"
+    },
+    {
+      "brandId": "68341613af122df00d272730",
+      "brandName": "Modesty Wardrobe",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701511/Northlux/r39iwpcwgusytna6eeq0.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341613af122df00d272730_modesty-wardrobe/image/r39iwpcwgusytna6eeq0_1751891746607.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:46.939Z"
+    },
+    {
+      "brandId": "68341613af122df00d272730",
+      "brandName": "Modesty Wardrobe",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748243986/Northlux/svslr4oibsr051vdlwuv.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341613af122df00d272730_modesty-wardrobe/mobile-banner/svslr4oibsr051vdlwuv_1751891746994.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:47.236Z"
+    },
+    {
+      "brandId": "6834167faf122df00d272733",
+      "brandName": "Nyle Clothing",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244093/Northlux/yuincrpwm7hdnhjzmpwl.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6834167faf122df00d272733_nyle-clothing/image/yuincrpwm7hdnhjzmpwl_1751891748416.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:48.776Z"
+    },
+    {
+      "brandId": "6834167faf122df00d272733",
+      "brandName": "Nyle Clothing",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244094/Northlux/uctn7klwzzt5dcbkgsl4.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6834167faf122df00d272733_nyle-clothing/mobile-banner/uctn7klwzzt5dcbkgsl4_1751891748842.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:50.615Z"
+    },
+    {
+      "brandId": "68341899af122df00d272745",
+      "brandName": "Ifab",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701492/Northlux/mathdrysfyb8mzbdqlpn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341899af122df00d272745_ifab/image/mathdrysfyb8mzbdqlpn_1751891751755.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:52.117Z"
+    },
+    {
+      "brandId": "68341899af122df00d272745",
+      "brandName": "Ifab",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246402/Northlux/jtflb0bzsdqmh0eqgyn5.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341899af122df00d272745_ifab/mobile-banner/jtflb0bzsdqmh0eqgyn5_1751891752181.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:52.464Z"
+    },
+    {
+      "brandId": "683418c5af122df00d272748",
+      "brandName": "Faas",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244676/Northlux/oaxzdcfwaihijwno3djw.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683418c5af122df00d272748_faas/image/oaxzdcfwaihijwno3djw_1751891753587.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:53.833Z"
+    },
+    {
+      "brandId": "683418c5af122df00d272748",
+      "brandName": "Faas",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244676/Northlux/or55havj1fmdsqiepq7q.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683418c5af122df00d272748_faas/mobile-banner/or55havj1fmdsqiepq7q_1751891753892.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:54.208Z"
+    },
+    {
+      "brandId": "68341905af122df00d27274b",
+      "brandName": "AJAB WARDROBE",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701474/Northlux/adkr8y3mm9g0byrtst1u.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341905af122df00d27274b_ajab-wardrobe/image/adkr8y3mm9g0byrtst1u_1751891755366.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:55.767Z"
+    },
+    {
+      "brandId": "68341905af122df00d27274b",
+      "brandName": "AJAB WARDROBE",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244740/Northlux/vdqxmeiunch7amh34n9l.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341905af122df00d27274b_ajab-wardrobe/mobile-banner/vdqxmeiunch7amh34n9l_1751891755843.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:56.253Z"
+    },
+    {
+      "brandId": "6834196baf122df00d272751",
+      "brandName": "Pathus by Femi",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244842/Northlux/mzamv4fn4jitmesimvud.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6834196baf122df00d272751_pathus-by-femi/image/mzamv4fn4jitmesimvud_1751891757379.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:57.617Z"
+    },
+    {
+      "brandId": "6834196baf122df00d272751",
+      "brandName": "Pathus by Femi",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244843/Northlux/x8ocv4peiojir4fryr6p.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6834196baf122df00d272751_pathus-by-femi/mobile-banner/x8ocv4peiojir4fryr6p_1751891757681.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:57.953Z"
+    },
+    {
+      "brandId": "683419fcaf122df00d272754",
+      "brandName": "Azure Cuts",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701425/Northlux/i4mb0xph0msnl7zjcjel.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683419fcaf122df00d272754_azure-cuts/image/i4mb0xph0msnl7zjcjel_1751891759077.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:59.489Z"
+    },
+    {
+      "brandId": "683419fcaf122df00d272754",
+      "brandName": "Azure Cuts",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748244987/Northlux/whgqxmkkeymfvn0i2m5x.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/683419fcaf122df00d272754_azure-cuts/mobile-banner/whgqxmkkeymfvn0i2m5x_1751891759557.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:35:59.866Z"
+    },
+    {
+      "brandId": "68341a34af122df00d272757",
+      "brandName": "Kitty Boutique",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245042/Northlux/dtncg2zrg6qzqfyu5ayi.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341a34af122df00d272757_kitty-boutique/image/dtncg2zrg6qzqfyu5ayi_1751891760987.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:01.426Z"
+    },
+    {
+      "brandId": "68341a34af122df00d272757",
+      "brandName": "Kitty Boutique",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245043/Northlux/ngqtwyk794fbyfqlttti.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341a34af122df00d272757_kitty-boutique/mobile-banner/ngqtwyk794fbyfqlttti_1751891761504.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:01.825Z"
+    },
+    {
+      "brandId": "68341a6aaf122df00d27275a",
+      "brandName": "ZIAA",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245096/Northlux/hmgyqynwcxohclomrovt.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341a6aaf122df00d27275a_ziaa/image/hmgyqynwcxohclomrovt_1751891762935.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:03.223Z"
+    },
+    {
+      "brandId": "68341a6aaf122df00d27275a",
+      "brandName": "ZIAA",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245097/Northlux/q5ufitk0cy9l2pnybcck.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341a6aaf122df00d27275a_ziaa/mobile-banner/q5ufitk0cy9l2pnybcck_1751891763272.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:03.554Z"
+    },
+    {
+      "brandId": "68341aa4af122df00d27275d",
+      "brandName": "SHALZ",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701330/Northlux/cdeoz9m3wgzw1hqqpk4j.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341aa4af122df00d27275d_shalz/image/cdeoz9m3wgzw1hqqpk4j_1751891764691.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:05.118Z"
+    },
+    {
+      "brandId": "68341aa4af122df00d27275d",
+      "brandName": "SHALZ",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245155/Northlux/lhlithws141lqtxzcnvr.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341aa4af122df00d27275d_shalz/mobile-banner/lhlithws141lqtxzcnvr_1751891765175.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:05.426Z"
+    },
+    {
+      "brandId": "68341acfaf122df00d272760",
+      "brandName": "Veils for you",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245198/Northlux/ocznygrlxo5kqipeqryl.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341acfaf122df00d272760_veils-for-you/image/ocznygrlxo5kqipeqryl_1751891766547.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:06.846Z"
+    },
+    {
+      "brandId": "68341acfaf122df00d272760",
+      "brandName": "Veils for you",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245199/Northlux/ayenpavdfm5cbk3b4hev.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341acfaf122df00d272760_veils-for-you/mobile-banner/ayenpavdfm5cbk3b4hev_1751891766908.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:07.203Z"
+    },
+    {
+      "brandId": "68341afeaf122df00d272763",
+      "brandName": "Eislo. in",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701317/Northlux/mfikfd9grfsyo5d0uzgx.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341afeaf122df00d272763_eislo--in/image/mfikfd9grfsyo5d0uzgx_1751891768315.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:08.545Z"
+    },
+    {
+      "brandId": "68341afeaf122df00d272763",
+      "brandName": "Eislo. in",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245246/Northlux/l5bkxnecdc15iwpde4ul.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341afeaf122df00d272763_eislo--in/mobile-banner/l5bkxnecdc15iwpde4ul_1751891768599.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:08.922Z"
+    },
+    {
+      "brandId": "68341b32af122df00d272766",
+      "brandName": "Bella",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748701300/Northlux/qjnhwj2mzehjnslw5vpv.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341b32af122df00d272766_bella/image/qjnhwj2mzehjnslw5vpv_1751891770038.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:10.458Z"
+    },
+    {
+      "brandId": "68341b32af122df00d272766",
+      "brandName": "Bella",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246485/Northlux/ecjbqd3k28byxlbscmqu.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341b32af122df00d272766_bella/mobile-banner/ecjbqd3k28byxlbscmqu_1751891770516.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:10.834Z"
+    },
+    {
+      "brandId": "68341b8faf122df00d272769",
+      "brandName": "H&H",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245390/Northlux/n0ztu6i3tzs1l5zzweje.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341b8faf122df00d272769_h-h/image/n0ztu6i3tzs1l5zzweje_1751891771961.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:12.216Z"
+    },
+    {
+      "brandId": "68341b8faf122df00d272769",
+      "brandName": "H&H",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748245391/Northlux/dlmyx3n0bkfk0vkepier.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341b8faf122df00d272769_h-h/mobile-banner/dlmyx3n0bkfk0vkepier_1751891772270.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:12.533Z"
+    },
+    {
+      "brandId": "68341bd1af122df00d27276c",
+      "brandName": "Taalish",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748689947/Northlux/lns6expueeo9g8flfjdt.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341bd1af122df00d27276c_taalish/image/lns6expueeo9g8flfjdt_1751891773645.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:13.900Z"
+    },
+    {
+      "brandId": "68341bd1af122df00d27276c",
+      "brandName": "Taalish",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1748246527/Northlux/zsrhokgrl8vyflvqn07x.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/68341bd1af122df00d27276c_taalish/mobile-banner/zsrhokgrl8vyflvqn07x_1751891773951.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:14.146Z"
+    },
+    {
+      "brandId": "684d6eff8f54764b85f2386b",
+      "brandName": "Selene",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749905149/Northlux/xd8qq4kezzbhyatkwhrb.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d6eff8f54764b85f2386b_selene/image/xd8qq4kezzbhyatkwhrb_1751891775271.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:15.638Z"
+    },
+    {
+      "brandId": "684d6eff8f54764b85f2386b",
+      "brandName": "Selene",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749905150/Northlux/qe1jspiquy2anrepc9uv.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d6eff8f54764b85f2386b_selene/banner/qe1jspiquy2anrepc9uv_1751891775706.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:16.047Z"
+    },
+    {
+      "brandId": "684d6eff8f54764b85f2386b",
+      "brandName": "Selene",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749905150/Northlux/u1xoarj5mbetgwmztmo3.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d6eff8f54764b85f2386b_selene/mobile-banner/u1xoarj5mbetgwmztmo3_1751891776111.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:16.447Z"
+    },
+    {
+      "brandId": "684d6f308f54764b85f2386e",
+      "brandName": "Ruyah Designs",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749905197/Northlux/rvxiwwudki3p4pyfhyrt.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d6f308f54764b85f2386e_ruyah-designs/image/rvxiwwudki3p4pyfhyrt_1751891777597.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:17.962Z"
+    },
+    {
+      "brandId": "684d6f308f54764b85f2386e",
+      "brandName": "Ruyah Designs",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749905198/Northlux/ladwxu4yuxg8wqo62gqn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d6f308f54764b85f2386e_ruyah-designs/banner/ladwxu4yuxg8wqo62gqn_1751891778017.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:18.387Z"
+    },
+    {
+      "brandId": "684d6f308f54764b85f2386e",
+      "brandName": "Ruyah Designs",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749905199/Northlux/dvqfkr2hxnls8m3s9mgn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d6f308f54764b85f2386e_ruyah-designs/mobile-banner/dvqfkr2hxnls8m3s9mgn_1751891778471.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:18.831Z"
+    },
+    {
+      "brandId": "684d88f58f54764b85f23f9d",
+      "brandName": "ZOVA COUTURE",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749912115/Northlux/j7a7wgcjtvfg4bvkpazk.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d88f58f54764b85f23f9d_zova-couture/image/j7a7wgcjtvfg4bvkpazk_1751891779974.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:20.297Z"
+    },
+    {
+      "brandId": "684d88f58f54764b85f23f9d",
+      "brandName": "ZOVA COUTURE",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749911796/Northlux/l7nvq9ybmlvdqdivuque.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d88f58f54764b85f23f9d_zova-couture/banner/l7nvq9ybmlvdqdivuque_1751891780357.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:20.678Z"
+    },
+    {
+      "brandId": "684d88f58f54764b85f23f9d",
+      "brandName": "ZOVA COUTURE",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749911797/Northlux/uyayzuonzr6ceddozvqg.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684d88f58f54764b85f23f9d_zova-couture/mobile-banner/uyayzuonzr6ceddozvqg_1751891780733.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:21.079Z"
+    },
+    {
+      "brandId": "684fa3358f54764b85f24670",
+      "brandName": "SR STYLES",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750049586/Northlux/dgdsbubqsrfnmxh7gjqc.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684fa3358f54764b85f24670_sr-styles/image/dgdsbubqsrfnmxh7gjqc_1751891782226.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:22.744Z"
+    },
+    {
+      "brandId": "684fa3358f54764b85f24670",
+      "brandName": "SR STYLES",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750049587/Northlux/bw2grrkcfis1hujiivim.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684fa3358f54764b85f24670_sr-styles/banner/bw2grrkcfis1hujiivim_1751891782819.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:23.166Z"
+    },
+    {
+      "brandId": "684fa3358f54764b85f24670",
+      "brandName": "SR STYLES",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750049588/Northlux/lsoregzgumqmktcgke85.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684fa3358f54764b85f24670_sr-styles/mobile-banner/lsoregzgumqmktcgke85_1751891783232.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:23.650Z"
+    },
+    {
+      "brandId": "684fc6bc8f54764b85f25395",
+      "brandName": "LibAaz",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750058681/Northlux/pmegplot1l6s4fjjkfnq.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684fc6bc8f54764b85f25395_libaaz/image/pmegplot1l6s4fjjkfnq_1751891784771.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:25.176Z"
+    },
+    {
+      "brandId": "684fc6bc8f54764b85f25395",
+      "brandName": "LibAaz",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750058683/Northlux/kxmtxi8jzbrxetpusemx.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684fc6bc8f54764b85f25395_libaaz/banner/kxmtxi8jzbrxetpusemx_1751891785249.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:25.524Z"
+    },
+    {
+      "brandId": "684fc6bc8f54764b85f25395",
+      "brandName": "LibAaz",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750058683/Northlux/ljknshpskmd2oqdgrfli.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/684fc6bc8f54764b85f25395_libaaz/mobile-banner/ljknshpskmd2oqdgrfli_1751891785570.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:25.845Z"
+    },
+    {
+      "brandId": "685291f78f54764b85f2bc57",
+      "brandName": "TERRIBERRI",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750241781/Northlux/kmigunip6kqb4qsdxzly.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/685291f78f54764b85f2bc57_terriberri/image/kmigunip6kqb4qsdxzly_1751891786959.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:27.233Z"
+    },
+    {
+      "brandId": "685291f78f54764b85f2bc57",
+      "brandName": "TERRIBERRI",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750241782/Northlux/icl6bljxxrtrl7ikhx05.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/685291f78f54764b85f2bc57_terriberri/banner/icl6bljxxrtrl7ikhx05_1751891787280.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:27.563Z"
+    },
+    {
+      "brandId": "685291f78f54764b85f2bc57",
+      "brandName": "TERRIBERRI",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750241783/Northlux/a8rynwjpassjgbfacuta.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/685291f78f54764b85f2bc57_terriberri/mobile-banner/a8rynwjpassjgbfacuta_1751891787612.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:27.825Z"
+    },
+    {
+      "brandId": "6858e5dd8f54764b85f32cf4",
+      "brandName": "Budget Box",
+      "imageType": "image",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750656475/Northlux/ecku7b3nbm8torlttvkk.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6858e5dd8f54764b85f32cf4_budget-box/image/ecku7b3nbm8torlttvkk_1751891788962.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:29.247Z"
+    },
+    {
+      "brandId": "6858e5dd8f54764b85f32cf4",
+      "brandName": "Budget Box",
+      "imageType": "banner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750656476/Northlux/cdyptnzkahojtdp9cjgk.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6858e5dd8f54764b85f32cf4_budget-box/banner/cdyptnzkahojtdp9cjgk_1751891789299.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:29.480Z"
+    },
+    {
+      "brandId": "6858e5dd8f54764b85f32cf4",
+      "brandName": "Budget Box",
+      "imageType": "mobileBanner",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750656477/Northlux/cqglg1vgekfbn2uhenvn.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/brands/6858e5dd8f54764b85f32cf4_budget-box/mobile-banner/cqglg1vgekfbn2uhenvn_1751891789542.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:36:29.734Z"
+    }
+  ]
+}

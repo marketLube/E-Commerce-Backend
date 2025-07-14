@@ -1,0 +1,68 @@
+{
+  "summary": {
+    "totalImages": 7,
+    "processedImages": 7,
+    "successfulMigrations": 7,
+    "failedMigrations": 0,
+    "successRate": "100.00%",
+    "startTime": "2025-07-14T05:04:06.966Z"
+  },
+  "details": [
+    {
+      "categoryId": "67c987b8d092d53deda78bb2",
+      "categoryName": "Gardening tools",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089255/products/i7gqh9hiba7kyeflmkkj.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67c987b8d092d53deda78bb2_gardening-tools/i7gqh9hiba7kyeflmkkj_1752469437837.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:03:58.066Z"
+    },
+    {
+      "categoryId": "67c987ced092d53deda78bb8",
+      "categoryName": "Car Care",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089226/products/wzadhmaz96qarejeb1sh.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67c987ced092d53deda78bb8_car-care/wzadhmaz96qarejeb1sh_1752469439199.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:03:59.386Z"
+    },
+    {
+      "categoryId": "67c988fdd092d53deda78bd0",
+      "categoryName": "Home Improvement",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089234/products/o7nnk3gkrvhpk3cfn36g.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67c988fdd092d53deda78bd0_home-improvement/o7nnk3gkrvhpk3cfn36g_1752469440482.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:04:00.678Z"
+    },
+    {
+      "categoryId": "67c9891fd092d53deda78bd6",
+      "categoryName": "Power & Hand tools",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089269/products/gm3b2tscrwjhxruo9oqi.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67c9891fd092d53deda78bd6_power---hand-tools/gm3b2tscrwjhxruo9oqi_1752469441794.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:04:01.980Z"
+    },
+    {
+      "categoryId": "67f27964de2e54b58fb762d8",
+      "categoryName": "Home care",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089311/products/onldz9quuyqedubavxvk.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67f27964de2e54b58fb762d8_home-care/onldz9quuyqedubavxvk_1752469443121.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:04:03.306Z"
+    },
+    {
+      "categoryId": "67f279fd4c9024026558362e",
+      "categoryName": "Stationary",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089148/products/nccpigpb9xbyameowsse.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67f279fd4c9024026558362e_stationary/nccpigpb9xbyameowsse_1752469444401.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:04:04.618Z"
+    },
+    {
+      "categoryId": "67f4b230b8f2a486a80f7f13",
+      "categoryName": "Kitchen & Dining",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1744089648/products/p25f8zgp8b2famofp7m8.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/categories/67f4b230b8f2a486a80f7f13_kitchen---dining/p25f8zgp8b2famofp7m8_1752469445715.jpg",
+      "status": "success",
+      "timestamp": "2025-07-14T05:04:05.905Z"
+    }
+  ]
+}

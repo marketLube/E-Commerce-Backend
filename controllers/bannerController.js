@@ -1,5 +1,5 @@
 const Banner = require("../model/bannerModel");
-const uploadToCloudinary = require("../utilities/cloudinaryUpload");
+const { uploadToS3 } = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const path = require("path");
@@ -25,7 +25,7 @@ const createBanner = catchAsync(async (req, res, next) => {
 
   if (req.files && req.files.length > 0) {
     const imageFile = req.files[0];
-    const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+    const uploadedImage = await uploadToS3(imageFile.buffer, imageFile.originalname, 'banners');
     bannerData.image = uploadedImage;
   }
 
@@ -79,7 +79,7 @@ const updateBanner = catchAsync(async (req, res, next) => {
 
   if (req.files && req.files.length > 0) {
     const imageFile = req.files[0];
-    const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+    const uploadedImage = await uploadToS3(imageFile.buffer, imageFile.originalname, 'banners');
     banner.image = uploadedImage;
   }
 

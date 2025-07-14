@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "totalImages": 10,
+    "processedImages": 10,
+    "successfulMigrations": 10,
+    "failedMigrations": 0,
+    "successRate": "100.00%",
+    "startTime": "2025-07-12T13:40:38.031Z"
+  },
+  "details": [
+    {
+      "bannerId": "680096b98868b75180194175",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190437/products/y7x6giho3iwqrvnarjwe.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/680096b98868b75180194175/y7x6giho3iwqrvnarjwe_1752327604311.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:13.557Z"
+    },
+    {
+      "bannerId": "6800988f266b8fbe1cbce06a",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190496/products/iiaxspdrsksvrjliihvr.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/6800988f266b8fbe1cbce06a/iiaxspdrsksvrjliihvr_1752327615085.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:16.206Z"
+    },
+    {
+      "bannerId": "68009b46235ca90c12c78eb9",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190511/products/xqgs5yjwsq4pypr4vvts.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/68009b46235ca90c12c78eb9/xqgs5yjwsq4pypr4vvts_1752327617534.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:19.234Z"
+    },
+    {
+      "bannerId": "68009d64235ca90c12c78f00",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190535/products/slhyd74ri33ejmqwsyu8.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/68009d64235ca90c12c78f00/slhyd74ri33ejmqwsyu8_1752327620605.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:22.310Z"
+    },
+    {
+      "bannerId": "6800a930235ca90c12c79613",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190571/products/kyqjozg5difim0zemica.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/6800a930235ca90c12c79613/kyqjozg5difim0zemica_1752327623617.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:24.335Z"
+    },
+    {
+      "bannerId": "6800a9a8235ca90c12c79660",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190596/products/tyodhxne5fxeuprt73ig.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/6800a9a8235ca90c12c79660/tyodhxne5fxeuprt73ig_1752327625675.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:27.104Z"
+    },
+    {
+      "bannerId": "6800aa91235ca90c12c796db",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1749190621/products/gdlxx27e4gap3ixf0tw5.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/6800aa91235ca90c12c796db/gdlxx27e4gap3ixf0tw5_1752327628366.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:29.051Z"
+    },
+    {
+      "bannerId": "6800ab98235ca90c12c79700",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1746517127/products/hhed5lficarlomby8glq.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/6800ab98235ca90c12c79700/hhed5lficarlomby8glq_1752327630359.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:31.833Z"
+    },
+    {
+      "bannerId": "6800d49fca2d81cedf53bb30",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1746517180/products/gjlk3y3pw4222kuajirj.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/6800d49fca2d81cedf53bb30/gjlk3y3pw4222kuajirj_1752327633157.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:34.630Z"
+    },
+    {
+      "bannerId": "68033aace48f12b2f8c696c0",
+      "imageType": "desktop",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1746517216/products/yzg06v49qa9gllldfnkc.png",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Millstore/banners/desktop/68033aace48f12b2f8c696c0/yzg06v49qa9gllldfnkc_1752327635901.jpg",
+      "status": "success",
+      "timestamp": "2025-07-12T13:40:36.970Z"
+    }
+  ]
+}

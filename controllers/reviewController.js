@@ -1,6 +1,6 @@
 const Product = require("../model/productModel");
 const Rating = require("../model/ratingModel");
-const uploadToCloudinary = require("../utilities/cloudinaryUpload");
+const { uploadToS3 } = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 
@@ -81,7 +81,7 @@ const addOrUpdateRating = catchAsync(async (req, res, next) => {
     const imageFile = req.files.find((file) => file.fieldname === "image");
 
     if (imageFile) {
-      const uploadedImage = await uploadToCloudinary(imageFile.buffer);
+      const uploadedImage = await uploadToS3(imageFile.buffer, imageFile.originalname, 'reviews');
       image = uploadedImage;
     }
   }

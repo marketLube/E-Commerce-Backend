@@ -10,7 +10,7 @@ const categoryModel = require("../model/categoryModel");
 const Product = require("../model/productModel");
 const productModel = require("../model/productModel");
 const Variant = require("../model/variantsModel");
-const uploadToCloudinary = require("../utilities/cloudinaryUpload");
+const { uploadToS3, uploadMultipleToS3 } = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const Rating = require("../model/ratingModel");
@@ -100,7 +100,7 @@ const addProduct = catchAsync(async (req, res, next) => {
 
     if (fieldname.startsWith("productImages")) {
       const imageIndex = parseInt(fieldname.match(/\[(\d+)\]/)[1]);
-      const imageUrl = await uploadToCloudinary(file.buffer);
+      const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products');
 
       productImages[imageIndex] = imageUrl;
     } else if (fieldname.startsWith("variants")) {
@@ -112,7 +112,7 @@ const addProduct = catchAsync(async (req, res, next) => {
         if (!variantImagesMap[variantIndex]) {
           variantImagesMap[variantIndex] = [];
         }
-        const imageUrl = await uploadToCloudinary(file.buffer);
+        const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products/variants');
         variantImagesMap[variantIndex][imageIndex] = imageUrl;
       }
     }
@@ -621,7 +621,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
 
       if (fieldname.startsWith("productImages")) {
         const imageIndex = parseInt(fieldname.match(/\[(\d+)\]/)[1]);
-        const imageUrl = await uploadToCloudinary(file.buffer);
+        const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products');
         if (!updateData.images) updateData.images = [...product.images];
         updateData.images[imageIndex] = imageUrl;
       } else if (fieldname.startsWith("variants")) {
@@ -637,7 +637,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
               ? [...existingVariant.images]
               : [];
           }
-          const imageUrl = await uploadToCloudinary(file.buffer);
+          const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products/variants');
           variantImagesMap[variantIndex][imageIndex] = imageUrl;
         }
       }

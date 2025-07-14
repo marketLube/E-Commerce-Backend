@@ -1,0 +1,76 @@
+{
+  "summary": {
+    "totalImages": 8,
+    "processedImages": 8,
+    "successfulMigrations": 8,
+    "failedMigrations": 0,
+    "successRate": "100.00%",
+    "startTime": "2025-07-07T12:29:30.655Z"
+  },
+  "details": [
+    {
+      "categoryId": "6837f46a62b8037a18b181ba",
+      "categoryName": "MODEST WEAR",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750062565/Northlux/wtebwdyep4lh95fuxuwn.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/6837f46a62b8037a18b181ba_modest-wear/wtebwdyep4lh95fuxuwn_1751891359255.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:19.601Z"
+    },
+    {
+      "categoryId": "6837f3b962b8037a18b1812c",
+      "categoryName": "ACCESSORIES",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750065554/Northlux/jefb1btlev7btmrgqmcv.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/6837f3b962b8037a18b1812c_accessories/jefb1btlev7btmrgqmcv_1751891360739.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:21.054Z"
+    },
+    {
+      "categoryId": "6837f03c0d26bb466db413ad",
+      "categoryName": "ETHNIC WEAR",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750062250/Northlux/onmhfuuokyixifgzppdu.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/6837f03c0d26bb466db413ad_ethnic-wear/onmhfuuokyixifgzppdu_1751891362151.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:22.442Z"
+    },
+    {
+      "categoryId": "68384acdf38bca59854b2693",
+      "categoryName": "KIDS",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750065924/Northlux/jzrba7zwexeopfsavctv.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/68384acdf38bca59854b2693_kids/jzrba7zwexeopfsavctv_1751891363574.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:23.883Z"
+    },
+    {
+      "categoryId": "684fec608f54764b85f26b23",
+      "categoryName": "COSMETICS & BEAUTY",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750068319/Northlux/tgtwnth7nrkp4d8pdwb2.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/684fec608f54764b85f26b23_cosmetics---beauty/tgtwnth7nrkp4d8pdwb2_1751891365001.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:25.334Z"
+    },
+    {
+      "categoryId": "685001ce8f54764b85f26d40",
+      "categoryName": "NIGHTWEAR",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750073806/Northlux/xlma7nymnz3dx7jwipdk.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/685001ce8f54764b85f26d40_nightwear/xlma7nymnz3dx7jwipdk_1751891366455.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:26.699Z"
+    },
+    {
+      "categoryId": "685008398f54764b85f27077",
+      "categoryName": "JWELLERY",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750075448/Northlux/bumwmzgdvfl4ssiajukq.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/685008398f54764b85f27077_jwellery/bumwmzgdvfl4ssiajukq_1751891367827.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:28.085Z"
+    },
+    {
+      "categoryId": "6850085e8f54764b85f270aa",
+      "categoryName": "HOME DECOR",
+      "originalUrl": "https://res.cloudinary.com/dakcaseq8/image/upload/v1750075486/Northlux/v84t94huoorehhrgmupg.jpg",
+      "newUrl": "https://marketlube-ecommerce.s3.ap-south-1.amazonaws.com/Northlux/categories/6850085e8f54764b85f270aa_home-decor/v84t94huoorehhrgmupg_1751891369187.jpg",
+      "status": "success",
+      "timestamp": "2025-07-07T12:29:29.602Z"
+    }
+  ]
+}
