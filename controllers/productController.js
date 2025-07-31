@@ -10,7 +10,10 @@ const categoryModel = require("../model/categoryModel");
 const Product = require("../model/productModel");
 const productModel = require("../model/productModel");
 const Variant = require("../model/variantsModel");
-const { uploadToS3, uploadMultipleToS3 } = require("../utilities/cloudinaryUpload");
+const {
+  uploadToS3,
+  uploadMultipleToS3,
+} = require("../utilities/cloudinaryUpload");
 const AppError = require("../utilities/errorHandlings/appError");
 const catchAsync = require("../utilities/errorHandlings/catchAsync");
 const Rating = require("../model/ratingModel");
@@ -30,6 +33,7 @@ const addProduct = catchAsync(async (req, res, next) => {
     label,
     units,
     stockStatus,
+    priorityNumber,
   } = req.body;
 
   if (stockStatus === "outofstock" && stock > 0) {
@@ -100,7 +104,11 @@ const addProduct = catchAsync(async (req, res, next) => {
 
     if (fieldname.startsWith("productImages")) {
       const imageIndex = parseInt(fieldname.match(/\[(\d+)\]/)[1]);
-      const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products');
+      const imageUrl = await uploadToS3(
+        file.buffer,
+        file.originalname,
+        "products"
+      );
 
       productImages[imageIndex] = imageUrl;
     } else if (fieldname.startsWith("variants")) {
@@ -112,7 +120,11 @@ const addProduct = catchAsync(async (req, res, next) => {
         if (!variantImagesMap[variantIndex]) {
           variantImagesMap[variantIndex] = [];
         }
-        const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products/variants');
+        const imageUrl = await uploadToS3(
+          file.buffer,
+          file.originalname,
+          "products/variants"
+        );
         variantImagesMap[variantIndex][imageIndex] = imageUrl;
       }
     }
@@ -136,6 +148,7 @@ const addProduct = catchAsync(async (req, res, next) => {
     label,
     units,
     stockStatus,
+    priorityNumber,
   };
 
   if (variantsArray && variantsArray.length > 0) {
@@ -393,12 +406,13 @@ const listProducts = catchAsync(async (req, res, next) => {
     { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
     { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
     {
-      $sort:
-        sort === "price-low"
-          ? { effectivePrice: 1 }
+      $sort: {
+        ...(sort === "price-low"
+          ? { effectivePrice: 1, priorityNumber: 1 }
           : sort === "price-high"
-          ? { effectivePrice: -1 }
-          : { createdAt: -1 },
+          ? { effectivePrice: -1, priorityNumber: 1 }
+          : { priorityNumber: 1, createdAt: -1 }),
+      },
     },
     { $skip: skip },
     { $limit: limit },
@@ -444,8 +458,6 @@ const listProducts = catchAsync(async (req, res, next) => {
     Product.aggregate(aggregationPipeline),
     Product.aggregate(countPipeline),
   ]);
-
-
 
   // Use the count from countResult instead of products.length
   const totalProducts = countResult[0]?.total || 0;
@@ -558,7 +570,6 @@ const updateProduct = catchAsync(async (req, res, next) => {
             _id: { $ne: variant._id }, // Exclude the current variant
           });
 
-
           const productSkuExists = await Product.findOne({
             sku: variant.sku,
             _id: { $ne: productId }, // Exclude the current variant
@@ -621,7 +632,11 @@ const updateProduct = catchAsync(async (req, res, next) => {
 
       if (fieldname.startsWith("productImages")) {
         const imageIndex = parseInt(fieldname.match(/\[(\d+)\]/)[1]);
-        const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products');
+        const imageUrl = await uploadToS3(
+          file.buffer,
+          file.originalname,
+          "products"
+        );
         if (!updateData.images) updateData.images = [...product.images];
         updateData.images[imageIndex] = imageUrl;
       } else if (fieldname.startsWith("variants")) {
@@ -637,7 +652,11 @@ const updateProduct = catchAsync(async (req, res, next) => {
               ? [...existingVariant.images]
               : [];
           }
-          const imageUrl = await uploadToS3(file.buffer, file.originalname, 'products/variants');
+          const imageUrl = await uploadToS3(
+            file.buffer,
+            file.originalname,
+            "products/variants"
+          );
           variantImagesMap[variantIndex][imageIndex] = imageUrl;
         }
       }

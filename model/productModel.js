@@ -25,6 +25,7 @@ const productSchema = new Schema(
       enum: ["instock", "outofstock"],
       default: "instock",
     },
+    priorityNumber: { type: Number, default: 10 },
   },
   { timestamps: true }
 );
